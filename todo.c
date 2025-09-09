@@ -6,7 +6,7 @@
 /*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/09 11:03:40 by victor           ###   ########.fr       */
+/*   Updated: 2025/09/09 16:30:41 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,16 @@
 
 static void replace_char_inplace(char *s, char find, char replace)
 {
-    int i = 0;
-    if (!s) return;
-    while (s[i])
-    {
-        if (s[i] == find)
-            s[i] = replace;
-        i++;
-    }
+	int	i;
+	
+	i = 0;
+	if (!s) return;
+	while (s[i])
+	{
+		if (s[i] == find)
+			s[i] = replace;
+		i++;
+	}
 }
 
 int	is_builtin(t_minishell *mini)
@@ -1013,37 +1015,72 @@ t_command	*parse_commands(t_minishell *mini)
 	return (mini->head);
 }
 
-void	process_token(t_minishell *mini, int *index)
+/*void process_token(t_minishell *mini, int *index)
 {
-	t_token	*token;
-
-	token = mini->t_list;
-	if (token->type == T_WORD)
-	{
-		if (token->quote != Q_SINGLE && ft_strchr(token->value, '$'))
-			expand_token(token, mini);
-		if (token->value[0] == '\0' && token->quote != Q_SINGLE)
-			return ;
-		if (token->quote == Q_NONE && (ft_strchr(token->value, '*')
-				|| ft_strchr(token->value, '?')
-				|| ft_strchr(token->value, '[')))
-		{
-			expand_and_add_glob(token->value, mini);
-		}
-		else
-			add_arg_to_command(mini, token->value);
-	}
-	else if (token->type == T_RED_IN && token->next)
-		parse_red_in(mini, &mini->t_list);
-	else if (token->type == T_RED_OUT && token->next)
-		parse_red_out(mini, &mini->t_list);
-	else if (token->type == T_RED_APPEND && token->next)
-		parse_red_append(mini, &mini->t_list);
-	else if (token->type == T_HEREDOC && token->next)
-		parse_heredoc(mini, &mini->t_list, index);
-	else if (token->type == T_PIPE)
-		mini->curr = NULL;
-}
+	 t_token *token;
+   
+	 token = mini->t_list;
+	 if (token->type == T_WORD)
+	 {
+	     if (token->quote != Q_SINGLE &&
+		   (ft_strchr(token->value, '$') || ft_strchr(token->value, '\x07')))
+		   expand_token(token, mini);
+   
+	     if (token->value[0] == '\0' && token->quote != Q_SINGLE)
+		   return ;
+	     if (token->quote == Q_NONE && (ft_strchr(token->value, '*')
+			 || ft_strchr(token->value, '?')
+			 || ft_strchr(token->value, '[')))
+	     {
+		   expand_and_add_glob(token->value, mini);
+	     }
+	     else
+		   add_arg_to_command(mini, token->value);
+	 }
+	 else if (token->type == T_RED_IN && token->next)
+	     parse_red_in(mini, &mini->t_list);
+	 else if (token->type == T_RED_OUT && token->next)
+	     parse_red_out(mini, &mini->t_list);
+	 else if (token->type == T_RED_APPEND && token->next)
+	     parse_red_append(mini, &mini->t_list);
+	 else if (token->type == T_HEREDOC && token->next)
+	     parse_heredoc(mini, &mini->t_list, index);
+	 else if (token->type == T_PIPE)
+	     mini->curr = NULL;
+}*/
+void process_token(t_minishell *mini, int *index)
+{
+	 t_token *token;
+   
+	 token = mini->t_list;
+	 if (token->type == T_WORD)
+	 {
+	     if (token->quote != Q_SINGLE &&
+		   (ft_strchr(token->value, '$') || ft_strchr(token->value, '\x07')))
+		   expand_token(token, mini);
+   
+	     if (token->value[0] == '\0' && token->quote != Q_SINGLE)
+		   return ;
+	     if (token->quote == Q_NONE && (ft_strchr(token->value, '*')
+			 || ft_strchr(token->value, '?')
+			 || ft_strchr(token->value, '[')))
+	     {
+		   expand_and_add_glob(token->value, mini);
+	     }
+	     else
+		   add_arg_to_command(mini, token->value);
+	 }
+	 else if (token->type == T_RED_IN && token->next)
+	     parse_red_in(mini, &mini->t_list);
+	 else if (token->type == T_RED_OUT && token->next)
+	     parse_red_out(mini, &mini->t_list);
+	 else if (token->type == T_RED_APPEND && token->next)
+	     parse_red_append(mini, &mini->t_list);
+	 else if (token->type == T_HEREDOC && token->next)
+	     parse_heredoc(mini, &mini->t_list, index);
+	 else if (token->type == T_PIPE)
+	     mini->curr = NULL;
+}   
 
 int	is_redir(t_redir *redir)
 {
@@ -1657,29 +1694,7 @@ void	do_signal(void)
 	signal(SIGQUIT, SIG_IGN);
 }
 
-/*t_token	*check_expansion(t_minishell *minishell, char *val)
-{
-	t_token	*new_token;
-
-	new_token = add_token(minishell, val);
-	if (!new_token)
-		return (NULL);
-	new_token->type = minishell->tokenizer->prev_type;
-	new_token->quote = minishell->tokenizer->quote;
-	if (new_token->type == T_WORD && new_token->value[0] == '$')
-	{
-		if (new_token->quote == Q_SINGLE)
-			new_token->expansion_type = NO_EXPANSION;
-		else if (new_token->value[1] == '?' && new_token->value[2] == '\0')
-			new_token->expansion_type = EXIT_STATUS_EXPANSION;
-		else
-			new_token->expansion_type = VAR_EXPANSION;
-	}
-	else
-		new_token->expansion_type = NO_EXPANSION;
-	return (new_token);
-}*/
-t_token *check_expansion(t_minishell *minishell, char *val)
+/*t_token *check_expansion(t_minishell *minishell, char *val)
 {
     t_token *new_token;
 
@@ -1702,7 +1717,34 @@ t_token *check_expansion(t_minishell *minishell, char *val)
     if (new_token->quote == Q_SINGLE && ft_strchr(new_token->value, '\x07'))
         replace_char_inplace(new_token->value, '\x07', '$');
     return (new_token);
+}*/
+t_token *check_expansion(t_minishell *minishell, char *val)
+{
+	 t_token *new_token;
+   
+	 new_token = add_token(minishell, val);
+	 if (!new_token)
+	     return (NULL);
+	 new_token->type = minishell->tokenizer->prev_type;
+	 new_token->quote = minishell->tokenizer->quote;
+   
+	 if (new_token->type == T_WORD && new_token->value && new_token->value[0] == '$')
+	 {
+	     if (new_token->quote == Q_SINGLE)
+		   new_token->expansion_type = NO_EXPANSION;
+	     else if (new_token->value[1] == '?' && new_token->value[2] == '\0')
+		   new_token->expansion_type = EXIT_STATUS_EXPANSION;
+	     else
+		   new_token->expansion_type = VAR_EXPANSION;
+	 }
+	 else
+	     new_token->expansion_type = NO_EXPANSION;
+	 if (new_token->quote == Q_SINGLE && new_token->value && ft_strchr(new_token->value, '\x07'))
+	     replace_char_inplace(new_token->value, '\x07', '$');
+   
+	 return (new_token);
 }
+   
 
 char	*expand_env_in_str(char *src, t_minishell *mini)
 {
@@ -2148,17 +2190,7 @@ char	*env_value(char const *name, t_env *env)
 	return (NULL);
 }
 
-/*void	expand_token(t_token *token, t_minishell *mini)
-{
-	char	*expanded;
-
-	if (token->quote == Q_SINGLE)
-		return ;
-	expanded = expand_env_in_str(token->value, mini);
-	free(token->value);
-	token->value = expanded;
-}*/
-void expand_token(t_token *token, t_minishell *mini)
+/*void expand_token(t_token *token, t_minishell *mini)
 {
     char *expanded;
 
@@ -2169,8 +2201,19 @@ void expand_token(t_token *token, t_minishell *mini)
     token->value = expanded;
     if (ft_strchr(token->value, '\x07'))
         replace_char_inplace(token->value, '\x07', '$');
+}*/
+void expand_token(t_token *token, t_minishell *mini)
+{
+	 char *expanded;
+   
+	 if (!token || token->quote == Q_SINGLE)
+	     return ;
+	 expanded = expand_env_in_str(token->value, mini);
+	 free(token->value);
+	 token->value = expanded ? expanded : ft_strdup("");
+	 if (token->value && ft_strchr(token->value, '\x07'))
+	     replace_char_inplace(token->value, '\x07', '$');
 }
-
 
 t_minishell	init_minishell(void)
 {
