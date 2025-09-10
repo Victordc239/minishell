@@ -6,252 +6,11 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/10 14:44:22 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/09/10 17:22:34 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
-
-static int	is_outer_parenthesized(const char *s)
-{
-	int		len;
-	int		i;
-	int		depth;
-	char	quote;
-
-	if (!s)
-		return (0);
-	if (s[0] != '(')
-		return (0);
-	len = ft_strlen(s);
-	depth = 1;
-	quote = 0;
-	i = 1;
-	while (i < len)
-	{
-		if ((s[i] == '\'' || s[i] == '"') && quote == 0)
-			quote = s[i];
-		else if (s[i] == quote)
-			quote = 0;
-		else if (!quote)
-		{
-			if (s[i] == '(')
-				depth++;
-			else if (s[i] == ')')
-			{
-				depth--;
-				if (depth == 0)
-					break ;
-			}
-		}
-		i++;
-	}
-	return (depth == 0 && i == len - 1);
-}
-
-static char	*strip_outer_parentheses(char *s, int *removed)
-{
-	char	*cur;
-	char	*tmp;
-	int		did_remove;
-	int		len;
-
-	if (removed)
-		*removed = 0;
-	if (!s)
-		return (NULL);
-	cur = trim_whitespace(s);
-	if (!cur)
-		return (ft_strdup(""));
-	did_remove = 0;
-	while (is_outer_parenthesized(cur))
-	{
-		len = ft_strlen(cur);
-		tmp = ft_substr(cur, 1, len - 2);
-		free(cur);
-		if (!tmp)
-			return (NULL);
-		cur = trim_whitespace(tmp);
-		free(tmp);
-		did_remove = 1;
-	}
-	if (removed && did_remove)
-		*removed = 1;
-	return (cur);
-}
-
-static char	*trim_whitespace(char *s)
-{
-	char	*start;
-	char	*end;
-
-	if (!s)
-		return (NULL);
-	start = s;
-	while (*start && (*start == ' ' || *start == '\t'))
-		start++;
-	end = start + ft_strlen(start);
-	while (end > start && (*(end - 1) == ' ' || *(end - 1) == '\t'))
-		end--;
-	return (ft_substr(start, 0, end - start));
-}
-
-static int	split_by_logical_ops(char *input, char ***segments_out, char ***ops_out, int *count_out)
-{
-	int		pos;
-	int		len;
-	int		start;
-	int		paren_depth;
-	int		seg_count;
-	char	quote;
-	char	*seg;
-	char	*trimmed;
-	char	**segments;
-	char	**ops;
-
-	pos = 0;
-	segments = NULL;
-	ops = NULL;
-	seg_count = 0;
-	if (!input)
-		return (0);
-	len = ft_strlen(input);
-	start = 0;
-	quote = 0;
-	paren_depth = 0;
-	while (pos < len)
-	{
-		if ((input[pos] == '\'' || input[pos] == '"'))
-		{
-			if (!quote)
-				quote = input[pos];
-			else if (quote == input[pos])
-				quote = 0;
-			pos++;
-			continue ;
-		}
-		if (!quote)
-		{
-			if (input[pos] == '(')
-			{
-				paren_depth++;
-				pos++;
-				continue ;
-			}
-			else if (input[pos] == ')')
-			{
-				if (paren_depth > 0)
-					paren_depth--;
-				pos++;
-				continue ;
-			}
-		}
-		if (!quote && paren_depth == 0 && pos + 1 < len)
-		{
-			if (input[pos] == '&' && input[pos + 1] == '&')
-			{
-				seg = ft_substr(input, start, pos - start);
-				trimmed = trim_whitespace(seg);
-				free(seg);
-				segments = realloc(segments, sizeof(char *) * (seg_count + 1));
-				segments[seg_count] = trimmed ? trimmed : ft_strdup("");
-				seg_count++;
-				ops = realloc(ops, sizeof(char *) * (seg_count));
-				ops[seg_count - 1] = ft_strdup("&&");
-				pos += 2;
-				start = pos;
-				continue;
-			}
-			if (input[pos] == '|' && input[pos + 1] == '|')
-			{
-				seg = ft_substr(input, start, pos - start);
-				trimmed = trim_whitespace(seg);
-				free(seg);
-				segments = realloc(segments, sizeof(char *) * (seg_count + 1));
-				segments[seg_count] = trimmed ? trimmed : ft_strdup("");
-				seg_count++;
-				ops = realloc(ops, sizeof(char *) * (seg_count));
-				ops[seg_count - 1] = ft_strdup("||");
-				pos += 2;
-				start = pos;
-				continue;
-			}
-		}
-		pos++;
-	}
-	seg = ft_substr(input, start, len - start);
-	trimmed = trim_whitespace(seg);
-	free(seg);
-	segments = realloc(segments, sizeof(char *) * (seg_count + 1));
-	segments[seg_count] = trimmed ? trimmed : ft_strdup("");
-	seg_count++;
-	*segments_out = segments;
-	*ops_out = ops;
-	*count_out = seg_count;
-	return (1);
-}
-
-static void	free_split_result(char **segments, char **ops, int count)
-{
-	int	i;
-
-	if (segments)
-	{
-		i = 0;
-		while (i < count)
-		{
-			free(segments[i]);
-			i++;
-		}
-		free(segments);
-	}
-	if (ops)
-	{
-		i = 0;
-		while (i < count - 1)
-		{
-			free(ops[i]);
-			i++;
-		}
-		free(ops);
-	}
-}
-
-static void replace_char_inplace(char *s, char find, char replace)
-{
-    int i = 0;
-    if (!s) return;
-    while (s[i])
-    {
-        if (s[i] == find)
-            s[i] = replace;
-        i++;
-    }
-}
-
-int	is_builtin(t_minishell *mini)
-{
-	t_token	*token;
-
-	token = mini->t_list;
-	if (!token || !token->value)
-		return (NO_BUITIN);
-	if (!ft_strcmp(token->value, "echo") || !ft_strcmp(token->value, "pwd")
-		|| !ft_strcmp(token->value, "env"))
-		return (BUILTIN_CHILD);
-	else if (!ft_strcmp(token->value, "cd") || !ft_strcmp(token->value, "exit")
-		|| !ft_strcmp(token->value, "export") || !ft_strcmp(token->value,
-			"unset"))
-		return (BUILTIN_PARENT);
-	return (NO_BUITIN);
-}
-
-int	is_builtin_str(char *str)
-{
-	return (!ft_strcmp(str, "echo") || !ft_strcmp(str, "cd") || !ft_strcmp(str,
-			"pwd") || !ft_strcmp(str, "export") || !ft_strcmp(str, "unset")
-		|| !ft_strcmp(str, "env") || !ft_strcmp(str, "exit"));
-}
 
 void	free_env_list(t_env *env)
 {
@@ -282,7 +41,7 @@ void	free_t_list(t_token *list)
 		list = tmp;
 	}
 }
-
+//////////////
 void	free_redir_list(t_redir *redir)
 {
 	t_redir	*tmp;
@@ -335,7 +94,7 @@ void	free_pipex_data(t_pipex *data)
 		free_command_list(data->commands);
 	free(data);
 }
-
+////////////////////////
 void	free_tokenizer(t_tokenizer *tokenizer)
 {
 	if (!tokenizer)
@@ -358,7 +117,7 @@ void	ft_freedoom(char **str)
 	}
 	free(str);
 }
-
+////////////////////v
 void	free_minishell(t_minishell *shell)
 {
 	if (!shell)
@@ -384,7 +143,7 @@ void	free_minishell(t_minishell *shell)
 	shell->tmp = NULL;
 	shell->curr = NULL;
 }
-
+///////////////////////////////////
 int	is_numeric(char const *str)
 {
 	int	i;
@@ -430,7 +189,7 @@ int	ft_exit(t_minishell *mini)
 	free_minishell(mini);
 	exit(code % 256);
 }
-
+//////////////////////////
 char	*get_env_value(char *name, t_env *env)
 {
 	while (env)
@@ -475,7 +234,7 @@ void	ft_cd(t_minishell *mini)
 	if (!mini->command_list->argv[1])
 		free(path);
 }
-
+//////////////////////
 void	remove_env_var(char const *name, t_minishell *mini)
 {
 	t_env	*curr;
@@ -512,7 +271,7 @@ void	ft_unset(t_minishell *mini)
 		i++;
 	}
 }
-
+///////////////////////
 int	count_exported(t_minishell *mini)
 {
 	int		count;
@@ -592,7 +351,7 @@ void	print_sorted_env(t_minishell *mini)
 	print_env_array(arr, count);
 	free(arr);
 }
-
+/////////////
 int	is_valid_identifier(char const *str)
 {
 	int	i;
@@ -608,7 +367,7 @@ int	is_valid_identifier(char const *str)
 	}
 	return (1);
 }
-
+//////////////////
 t_env	*find_env(t_env *env_list, char const *name)
 {
 	while (env_list)
@@ -619,7 +378,7 @@ t_env	*find_env(t_env *env_list, char const *name)
 	}
 	return (NULL);
 }
-
+//////////////////
 void	update_node_value(t_env *tmp, char *value, int exported)
 {
 	if (tmp->value)
@@ -702,7 +461,7 @@ void	add_env_node(t_minishell *mini, char *name, char *value, int exported)
 		return ;
 	append_node_to_list(mini, new);
 }
-
+//////////////////
 void	add_or_update_env(char *arg, t_minishell *mini)
 {
 	t_env	*var;
@@ -725,7 +484,7 @@ void	add_or_update_env(char *arg, t_minishell *mini)
 		add_env_node(mini, name, value, 1);
 	free(name);
 }
-
+//////////////////
 void	mark_as_exported(char *name, t_minishell *mini)
 {
 	t_env	*var;
@@ -736,7 +495,7 @@ void	mark_as_exported(char *name, t_minishell *mini)
 	else
 		add_env_node(mini, name, NULL, 1);
 }
-
+//////////////////
 int	process_export_argument(char *arg, t_minishell *mini)
 {
 	char	*equal;
@@ -763,7 +522,7 @@ int	process_export_argument(char *arg, t_minishell *mini)
 	free(name);
 	return (error);
 }
-
+//////////////////////////
 void	ft_export(t_minishell *mini)
 {
 	int	i;
@@ -795,181 +554,7 @@ void	execute_buitin(t_minishell *minishell)
 	else if (!ft_strcmp(minishell->command_list->argv[0], "export"))
 		ft_export(minishell);
 }
-
-void	ft_echo_arg(char **argv)
-{
-	int	new_line;
-	int	i;
-	int	j;
-
-	i = 1;
-	new_line = 1;
-	while (argv[i] && !ft_strncmp(argv[i], "-n", 2))
-	{
-		j = 2;
-		while (argv[i][j] == 'n')
-			j++;
-		if (argv[i][j] != '\0')
-			break ;
-		new_line = 0;
-		i++;
-	}
-	while (argv[i])
-	{
-		ft_putstr(argv[i], 1);
-		if (argv[i + 1])
-			ft_putstr(" ", 1);
-		i++;
-	}
-	if (new_line)
-		ft_putstr("\n", 1);
-}
-
-void	ft_pwd(char **argv, char **env)
-{
-	char	*cwd;
-
-	(void)argv;
-	(void)env;
-	cwd = getcwd(NULL, 0);
-	if (!cwd)
-	{
-		ft_putstr("Error pwd\n", 2);
-		return ;
-	}
-	ft_putstr(cwd, 1);
-	ft_putstr("\n", 1);
-	free(cwd);
-}
-
-void	ft_env(char **argv, char **env)
-{
-	int	i;
-
-	(void)argv;
-	i = 0;
-	while (env[i])
-	{
-		write(1, env[i], ft_strlen(env[i]));
-		write(1, "\n", 1);
-		i++;
-	}
-}
-
-void	execute_buitin_args(char **argv, char ***env, t_minishell *mini)
-{
-	if (!ft_strcmp(argv[0], "echo"))
-		ft_echo_arg(argv);
-	else if (!ft_strcmp(argv[0], "pwd"))
-		ft_pwd(argv, *env);
-	else if (!ft_strcmp(argv[0], "export"))
-		ft_export(mini);
-	else if (!ft_strcmp(argv[0], "env"))
-		ft_env(argv, *env);
-}
-
-t_env	*create_env_list(char **envp, t_minishell *mini)
-{
-	int		i;
-	char	*equal;
-	char	*name;
-	char	*value;
-
-	mini->env_list = NULL;
-	i = 0;
-	while (envp[i])
-	{
-		equal = ft_strchr(envp[i], '=');
-		if (equal)
-		{
-			name = ft_substr(envp[i], 0, equal - envp[i]);
-			value = ft_strdup(equal + 1);
-			add_env_node(mini, name, value, 1);
-			free(name);
-			free(value);
-		}
-		i++;
-	}
-	return (mini->env_list);
-}
-
-static int	env_len(char **env)
-{
-	int	i;
-
-	i = 0;
-	while (env && env[i])
-		i++;
-	return (i);
-}
-
-char	**copy_env(char **env)
-{
-	int		len;
-	char	**copy;
-	int		i;
-
-	i = 0;
-	len = env_len(env);
-	copy = malloc(sizeof(char *) * (len + 1));
-	if (!copy)
-		return (NULL);
-	while (i < len)
-	{
-		copy[i] = ft_strdup(env[i]);
-		i++;
-	}
-	copy[i] = NULL;
-	return (copy);
-}
-
-void	exit_with_error(char *message, int exit_code, int std)
-{
-	ft_putstr(message, std);
-	exit(exit_code);
-}
-
-void	add_arg_to_command(t_minishell *mini, char *arg)
-{
-	int		count;
-	int		i;
-	char	**new_argv;
-
-	count = 0;
-	i = 0;
-	if (mini->curr->argv)
-	{
-		while (mini->curr->argv[count])
-			count++;
-	}
-	new_argv = malloc(sizeof(char *) * (count + 2));
-	if (!new_argv)
-		exit_with_error("Error malloc argv\n", 1, 2);
-	while (i < count)
-	{
-		new_argv[i] = mini->curr->argv[i];
-		i++;
-	}
-	new_argv[count] = ft_strdup(arg);
-	new_argv[count + 1] = NULL;
-	free(mini->curr->argv);
-	mini->curr->argv = new_argv;
-}
-
-void	free_struct(t_pipex *data, char *message, int exit_code, int std)
-{
-	if (data)
-	{
-		if (data->pid)
-		{
-			free(data->pid);
-			data->pid = NULL;
-		}
-		free(data);
-	}
-	ft_putstr(message, std);
-	exit(exit_code);
-}
+///////////////////
 
 void	free_and_exit(char **args, char **paths, int exit_code)
 {
@@ -1128,6 +713,87 @@ char	**env_to_array(t_env *env_list)
 	return (env_array);
 }
 
+int	is_builtin_str(char *str)
+{
+	return (!ft_strcmp(str, "echo") || !ft_strcmp(str, "cd") || !ft_strcmp(str,
+			"pwd") || !ft_strcmp(str, "export") || !ft_strcmp(str, "unset")
+		|| !ft_strcmp(str, "env") || !ft_strcmp(str, "exit"));
+}
+
+////////////////////////
+void	ft_echo_arg(char **argv)
+{
+	int	new_line;
+	int	i;
+	int	j;
+
+	i = 1;
+	new_line = 1;
+	while (argv[i] && !ft_strncmp(argv[i], "-n", 2))
+	{
+		j = 2;
+		while (argv[i][j] == 'n')
+			j++;
+		if (argv[i][j] != '\0')
+			break ;
+		new_line = 0;
+		i++;
+	}
+	while (argv[i])
+	{
+		ft_putstr(argv[i], 1);
+		if (argv[i + 1])
+			ft_putstr(" ", 1);
+		i++;
+	}
+	if (new_line)
+		ft_putstr("\n", 1);
+}
+
+void	ft_pwd(char **argv, char **env)
+{
+	char	*cwd;
+
+	(void)argv;
+	(void)env;
+	cwd = getcwd(NULL, 0);
+	if (!cwd)
+	{
+		ft_putstr("Error pwd\n", 2);
+		return ;
+	}
+	ft_putstr(cwd, 1);
+	ft_putstr("\n", 1);
+	free(cwd);
+}
+
+void	ft_env(char **argv, char **env)
+{
+	int	i;
+
+	(void)argv;
+	i = 0;
+	while (env[i])
+	{
+		write(1, env[i], ft_strlen(env[i]));
+		write(1, "\n", 1);
+		i++;
+	}
+}
+
+void	execute_buitin_args(char **argv, char ***env, t_minishell *mini)
+{
+	if (!ft_strcmp(argv[0], "echo"))
+		ft_echo_arg(argv);
+	else if (!ft_strcmp(argv[0], "pwd"))
+		ft_pwd(argv, *env);
+	else if (!ft_strcmp(argv[0], "export"))
+		ft_export(mini);
+	else if (!ft_strcmp(argv[0], "env"))
+		ft_env(argv, *env);
+}
+////////////////////////
+
 char	*find_execpath(char **envir)
 {
 	int	i;
@@ -1142,6 +808,22 @@ char	*find_execpath(char **envir)
 		i++;
 	}
 	return (NULL);
+}
+
+////////////////////////
+void	free_struct(t_pipex *data, char *message, int exit_code, int std)
+{
+	if (data)
+	{
+		if (data->pid)
+		{
+			free(data->pid);
+			data->pid = NULL;
+		}
+		free(data);
+	}
+	ft_putstr(message, std);
+	exit(exit_code);
 }
 
 void	check_errno(int err, t_minishell *mini)
@@ -1233,7 +915,7 @@ void	execute_command(t_minishell *mini, char **paths, char **envir)
 	check_errno(ENOENT, mini);
 	exit(127);
 }
-
+////////////////////////
 void	ft_cmd(t_minishell *mini)
 {
 	char	**possible_paths;
@@ -1261,6 +943,7 @@ void	ft_cmd(t_minishell *mini)
 			free_minishell(mini), ft_freedoom(envir));
 	execute_command(mini, possible_paths, envir);
 }
+////////////////////////
 
 t_redir	*init_redir(int type, char const *filename)
 {
@@ -1297,7 +980,62 @@ void	add_redir_to_cmd(t_minishell *mini, int type, char const *filename)
 		mini->curr->last_redir = new;
 	}
 }
+///////////////////
+void	exit_with_error(char *message, int exit_code, int std)
+{
+	ft_putstr(message, std);
+	exit(exit_code);
+}
+///////////////////
+void	add_arg_to_command(t_minishell *mini, char *arg)
+{
+	int		count;
+	int		i;
+	char	**new_argv;
 
+	count = 0;
+	i = 0;
+	if (mini->curr->argv)
+	{
+		while (mini->curr->argv[count])
+			count++;
+	}
+	new_argv = malloc(sizeof(char *) * (count + 2));
+	if (!new_argv)
+		exit_with_error("Error malloc argv\n", 1, 2);
+	while (i < count)
+	{
+		new_argv[i] = mini->curr->argv[i];
+		i++;
+	}
+	new_argv[count] = ft_strdup(arg);
+	new_argv[count + 1] = NULL;
+	free(mini->curr->argv);
+	mini->curr->argv = new_argv;
+}
+///////////////////
+int	expand_and_add_glob(char *pattern, t_minishell *mini)
+{
+	glob_t	pg;
+	int		ret;
+	size_t	i;
+
+	ret = glob(pattern, 0, NULL, &pg);
+	if (ret == 0)
+	{
+		i = 0;
+		while (pg.gl_pathv[i])
+		{
+			add_arg_to_command(mini, pg.gl_pathv[i]);
+			i++;
+		}
+		globfree(&pg);
+		return (1);
+	}
+	add_arg_to_command(mini, pattern);
+	return (1);
+}
+////////////////////////
 void	parse_red_in(t_minishell *mini, t_token **token)
 {
 	if (!(*token)->next || (*token)->type != T_RED_IN)
@@ -1313,7 +1051,7 @@ void	parse_red_in(t_minishell *mini, t_token **token)
 	add_redir_to_cmd(mini, T_RED_IN, (*token)->next->value);
 	*token = (*token)->next;
 }
-
+////////////////////////
 void	parse_red_out(t_minishell *mini, t_token **token)
 {
 	if (!(*token)->next)
@@ -1329,7 +1067,7 @@ void	parse_red_out(t_minishell *mini, t_token **token)
 	add_redir_to_cmd(mini, T_RED_OUT, (*token)->next->value);
 	*token = (*token)->next;
 }
-
+////////////////////////
 char	*handle_heredoc_in_command(t_command *cmd, char *limiter, int index)
 {
 	char	*filename;
@@ -1505,6 +1243,20 @@ char	*expand_env_in_str(char *src, t_minishell *mini)
 	return (res);
 }
 
+static void	replace_char_inplace(char *s, char find, char replace)
+{
+    int i;
+
+	i = 0;
+	if (!s) return;
+	while (s[i])
+	{
+		if (s[i] == find)
+			s[i] = replace;
+		i++;
+	}
+}
+
 void expand_token(t_token *token, t_minishell *mini)
 {
     char *expanded;
@@ -1516,28 +1268,6 @@ void expand_token(t_token *token, t_minishell *mini)
     token->value = expanded;
     if (ft_strchr(token->value, '\x07'))
         replace_char_inplace(token->value, '\x07', '$');
-}
-
-int	expand_and_add_glob(char *pattern, t_minishell *mini)
-{
-	glob_t	pg;
-	int		ret;
-	size_t	i;
-
-	ret = glob(pattern, 0, NULL, &pg);
-	if (ret == 0)
-	{
-		i = 0;
-		while (pg.gl_pathv[i])
-		{
-			add_arg_to_command(mini, pg.gl_pathv[i]);
-			i++;
-		}
-		globfree(&pg);
-		return (1);
-	}
-	add_arg_to_command(mini, pattern);
-	return (1);
 }
 
 void	parse_red_append(t_minishell *mini, t_token **token)
@@ -1556,7 +1286,7 @@ void	parse_red_append(t_minishell *mini, t_token **token)
 	mini->curr->append = 1;
 	*token = (*token)->next;
 }
-
+//////////////
 void process_token(t_minishell *mini, int *index)
 {
 	 t_token *token;
@@ -1817,6 +1547,23 @@ t_pipex	*init_pipex(void)
 	px->pid = NULL;
 	px->commands = NULL;
 	return (px);
+}
+
+int	is_builtin(t_minishell *mini)
+{
+	t_token	*token;
+
+	token = mini->t_list;
+	if (!token || !token->value)
+		return (NO_BUITIN);
+	if (!ft_strcmp(token->value, "echo") || !ft_strcmp(token->value, "pwd")
+		|| !ft_strcmp(token->value, "env"))
+		return (BUILTIN_CHILD);
+	else if (!ft_strcmp(token->value, "cd") || !ft_strcmp(token->value, "exit")
+		|| !ft_strcmp(token->value, "export") || !ft_strcmp(token->value,
+			"unset"))
+		return (BUILTIN_PARENT);
+	return (NO_BUITIN);
 }
 
 int	count_commands_list(t_minishell *mini)
@@ -2265,6 +2012,38 @@ t_minishell	init_minishell(void)
 	minishell.current = NULL;
 	return (minishell);
 }
+///////////
+
+static int	env_len(char **env)
+{
+	int	i;
+
+	i = 0;
+	while (env && env[i])
+		i++;
+	return (i);
+}
+
+char	**copy_env(char **env)
+{
+	int		len;
+	char	**copy;
+	int		i;
+
+	i = 0;
+	len = env_len(env);
+	copy = malloc(sizeof(char *) * (len + 1));
+	if (!copy)
+		return (NULL);
+	while (i < len)
+	{
+		copy[i] = ft_strdup(env[i]);
+		i++;
+	}
+	copy[i] = NULL;
+	return (copy);
+}
+//////////
 
 volatile sig_atomic_t	g_status = 0;
 
@@ -2295,6 +2074,31 @@ int	check_syntax_pipes(t_token *tokenizer)
 		   return (0);
 	   }
 	   return (1);
+}
+
+t_env	*create_env_list(char **envp, t_minishell *mini)
+{
+	int		i;
+	char	*equal;
+	char	*name;
+	char	*value;
+
+	mini->env_list = NULL;
+	i = 0;
+	while (envp[i])
+	{
+		equal = ft_strchr(envp[i], '=');
+		if (equal)
+		{
+			name = ft_substr(envp[i], 0, equal - envp[i]);
+			value = ft_strdup(equal + 1);
+			add_env_node(mini, name, value, 1);
+			free(name);
+			free(value);
+		}
+		i++;
+	}
+	return (mini->env_list);
 }
 
 static int	execute_group_in_subshell(t_minishell *parent, char *inner)
@@ -2347,6 +2151,295 @@ static int	execute_group_in_subshell(t_minishell *parent, char *inner)
 	else if (WIFSIGNALED(status))
 		g_status = 128 + WTERMSIG(status);
 	return (g_status);
+}
+
+static int	split_by_logical_ops(char *input, char ***segments_out, char ***ops_out, int *count_out)
+{
+	int		pos;
+	int		len;
+	int		start;
+	int		paren_depth;
+	int		seg_count;
+	char	quote;
+	char	*seg;
+	char	*trimmed;
+	char	**segments;
+	char	**ops;
+
+	pos = 0;
+	segments = NULL;
+	ops = NULL;
+	seg_count = 0;
+	if (!input)
+		return (0);
+	len = ft_strlen(input);
+	start = 0;
+	quote = 0;
+	paren_depth = 0;
+	while (pos < len)
+	{
+		if ((input[pos] == '\'' || input[pos] == '"'))
+		{
+			if (!quote)
+				quote = input[pos];
+			else if (quote == input[pos])
+				quote = 0;
+			pos++;
+			continue ;
+		}
+		if (!quote)
+		{
+			if (input[pos] == '(')
+			{
+				paren_depth++;
+				pos++;
+				continue ;
+			}
+			else if (input[pos] == ')')
+			{
+				if (paren_depth > 0)
+					paren_depth--;
+				pos++;
+				continue ;
+			}
+		}
+		if (!quote && paren_depth == 0 && pos + 1 < len)
+		{
+			if (input[pos] == '&' && input[pos + 1] == '&')
+			{
+				seg = ft_substr(input, start, pos - start);
+				trimmed = trim_whitespace(seg);
+				free(seg);
+				segments = realloc(segments, sizeof(char *) * (seg_count + 1));
+				segments[seg_count] = trimmed ? trimmed : ft_strdup("");
+				seg_count++;
+				ops = realloc(ops, sizeof(char *) * (seg_count));
+				ops[seg_count - 1] = ft_strdup("&&");
+				pos += 2;
+				start = pos;
+				continue;
+			}
+			if (input[pos] == '|' && input[pos + 1] == '|')
+			{
+				seg = ft_substr(input, start, pos - start);
+				trimmed = trim_whitespace(seg);
+				free(seg);
+				segments = realloc(segments, sizeof(char *) * (seg_count + 1));
+				segments[seg_count] = trimmed ? trimmed : ft_strdup("");
+				seg_count++;
+				ops = realloc(ops, sizeof(char *) * (seg_count));
+				ops[seg_count - 1] = ft_strdup("||");
+				pos += 2;
+				start = pos;
+				continue;
+			}
+		}
+		pos++;
+	}
+	seg = ft_substr(input, start, len - start);
+	trimmed = trim_whitespace(seg);
+	free(seg);
+	segments = realloc(segments, sizeof(char *) * (seg_count + 1));
+	segments[seg_count] = trimmed ? trimmed : ft_strdup("");
+	seg_count++;
+	*segments_out = segments;
+	*ops_out = ops;
+	*count_out = seg_count;
+	return (1);
+}
+
+static char	*trim_whitespace(char *s)
+{
+	char	*start;
+	char	*end;
+
+	if (!s)
+		return (NULL);
+	start = s;
+	while (*start && (*start == ' ' || *start == '\t'))
+		start++;
+	end = start + ft_strlen(start);
+	while (end > start && (*(end - 1) == ' ' || *(end - 1) == '\t'))
+		end--;
+	return (ft_substr(start, 0, end - start));
+}
+
+static int	is_outer_parenthesized(const char *s)
+{
+	int		len;
+	int		i;
+	int		depth;
+	char	quote;
+
+	if (!s)
+		return (0);
+	if (s[0] != '(')
+		return (0);
+	len = ft_strlen(s);
+	depth = 1;
+	quote = 0;
+	i = 1;
+	while (i < len)
+	{
+		if ((s[i] == '\'' || s[i] == '"') && quote == 0)
+			quote = s[i];
+		else if (s[i] == quote)
+			quote = 0;
+		else if (!quote)
+		{
+			if (s[i] == '(')
+				depth++;
+			else if (s[i] == ')')
+			{
+				depth--;
+				if (depth == 0)
+					break ;
+			}
+		}
+		i++;
+	}
+	return (depth == 0 && i == len - 1);
+}
+
+static char	*strip_outer_parentheses(char *s, int *removed)
+{
+	char	*cur;
+	char	*tmp;
+	int		did_remove;
+	int		len;
+
+	if (removed)
+		*removed = 0;
+	if (!s)
+		return (NULL);
+	cur = trim_whitespace(s);
+	if (!cur)
+		return (ft_strdup(""));
+	did_remove = 0;
+	while (is_outer_parenthesized(cur))
+	{
+		len = ft_strlen(cur);
+		tmp = ft_substr(cur, 1, len - 2);
+		free(cur);
+		if (!tmp)
+			return (NULL);
+		cur = trim_whitespace(tmp);
+		free(tmp);
+		did_remove = 1;
+	}
+	if (removed && did_remove)
+		*removed = 1;
+	return (cur);
+}
+
+static char	*trim_whitespace(char *s)
+{
+	char	*start;
+	char	*end;
+
+	if (!s)
+		return (NULL);
+	start = s;
+	while (*start && (*start == ' ' || *start == '\t'))
+		start++;
+	end = start + ft_strlen(start);
+	while (end > start && (*(end - 1) == ' ' || *(end - 1) == '\t'))
+		end--;
+	return (ft_substr(start, 0, end - start));
+}
+
+static int	is_outer_parenthesized(const char *s)
+{
+	int		len;
+	int		i;
+	int		depth;
+	char	quote;
+
+	if (!s)
+		return (0);
+	if (s[0] != '(')
+		return (0);
+	len = ft_strlen(s);
+	depth = 1;
+	quote = 0;
+	i = 1;
+	while (i < len)
+	{
+		if ((s[i] == '\'' || s[i] == '"') && quote == 0)
+			quote = s[i];
+		else if (s[i] == quote)
+			quote = 0;
+		else if (!quote)
+		{
+			if (s[i] == '(')
+				depth++;
+			else if (s[i] == ')')
+			{
+				depth--;
+				if (depth == 0)
+					break ;
+			}
+		}
+		i++;
+	}
+	return (depth == 0 && i == len - 1);
+}
+
+static char	*strip_outer_parentheses(char *s, int *removed)
+{
+	char	*cur;
+	char	*tmp;
+	int		did_remove;
+	int		len;
+
+	if (removed)
+		*removed = 0;
+	if (!s)
+		return (NULL);
+	cur = trim_whitespace(s);
+	if (!cur)
+		return (ft_strdup(""));
+	did_remove = 0;
+	while (is_outer_parenthesized(cur))
+	{
+		len = ft_strlen(cur);
+		tmp = ft_substr(cur, 1, len - 2);
+		free(cur);
+		if (!tmp)
+			return (NULL);
+		cur = trim_whitespace(tmp);
+		free(tmp);
+		did_remove = 1;
+	}
+	if (removed && did_remove)
+		*removed = 1;
+	return (cur);
+}
+
+static void	free_split_result(char **segments, char **ops, int count)
+{
+	int	i;
+
+	if (segments)
+	{
+		i = 0;
+		while (i < count)
+		{
+			free(segments[i]);
+			i++;
+		}
+		free(segments);
+	}
+	if (ops)
+	{
+		i = 0;
+		while (i < count - 1)
+		{
+			free(ops[i]);
+			i++;
+		}
+		free(ops);
+	}
 }
 
 static void	process_input(char *input, t_minishell *minishell)
