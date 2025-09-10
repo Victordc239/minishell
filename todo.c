@@ -6,12 +6,96 @@
 /*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/10 10:58:16 by victor           ###   ########.fr       */
+/*   Updated: 2025/09/10 11:24:10 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
 
+static int execute_group_in_subshell(t_minishell *parent, char *inner)
+{
+    pid_t pid;
+    int status;
+
+    pid = fork();
+    if (pid == -1)
+    {
+        perror("fork");
+        return (1);
+    }
+    if (pid == 0)
+    {
+        t_minishell child;
+        char **env_arr = NULL;
+        char *status_str = NULL;
+        signal(SIGINT, SIG_DFL);
+        signal(SIGQUIT, SIG_DFL);
+        child = init_minishell();
+        env_arr = env_to_array(parent->env_list);
+        if (env_arr)
+            child.env_list = create_env_list(env_arr, &child);
+        status_str = ft_itoa(g_status);
+        if (status_str)
+        {
+            add_env_node(&child, "?", status_str, 0);
+            free(status_str);
+        }
+        process_input(inner ? inner : "", &child);
+        if (child.env_list)
+            free_env_list(child.env_list);
+        if (env_arr)
+            ft_freedoom(env_arr);
+        exit(g_status);
+    }
+    if (waitpid(pid, &status, 0) == -1)
+    {
+        perror("waitpid");
+        return (1);
+    }
+    if (WIFEXITED(status))
+        g_status = WEXITSTATUS(status);
+    else if (WIFSIGNALED(status))
+        g_status = 128 + WTERMSIG(status);
+    return (g_status);
+}
+
+/*static int is_outer_parenthesized(const char *s)
+{
+    int len;
+    int i;
+    int depth;
+    char quote;
+
+    if (!s)
+        return (0);
+    if (s[0] != '(')
+        return (0);
+    len = ft_strlen(s);
+    depth = 1;
+    quote = 0;
+    i = 1;
+    while (i < len)
+    {
+        char c = s[i];
+        if ((c == '\'' || c == '"') && quote == 0)
+            quote = c;
+        else if (c == quote)
+            quote = 0;
+        else if (!quote)
+        {
+            if (c == '(')
+                depth++;
+            else if (c == ')')
+            {
+                depth--;
+                if (depth == 0)
+                    break ;
+            }
+        }
+        i++;
+    }
+    return (depth == 0 && i == len - 1);
+}*/
 static int is_outer_parenthesized(const char *s)
 {
     int len;
@@ -50,7 +134,7 @@ static int is_outer_parenthesized(const char *s)
     return (depth == 0 && i == len - 1);
 }
 
-static char *strip_outer_parentheses(char *s, int *removed)
+/*static char *strip_outer_parentheses(char *s, int *removed)
 {
     char *cur;
     char *tmp;
@@ -77,7 +161,52 @@ static char *strip_outer_parentheses(char *s, int *removed)
     if (removed && did_remove)
         *removed = 1;
     return (cur);
+}*/
+static char *strip_outer_parentheses(char *s, int *removed)
+{
+    char *cur;
+    char *tmp;
+    int did_remove;
+
+    if (removed)
+        *removed = 0;
+    if (!s)
+        return (NULL);
+    cur = trim_whitespace(s);
+    if (!cur)
+        return (ft_strdup(""));
+    did_remove = 0;
+    while (is_outer_parenthesized(cur))
+    {
+        int len = ft_strlen(cur);
+        tmp = ft_substr(cur, 1, len - 2);
+        free(cur);
+        if (!tmp)
+            return (NULL);
+        cur = trim_whitespace(tmp);
+        free(tmp);
+        did_remove = 1;
+    }
+    if (removed && did_remove)
+        *removed = 1;
+    return (cur);
 }
+
+/*static char *trim_whitespace(char *s)
+{
+    char *start;
+    char *end;
+
+    if (!s)
+        return (NULL);
+    start = s;
+    while (*start && (*start == ' ' || *start == '\t'))
+        start++;
+    end = start + ft_strlen(start);
+    while (end > start && (*(end - 1) == ' ' || *(end - 1) == '\t'))
+        end--;
+    return (ft_substr(start, 0, end - start));
+}*/
 
 static char *trim_whitespace(char *s)
 {
@@ -95,7 +224,7 @@ static char *trim_whitespace(char *s)
     return (ft_substr(start, 0, end - start));
 }
 
-static int split_by_logical_ops(char *input, char ***segments_out, char ***ops_out, int *count_out)
+/*static int split_by_logical_ops(char *input, char ***segments_out, char ***ops_out, int *count_out)
 {
     int pos = 0;
     int len = ft_strlen(input);
@@ -180,8 +309,126 @@ static int split_by_logical_ops(char *input, char ***segments_out, char ***ops_o
     *ops_out = ops;
     *count_out = seg_count;
     return (1);
+}*/
+static int split_by_logical_ops(char *input, char ***segments_out, char ***ops_out, int *count_out)
+{
+    int pos = 0;
+    int len;
+    int start;
+    char quote;
+    int paren_depth;
+    char **segments = NULL;
+    char **ops = NULL;
+    int seg_count = 0;
+    char *seg;
+    char *trimmed;
+
+    if (!input)
+        return (0);
+    len = ft_strlen(input);
+    start = 0;
+    quote = 0;
+    paren_depth = 0;
+    while (pos < len)
+    {
+        char c = input[pos];
+        if ((c == '\'' || c == '"'))
+        {
+            if (!quote)
+                quote = c;
+            else if (quote == c)
+                quote = 0;
+            pos++;
+            continue;
+        }
+        if (!quote)
+        {
+            if (c == '(')
+            {
+                paren_depth++;
+                pos++;
+                continue;
+            }
+            else if (c == ')')
+            {
+                if (paren_depth > 0)
+                    paren_depth--;
+                pos++;
+                continue;
+            }
+        }
+        if (!quote && paren_depth == 0 && pos + 1 < len)
+        {
+            if (input[pos] == '&' && input[pos + 1] == '&')
+            {
+                seg = ft_substr(input, start, pos - start);
+                trimmed = trim_whitespace(seg);
+                free(seg);
+                segments = realloc(segments, sizeof(char *) * (seg_count + 1));
+                segments[seg_count] = trimmed ? trimmed : ft_strdup("");
+                seg_count++;
+                ops = realloc(ops, sizeof(char *) * (seg_count));
+                ops[seg_count - 1] = ft_strdup("&&");
+                pos += 2;
+                start = pos;
+                continue;
+            }
+            if (input[pos] == '|' && input[pos + 1] == '|')
+            {
+                seg = ft_substr(input, start, pos - start);
+                trimmed = trim_whitespace(seg);
+                free(seg);
+                segments = realloc(segments, sizeof(char *) * (seg_count + 1));
+                segments[seg_count] = trimmed ? trimmed : ft_strdup("");
+                seg_count++;
+                ops = realloc(ops, sizeof(char *) * (seg_count));
+                ops[seg_count - 1] = ft_strdup("||");
+                pos += 2;
+                start = pos;
+                continue;
+            }
+        }
+        pos++;
+    }
+    /* último segmento */
+    seg = ft_substr(input, start, len - start);
+    trimmed = trim_whitespace(seg);
+    free(seg);
+    segments = realloc(segments, sizeof(char *) * (seg_count + 1));
+    segments[seg_count] = trimmed ? trimmed : ft_strdup("");
+    seg_count++;
+
+    *segments_out = segments;
+    *ops_out = ops;
+    *count_out = seg_count;
+    return (1);
 }
 
+/*static void free_split_result(char **segments, char **ops, int count)
+{
+    int i;
+
+    if (segments)
+    {
+        i = 0;
+        while (i < count)
+        {
+            free(segments[i]);
+            i++;
+        }
+        free(segments);
+    }
+    if (ops)
+    {
+        i = 0;
+        while (i < count - 1)
+        {
+            free(ops[i]);
+            i++;
+        }
+        free(ops);
+    }
+}*/
 static void free_split_result(char **segments, char **ops, int count)
 {
     int i;
@@ -2431,86 +2678,7 @@ t_minishell	init_minishell(void)
 
 volatile sig_atomic_t	g_status = 0;
 
-/*static void process_input(char *input, t_minishell *minishell)		ORIGINAL
-{
-    char    *status_str;
-    char    **segments = NULL;
-    char    **ops = NULL;
-    int     seg_count = 0;
-    int     i = 0;
-
-    add_history(input);
-    g_status = 0;
-    if (!split_by_logical_ops(input, &segments, &ops, &seg_count))
-    {
-        ft_putstr("minishell: internal split error\n", 2);
-        return ;
-    }
-    i = 0;
-    while (i < seg_count)
-    {
-        char *seg = segments[i];
-        if (!seg || *seg == '\0')
-        {
-            i++;
-            continue ;
-        }
-        if (!fill_tokens(minishell, seg))
-        {
-            ft_putstr("syntax error: unclosed quote\n", 2);
-            g_status = 2;
-            status_str = ft_itoa(g_status);
-            if (status_str)
-            {
-                add_env_node(minishell, "?", status_str, 0);
-                free(status_str);
-            }
-            if (minishell->t_list)
-            {
-                free_t_list(minishell->t_list);
-                minishell->t_list = NULL;
-            }
-            break ;
-        }
-        if (!check_syntax_pipes(minishell->t_list))
-        {
-            status_str = ft_itoa(g_status);
-            if (status_str)
-            {
-                add_env_node(minishell, "?", status_str, 0);
-                free(status_str);
-            }
-            if (minishell->t_list)
-            {
-                free_t_list(minishell->t_list);
-                minishell->t_list = NULL;
-            }
-            break ;
-        }
-        ft_execute(minishell);
-        if (minishell->t_list)
-        {
-            free_t_list(minishell->t_list);
-            minishell->t_list = NULL;
-        }
-        status_str = ft_itoa(g_status);
-        if (status_str)
-        {
-            add_env_node(minishell, "?", status_str, 0);
-            free(status_str);
-        }
-        if (i < seg_count - 1 && ops != NULL && ops[i] != NULL)
-        {
-            if (!ft_strcmp(ops[i], "&&") && g_status != 0)
-                break ;
-            if (!ft_strcmp(ops[i], "||") && g_status == 0)
-                break ;
-        }
-        i++;
-    }
-    free_split_result(segments, ops, seg_count);
-}*/
-static void process_input(char *input, t_minishell *minishell)
+/*static void process_input(char *input, t_minishell *minishell)
 {
     char    *status_str;
     char    **segments = NULL;
@@ -2608,6 +2776,104 @@ static void process_input(char *input, t_minishell *minishell)
                 break ;
         }
 
+        i++;
+    }
+    free_split_result(segments, ops, seg_count);
+}*/
+static void process_input(char *input, t_minishell *minishell)
+{
+    char    *status_str;
+    char    **segments = NULL;
+    char    **ops = NULL;
+    int     seg_count = 0;
+    int     i = 0;
+
+    add_history(input);
+    g_status = 0;
+    if (!split_by_logical_ops(input, &segments, &ops, &seg_count))
+    {
+        ft_putstr("minishell: internal split error\n", 2);
+        return ;
+    }
+    i = 0;
+    while (i < seg_count)
+    {
+        int is_group = 0;
+        char *seg = segments[i];
+        char *inner = NULL;
+
+        if (!seg || *seg == '\0')
+        {
+            i++;
+            continue ;
+        }
+        inner = strip_outer_parentheses(seg, &is_group);
+        if (is_group)
+        {
+            execute_group_in_subshell(minishell, inner ? inner : "");
+            if (inner)
+                free(inner);
+        }
+        else
+        {
+            if (!fill_tokens(minishell, seg))
+            {
+                ft_putstr("syntax error: unclosed quote\n", 2);
+                g_status = 2;
+                status_str = ft_itoa(g_status);
+                if (status_str)
+                {
+                    add_env_node(minishell, "?", status_str, 0);
+                    free(status_str);
+                }
+                if (minishell->t_list)
+                {
+                    free_t_list(minishell->t_list);
+                    minishell->t_list = NULL;
+                }
+                if (inner)
+                    free(inner);
+                break ;
+            }
+            if (!check_syntax_pipes(minishell->t_list))
+            {
+                status_str = ft_itoa(g_status);
+                if (status_str)
+                {
+                    add_env_node(minishell, "?", status_str, 0);
+                    free(status_str);
+                }
+                if (minishell->t_list)
+                {
+                    free_t_list(minishell->t_list);
+                    minishell->t_list = NULL;
+                }
+                if (inner)
+                    free(inner);
+                break ;
+            }
+            ft_execute(minishell);
+            if (minishell->t_list)
+            {
+                free_t_list(minishell->t_list);
+                minishell->t_list = NULL;
+            }
+            if (inner)
+                free(inner);
+        }
+        status_str = ft_itoa(g_status);
+        if (status_str)
+        {
+            add_env_node(minishell, "?", status_str, 0);
+            free(status_str);
+        }
+	  if (i < seg_count - 1 && ops != NULL && ops[i] != NULL)
+        {
+            if (!ft_strcmp(ops[i], "&&") && g_status != 0)
+                i += 1;
+            else if (!ft_strcmp(ops[i], "||") && g_status == 0)
+                i += 1;
+        }
         i++;
     }
     free_split_result(segments, ops, seg_count);
