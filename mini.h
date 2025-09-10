@@ -6,7 +6,7 @@
 /*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 14:02:20 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/10 10:46:07 by victor           ###   ########.fr       */
+/*   Updated: 2025/09/10 12:18:34 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,9 +173,9 @@ static int	extract_double_metachar(t_minishell *shell);
 static int	extract_single_metachar(t_minishell *shell);
 static int	is_word_char(char c);
 
-static int split_by_logical_ops(char *input, char ***segments_out, char ***ops_out, int *count_out);
-
-static int is_outer_parenthesized(const char *s);
+static int	split_by_logical_ops(char *input, char ***segments_out, char ***ops_out, int *count_out);
+static int	execute_group_in_subshell(t_minishell *parent, char *inner);
+static int	is_outer_parenthesized(const char *s);
 
 void	execute_buitin(t_minishell *minishell);
 void	ft_cd(t_minishell *mini);
@@ -241,7 +241,7 @@ static void	process_input(char *input, t_minishell *minishell);
 
 static void	replace_char_inplace(char *s, char find, char replace);
 
-static void free_split_result(char **segments, char **ops, int count);
+static void	free_split_result(char **segments, char **ops, int count);
 
 
 char	*get_env_value(char *name, t_env *env);
@@ -263,9 +263,8 @@ char	**copy_env(char **env);
 char	**env_to_array(t_env *env_list);
 static char	*join_free(char *s1, char *s2);
 
-static char *trim_whitespace(char *s);
-
-static char *strip_outer_parentheses(char *s, int *removed);
+static char	*trim_whitespace(char *s);
+static char	*strip_outer_parentheses(char *s, int *removed);
 
 t_env	*create_new_node(char *name, char *value, int exported);
 t_env	*find_env(t_env *env_list, char const *name);

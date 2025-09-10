@@ -6,453 +6,264 @@
 /*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/10 11:24:10 by victor           ###   ########.fr       */
+/*   Updated: 2025/09/10 12:34:22 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
 
-static int execute_group_in_subshell(t_minishell *parent, char *inner)
+static int	execute_group_in_subshell(t_minishell *parent, char *inner)
 {
-    pid_t pid;
-    int status;
+	pid_t		pid;
+	t_minishell	child;
+	char		**env_arr;
+	char		*status_str;
+	int			status;
 
-    pid = fork();
-    if (pid == -1)
-    {
-        perror("fork");
-        return (1);
-    }
-    if (pid == 0)
-    {
-        t_minishell child;
-        char **env_arr = NULL;
-        char *status_str = NULL;
-        signal(SIGINT, SIG_DFL);
-        signal(SIGQUIT, SIG_DFL);
-        child = init_minishell();
-        env_arr = env_to_array(parent->env_list);
-        if (env_arr)
-            child.env_list = create_env_list(env_arr, &child);
-        status_str = ft_itoa(g_status);
-        if (status_str)
-        {
-            add_env_node(&child, "?", status_str, 0);
-            free(status_str);
-        }
-        process_input(inner ? inner : "", &child);
-        if (child.env_list)
-            free_env_list(child.env_list);
-        if (env_arr)
-            ft_freedoom(env_arr);
-        exit(g_status);
-    }
-    if (waitpid(pid, &status, 0) == -1)
-    {
-        perror("waitpid");
-        return (1);
-    }
-    if (WIFEXITED(status))
-        g_status = WEXITSTATUS(status);
-    else if (WIFSIGNALED(status))
-        g_status = 128 + WTERMSIG(status);
-    return (g_status);
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("fork");
+		return (1);
+	}
+	if (pid == 0)
+	{
+		env_arr = NULL;
+		status_str = NULL;
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
+		child = init_minishell();
+		env_arr = env_to_array(parent->env_list);
+		if (env_arr)
+			child.env_list = create_env_list(env_arr, &child);
+		status_str = ft_itoa(g_status);
+		if (status_str)
+		{
+			add_env_node(&child, "?", status_str, 0);
+			free(status_str);
+		}
+		process_input(inner ? inner : "", &child);
+		if (child.env_list)
+			free_env_list(child.env_list);
+		if (env_arr)
+			ft_freedoom(env_arr);
+		exit(g_status);
+	}
+	if (waitpid(pid, &status, 0) == -1)
+	{
+		perror("waitpid");
+		return (1);
+	}
+	if (WIFEXITED(status))
+		g_status = WEXITSTATUS(status);
+	else if (WIFSIGNALED(status))
+		g_status = 128 + WTERMSIG(status);
+	return (g_status);
 }
 
-/*static int is_outer_parenthesized(const char *s)
+static int	is_outer_parenthesized(const char *s)
 {
-    int len;
-    int i;
-    int depth;
-    char quote;
+	int		len;
+	int		i;
+	int		depth;
+	char	quote;
 
-    if (!s)
-        return (0);
-    if (s[0] != '(')
-        return (0);
-    len = ft_strlen(s);
-    depth = 1;
-    quote = 0;
-    i = 1;
-    while (i < len)
-    {
-        char c = s[i];
-        if ((c == '\'' || c == '"') && quote == 0)
-            quote = c;
-        else if (c == quote)
-            quote = 0;
-        else if (!quote)
-        {
-            if (c == '(')
-                depth++;
-            else if (c == ')')
-            {
-                depth--;
-                if (depth == 0)
-                    break ;
-            }
-        }
-        i++;
-    }
-    return (depth == 0 && i == len - 1);
-}*/
-static int is_outer_parenthesized(const char *s)
-{
-    int len;
-    int i;
-    int depth;
-    char quote;
-
-    if (!s)
-        return (0);
-    if (s[0] != '(')
-        return (0);
-    len = ft_strlen(s);
-    depth = 1;
-    quote = 0;
-    i = 1;
-    while (i < len)
-    {
-        char c = s[i];
-        if ((c == '\'' || c == '"') && quote == 0)
-            quote = c;
-        else if (c == quote)
-            quote = 0;
-        else if (!quote)
-        {
-            if (c == '(')
-                depth++;
-            else if (c == ')')
-            {
-                depth--;
-                if (depth == 0)
-                    break ;
-            }
-        }
-        i++;
-    }
-    return (depth == 0 && i == len - 1);
+	if (!s)
+		return (0);
+	if (s[0] != '(')
+		return (0);
+	len = ft_strlen(s);
+	depth = 1;
+	quote = 0;
+	i = 1;
+	while (i < len)
+	{
+		if ((s[i] == '\'' || s[i] == '"') && quote == 0)
+			quote = s[i];
+		else if (s[i] == quote)
+			quote = 0;
+		else if (!quote)
+		{
+			if (s[i] == '(')
+				depth++;
+			else if (s[i] == ')')
+			{
+				depth--;
+				if (depth == 0)
+					break ;
+			}
+		}
+		i++;
+	}
+	return (depth == 0 && i == len - 1);
 }
 
-/*static char *strip_outer_parentheses(char *s, int *removed)
+static char	*strip_outer_parentheses(char *s, int *removed)
 {
-    char *cur;
-    char *tmp;
-    int did_remove = 0;
+	char	*cur;
+	char	*tmp;
+	int		did_remove;
+	int		len;
 
-    if (removed)
-        *removed = 0;
-    if (!s)
-        return (NULL);
-    cur = trim_whitespace(s);
-    if (!cur)
-        return (ft_strdup(""));
-    while (is_outer_parenthesized(cur))
-    {
-        int len = ft_strlen(cur);
-        tmp = ft_substr(cur, 1, len - 2);
-        free(cur);
-        if (!tmp)
-            return (NULL);
-        cur = trim_whitespace(tmp);
-        free(tmp);
-        did_remove = 1;
-    }
-    if (removed && did_remove)
-        *removed = 1;
-    return (cur);
-}*/
-static char *strip_outer_parentheses(char *s, int *removed)
-{
-    char *cur;
-    char *tmp;
-    int did_remove;
-
-    if (removed)
-        *removed = 0;
-    if (!s)
-        return (NULL);
-    cur = trim_whitespace(s);
-    if (!cur)
-        return (ft_strdup(""));
-    did_remove = 0;
-    while (is_outer_parenthesized(cur))
-    {
-        int len = ft_strlen(cur);
-        tmp = ft_substr(cur, 1, len - 2);
-        free(cur);
-        if (!tmp)
-            return (NULL);
-        cur = trim_whitespace(tmp);
-        free(tmp);
-        did_remove = 1;
-    }
-    if (removed && did_remove)
-        *removed = 1;
-    return (cur);
+	if (removed)
+		*removed = 0;
+	if (!s)
+		return (NULL);
+	cur = trim_whitespace(s);
+	if (!cur)
+		return (ft_strdup(""));
+	did_remove = 0;
+	while (is_outer_parenthesized(cur))
+	{
+		len = ft_strlen(cur);
+		tmp = ft_substr(cur, 1, len - 2);
+		free(cur);
+		if (!tmp)
+			return (NULL);
+		cur = trim_whitespace(tmp);
+		free(tmp);
+		did_remove = 1;
+	}
+	if (removed && did_remove)
+		*removed = 1;
+	return (cur);
 }
 
-/*static char *trim_whitespace(char *s)
+static char	*trim_whitespace(char *s)
 {
-    char *start;
-    char *end;
+	char	*start;
+	char	*end;
 
-    if (!s)
-        return (NULL);
-    start = s;
-    while (*start && (*start == ' ' || *start == '\t'))
-        start++;
-    end = start + ft_strlen(start);
-    while (end > start && (*(end - 1) == ' ' || *(end - 1) == '\t'))
-        end--;
-    return (ft_substr(start, 0, end - start));
-}*/
-
-static char *trim_whitespace(char *s)
-{
-    char *start;
-    char *end;
-
-    if (!s)
-        return (NULL);
-    start = s;
-    while (*start && (*start == ' ' || *start == '\t'))
-        start++;
-    end = start + ft_strlen(start);
-    while (end > start && (*(end - 1) == ' ' || *(end - 1) == '\t'))
-        end--;
-    return (ft_substr(start, 0, end - start));
+	if (!s)
+		return (NULL);
+	start = s;
+	while (*start && (*start == ' ' || *start == '\t'))
+		start++;
+	end = start + ft_strlen(start);
+	while (end > start && (*(end - 1) == ' ' || *(end - 1) == '\t'))
+		end--;
+	return (ft_substr(start, 0, end - start));
 }
 
-/*static int split_by_logical_ops(char *input, char ***segments_out, char ***ops_out, int *count_out)
+static int	split_by_logical_ops(char *input, char ***segments_out, char ***ops_out, int *count_out)
 {
-    int pos = 0;
-    int len = ft_strlen(input);
-    int start = 0;
-    char quote = 0;
-    int paren_depth = 0;
-    char **segments = NULL;
-    char **ops = NULL;
-    int seg_count = 0;
-    char *seg;
-    char *trimmed;
+	int		pos;
+	int		len;
+	int		start;
+	int		paren_depth;
+	int		seg_count;
+	char	quote;
+	char	*seg;
+	char	*trimmed;
+	char	**segments;
+	char	**ops;
 
-    while (pos < len)
-    {
-        char c = input[pos];
-        if ((c == '\'' || c == '"'))
-        {
-            if (!quote)
-                quote = c;
-            else if (quote == c)
-                quote = 0;
-            pos++;
-            continue;
-        }
-        if (!quote)
-        {
-            if (c == '(')
-            {
-                paren_depth++;
-                pos++;
-                continue;
-            }
-            else if (c == ')')
-            {
-                if (paren_depth > 0)
-                    paren_depth--;
-                pos++;
-                continue;
-            }
-        }
-        if (!quote && paren_depth == 0 && pos + 1 < len)
-        {
-            if (input[pos] == '&' && input[pos + 1] == '&')
-            {
-                seg = ft_substr(input, start, pos - start);
-                trimmed = trim_whitespace(seg);
-                free(seg);
-                segments = realloc(segments, sizeof(char *) * (seg_count + 1));
-                segments[seg_count] = trimmed ? trimmed : ft_strdup("");
-                seg_count++;
-                ops = realloc(ops, sizeof(char *) * (seg_count));
-                ops[seg_count - 1] = ft_strdup("&&");
-                pos += 2;
-                start = pos;
-                continue;
-            }
-            if (input[pos] == '|' && input[pos + 1] == '|')
-            {
-                seg = ft_substr(input, start, pos - start);
-                trimmed = trim_whitespace(seg);
-                free(seg);
-                segments = realloc(segments, sizeof(char *) * (seg_count + 1));
-                segments[seg_count] = trimmed ? trimmed : ft_strdup("");
-                seg_count++;
-                ops = realloc(ops, sizeof(char *) * (seg_count));
-                ops[seg_count - 1] = ft_strdup("||");
-                pos += 2;
-                start = pos;
-                continue;
-            }
-        }
-        pos++;
-    }
-    seg = ft_substr(input, start, len - start);
-    trimmed = trim_whitespace(seg);
-    free(seg);
-    segments = realloc(segments, sizeof(char *) * (seg_count + 1));
-    segments[seg_count] = trimmed ? trimmed : ft_strdup("");
-    seg_count++;
-
-    *segments_out = segments;
-    *ops_out = ops;
-    *count_out = seg_count;
-    return (1);
-}*/
-static int split_by_logical_ops(char *input, char ***segments_out, char ***ops_out, int *count_out)
-{
-    int pos = 0;
-    int len;
-    int start;
-    char quote;
-    int paren_depth;
-    char **segments = NULL;
-    char **ops = NULL;
-    int seg_count = 0;
-    char *seg;
-    char *trimmed;
-
-    if (!input)
-        return (0);
-    len = ft_strlen(input);
-    start = 0;
-    quote = 0;
-    paren_depth = 0;
-    while (pos < len)
-    {
-        char c = input[pos];
-        if ((c == '\'' || c == '"'))
-        {
-            if (!quote)
-                quote = c;
-            else if (quote == c)
-                quote = 0;
-            pos++;
-            continue;
-        }
-        if (!quote)
-        {
-            if (c == '(')
-            {
-                paren_depth++;
-                pos++;
-                continue;
-            }
-            else if (c == ')')
-            {
-                if (paren_depth > 0)
-                    paren_depth--;
-                pos++;
-                continue;
-            }
-        }
-        if (!quote && paren_depth == 0 && pos + 1 < len)
-        {
-            if (input[pos] == '&' && input[pos + 1] == '&')
-            {
-                seg = ft_substr(input, start, pos - start);
-                trimmed = trim_whitespace(seg);
-                free(seg);
-                segments = realloc(segments, sizeof(char *) * (seg_count + 1));
-                segments[seg_count] = trimmed ? trimmed : ft_strdup("");
-                seg_count++;
-                ops = realloc(ops, sizeof(char *) * (seg_count));
-                ops[seg_count - 1] = ft_strdup("&&");
-                pos += 2;
-                start = pos;
-                continue;
-            }
-            if (input[pos] == '|' && input[pos + 1] == '|')
-            {
-                seg = ft_substr(input, start, pos - start);
-                trimmed = trim_whitespace(seg);
-                free(seg);
-                segments = realloc(segments, sizeof(char *) * (seg_count + 1));
-                segments[seg_count] = trimmed ? trimmed : ft_strdup("");
-                seg_count++;
-                ops = realloc(ops, sizeof(char *) * (seg_count));
-                ops[seg_count - 1] = ft_strdup("||");
-                pos += 2;
-                start = pos;
-                continue;
-            }
-        }
-        pos++;
-    }
-    /* último segmento */
-    seg = ft_substr(input, start, len - start);
-    trimmed = trim_whitespace(seg);
-    free(seg);
-    segments = realloc(segments, sizeof(char *) * (seg_count + 1));
-    segments[seg_count] = trimmed ? trimmed : ft_strdup("");
-    seg_count++;
-
-    *segments_out = segments;
-    *ops_out = ops;
-    *count_out = seg_count;
-    return (1);
+	pos = 0;
+	segments = NULL;
+	ops = NULL;
+	seg_count = 0;
+	if (!input)
+		return (0);
+	len = ft_strlen(input);
+	start = 0;
+	quote = 0;
+	paren_depth = 0;
+	while (pos < len)
+	{
+		if ((input[pos] == '\'' || input[pos] == '"'))
+		{
+			if (!quote)
+				quote = input[pos];
+			else if (quote == input[pos])
+				quote = 0;
+			pos++;
+			continue ;
+		}
+		if (!quote)
+		{
+			if (input[pos] == '(')
+			{
+				paren_depth++;
+				pos++;
+				continue ;
+			}
+			else if (input[pos] == ')')
+			{
+				if (paren_depth > 0)
+					paren_depth--;
+				pos++;
+				continue ;
+			}
+		}
+		if (!quote && paren_depth == 0 && pos + 1 < len)
+		{
+			if (input[pos] == '&' && input[pos + 1] == '&')
+			{
+				seg = ft_substr(input, start, pos - start);
+				trimmed = trim_whitespace(seg);
+				free(seg);
+				segments = realloc(segments, sizeof(char *) * (seg_count + 1));
+				segments[seg_count] = trimmed ? trimmed : ft_strdup("");
+				seg_count++;
+				ops = realloc(ops, sizeof(char *) * (seg_count));
+				ops[seg_count - 1] = ft_strdup("&&");
+				pos += 2;
+				start = pos;
+				continue;
+			}
+			if (input[pos] == '|' && input[pos + 1] == '|')
+			{
+				seg = ft_substr(input, start, pos - start);
+				trimmed = trim_whitespace(seg);
+				free(seg);
+				segments = realloc(segments, sizeof(char *) * (seg_count + 1));
+				segments[seg_count] = trimmed ? trimmed : ft_strdup("");
+				seg_count++;
+				ops = realloc(ops, sizeof(char *) * (seg_count));
+				ops[seg_count - 1] = ft_strdup("||");
+				pos += 2;
+				start = pos;
+				continue;
+			}
+		}
+		pos++;
+	}
+	seg = ft_substr(input, start, len - start);
+	trimmed = trim_whitespace(seg);
+	free(seg);
+	segments = realloc(segments, sizeof(char *) * (seg_count + 1));
+	segments[seg_count] = trimmed ? trimmed : ft_strdup("");
+	seg_count++;
+	*segments_out = segments;
+	*ops_out = ops;
+	*count_out = seg_count;
+	return (1);
 }
 
-/*static void free_split_result(char **segments, char **ops, int count)
+static void	free_split_result(char **segments, char **ops, int count)
 {
-    int i;
+	int	i;
 
-    if (segments)
-    {
-        i = 0;
-        while (i < count)
-        {
-            free(segments[i]);
-            i++;
-        }
-        free(segments);
-    }
-    if (ops)
-    {
-        i = 0;
-        while (i < count - 1)
-        {
-            free(ops[i]);
-            i++;
-        }
-        free(ops);
-    }
-}*/
-static void free_split_result(char **segments, char **ops, int count)
-{
-    int i;
-
-    if (segments)
-    {
-        i = 0;
-        while (i < count)
-        {
-            free(segments[i]);
-            i++;
-        }
-        free(segments);
-    }
-    if (ops)
-    {
-        i = 0;
-        while (i < count - 1)
-        {
-            free(ops[i]);
-            i++;
-        }
-        free(ops);
-    }
+	if (segments)
+	{
+		i = 0;
+		while (i < count)
+		{
+			free(segments[i]);
+			i++;
+		}
+		free(segments);
+	}
+	if (ops)
+	{
+		i = 0;
+		while (i < count - 1)
+		{
+			free(ops[i]);
+			i++;
+		}
+		free(ops);
+	}
 }
 
 static void replace_char_inplace(char *s, char find, char replace)
