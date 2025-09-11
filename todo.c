@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   todo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
+/*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/10 17:22:34 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/09/11 12:54:31 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -869,7 +869,7 @@ char	*create_path(char *possible_path, char *command)
 	return (path);
 }
 
-void	execute_command(t_minishell *mini, char **paths, char **envir)
+/*void	execute_command(t_minishell *mini, char **paths, char **envir)	DIVIDIDA EXECUTE_COMMAND Y TRY_EXEC_FROM_PATHS
 {
 	char	*cmd;
 	char	*path;
@@ -881,20 +881,35 @@ void	execute_command(t_minishell *mini, char **paths, char **envir)
 	if (ft_strchr(cmd, '/'))
 	{
 		if (access(cmd, F_OK) == -1)
-		{
-			perror(cmd);
-			free_minishell(mini);
-			exit(127);
-		}
+			(perror(cmd), free_minishell(mini), exit(127));
 		if (access(cmd, X_OK) == -1)
-		{
-			perror(cmd);
-			free_minishell(mini);
-			exit(126);
-		}
+			(perror(cmd), free_minishell(mini), exit(126));
 		execve(cmd, mini->command_list->argv, envir);
 		check_errno(errno, mini);
 	}
+	i = 0;
+	while (paths[i])
+	{
+		path = create_path(paths[i], cmd);
+		if (!path)
+			free_and_exit(mini->command_list->argv, paths, 0);
+		if (access(path, F_OK) == 0 && access(path, X_OK) == 0)
+		{
+			execve(path, mini->command_list->argv, envir);
+			(free(path), check_errno(errno, mini));
+		}
+		(free(path), i++);
+	}
+	mini->paths_execve = paths;
+	mini->envir_execve = envir;
+	(check_errno(ENOENT, mini), exit(127));
+}*/
+
+static void	try_exec_from_paths(char **paths, char *cmd, t_minishell *mini, char **envir)
+{
+	int		i;
+	char	*path;
+
 	i = 0;
 	while (paths[i])
 	{
@@ -910,10 +925,28 @@ void	execute_command(t_minishell *mini, char **paths, char **envir)
 		free(path);
 		i++;
 	}
+}
+
+void	execute_command(t_minishell *mini, char **paths, char **envir)
+{
+	char	*cmd;
+
+	if (!envir || !*envir)
+		free_struct(mini->pipex_data, "Missing environment\n", 1, 2);
+	cmd = mini->command_list->argv[0];
+	if (ft_strchr(cmd, '/'))
+	{
+		if (access(cmd, F_OK) == -1)
+			(perror(cmd), free_minishell(mini), exit(127));
+		if (access(cmd, X_OK) == -1)
+			(perror(cmd), free_minishell(mini), exit(126));
+		execve(cmd, mini->command_list->argv, envir);
+		check_errno(errno, mini);
+	}
+	try_exec_from_paths(paths, cmd, mini, envir);
 	mini->paths_execve = paths;
 	mini->envir_execve = envir;
-	check_errno(ENOENT, mini);
-	exit(127);
+	(check_errno(ENOENT, mini), exit(127));
 }
 ////////////////////////
 void	ft_cmd(t_minishell *mini)
@@ -1245,10 +1278,11 @@ char	*expand_env_in_str(char *src, t_minishell *mini)
 
 static void	replace_char_inplace(char *s, char find, char replace)
 {
-    int i;
+	int	i;
 
 	i = 0;
-	if (!s) return;
+	if (!s)
+		return ;
 	while (s[i])
 	{
 		if (s[i] == find)
@@ -1257,17 +1291,17 @@ static void	replace_char_inplace(char *s, char find, char replace)
 	}
 }
 
-void expand_token(t_token *token, t_minishell *mini)
+void	expand_token(t_token *token, t_minishell *mini)
 {
-    char *expanded;
+	char	*expanded;
 
-    if (token->quote == Q_SINGLE)
-        return ;
-    expanded = expand_env_in_str(token->value, mini);
-    free(token->value);
-    token->value = expanded;
-    if (ft_strchr(token->value, '\x07'))
-        replace_char_inplace(token->value, '\x07', '$');
+	if (token->quote == Q_SINGLE)
+		return ;
+	expanded = expand_env_in_str(token->value, mini);
+	free(token->value);
+	token->value = expanded;
+	if (ft_strchr(token->value, '\x07'))
+		replace_char_inplace(token->value, '\x07', '$');
 }
 
 void	parse_red_append(t_minishell *mini, t_token **token)
@@ -1287,38 +1321,37 @@ void	parse_red_append(t_minishell *mini, t_token **token)
 	*token = (*token)->next;
 }
 //////////////
-void process_token(t_minishell *mini, int *index)
+void	process_token(t_minishell *mini, int *index)
 {
-	 t_token *token;
-   
-	 token = mini->t_list;
-	 if (token->type == T_WORD)
-	 {
-	     if (token->quote != Q_SINGLE &&
-		   (ft_strchr(token->value, '$') || ft_strchr(token->value, '\x07')))
-		   expand_token(token, mini);
-   
-	     if (token->value[0] == '\0' && token->quote != Q_SINGLE)
-		   return ;
-	     if (token->quote == Q_NONE && (ft_strchr(token->value, '*')
-			 || ft_strchr(token->value, '?')
-			 || ft_strchr(token->value, '[')))
-	     {
-		   expand_and_add_glob(token->value, mini);
-	     }
-	     else
-		   add_arg_to_command(mini, token->value);
-	 }
-	 else if (token->type == T_RED_IN && token->next)
-	     parse_red_in(mini, &mini->t_list);
-	 else if (token->type == T_RED_OUT && token->next)
-	     parse_red_out(mini, &mini->t_list);
-	 else if (token->type == T_RED_APPEND && token->next)
-	     parse_red_append(mini, &mini->t_list);
-	 else if (token->type == T_HEREDOC && token->next)
-	     parse_heredoc(mini, &mini->t_list, index);
-	 else if (token->type == T_PIPE)
-	     mini->curr = NULL;
+	t_token	*token;
+
+	token = mini->t_list;
+	if (token->type == T_WORD)
+	{
+		if (token->quote != Q_SINGLE && (ft_strchr(token->value, '$')
+				|| ft_strchr(token->value, '\x07')))
+			expand_token(token, mini);
+		if (token->value[0] == '\0' && token->quote != Q_SINGLE)
+			return ;
+		if (token->quote == Q_NONE && (ft_strchr(token->value, '*')
+				|| ft_strchr(token->value, '?') 
+				|| ft_strchr(token->value, '[')))
+		{
+			expand_and_add_glob(token->value, mini);
+		}
+		else
+			add_arg_to_command(mini, token->value);
+	}
+	else if (token->type == T_RED_IN && token->next)
+		parse_red_in(mini, &mini->t_list);
+	else if (token->type == T_RED_OUT && token->next)
+		parse_red_out(mini, &mini->t_list);
+	else if (token->type == T_RED_APPEND && token->next)
+		parse_red_append(mini, &mini->t_list);
+	else if (token->type == T_HEREDOC && token->next)
+		parse_heredoc(mini, &mini->t_list, index);
+	else if (token->type == T_PIPE)
+		mini->curr = NULL;
 }
 
 t_command	*parse_commands(t_minishell *mini)
@@ -1358,30 +1391,16 @@ void	apply_one_redirection(t_minishell *mini, t_redir *redir)
 	else
 		fd = open(redir->filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd == -1)
-	{
-		perror(redir->filename);
-		free_minishell(mini);
-		exit(1);
-	}
+		(perror(redir->filename), free_minishell(mini), exit(1));
 	if (redir->type == T_RED_IN || redir->type == T_HEREDOC)
 	{
 		if (dup2(fd, STDIN_FILENO) == -1)
-		{
-			perror("dup2");
-			close(fd);
-			free_minishell(mini);
-			exit(1);
-		}
+			(perror("dup2"), close(fd), free_minishell(mini), exit(1));
 	}
 	else
 	{
 		if (dup2(fd, STDOUT_FILENO) == -1)
-		{
-			perror("dup2");
-			close(fd);
-			free_minishell(mini);
-			exit(1);
-		}
+			(perror("dup2"), close(fd), free_minishell(mini), exit(1));
 	}
 	close(fd);
 }
@@ -1765,44 +1784,97 @@ static char	*join_free(char *s1, char *s2)
 	return (res);
 }
 
-char *extract_complex_token(t_minishell *shell)
+/*char	*extract_complex_token(t_minishell *shell)	DIVIDIDA EN process_complex_token_parts Y extract_complex_token
 {
-    char *token;
-    char *part;
-    t_token_quote first_quote = (t_token_quote)-1;
-    int mixed = 0;
+	char			*token;
+	char			*part;
+	t_token_quote	first_quote;
+	int				mixed;
 
-    token = ft_strdup("");
-    if (!token)
-    {
-        shell->tokenizer->err = 1;
-        return (NULL);
-    }
-    while (shell->tokenizer->input[shell->tokenizer->pos]
-        && shell->tokenizer->input[shell->tokenizer->pos] != ' '
-        && shell->tokenizer->input[shell->tokenizer->pos] != '\t'
-        && !ft_strchr("|<>", shell->tokenizer->input[shell->tokenizer->pos]))
-    {
-        part = get_next_token_part(shell);
-        if (!part)
-        {
-            free(token);
-            return (NULL);
-        }
-        if (first_quote == (t_token_quote)-1)
-            first_quote = shell->tokenizer->quote;
-        else if (shell->tokenizer->quote != first_quote)
-            mixed = 1;
-        if (shell->tokenizer->quote == Q_SINGLE)
-            replace_char_inplace(part, '$', '\x07');
-        token = join_free(token, part);
-    }
-    shell->tokenizer->prev_type = T_WORD;
-    if (!mixed && first_quote != (t_token_quote)-1)
-        shell->tokenizer->quote = first_quote;
-    else
-        shell->tokenizer->quote = Q_NONE;
-    return (token);
+	mixed = 0;
+	first_quote = (t_token_quote)-1;
+	token = ft_strdup("");
+	if (!token)
+	{
+		shell->tokenizer->err = 1;
+		return (NULL);
+	}
+	while (shell->tokenizer->input[shell->tokenizer->pos]
+		&& shell->tokenizer->input[shell->tokenizer->pos] != ' '
+		&& shell->tokenizer->input[shell->tokenizer->pos] != '\t'
+		&& !ft_strchr("|<>", shell->tokenizer->input[shell->tokenizer->pos]))
+	{
+		part = get_next_token_part(shell);
+		if (!part)
+		{
+			free(token);
+			return (NULL);
+		}
+		if (first_quote == (t_token_quote) - 1)
+			first_quote = shell->tokenizer->quote;
+		else if (shell->tokenizer->quote != first_quote)
+			mixed = 1;
+		if (shell->tokenizer->quote == Q_SINGLE)
+			replace_char_inplace(part, '$', '\x07');
+		token = join_free(token, part);
+	}
+	shell->tokenizer->prev_type = T_WORD;
+	if (!mixed && first_quote != (t_token_quote)-1)
+		shell->tokenizer->quote = first_quote;
+	else
+		shell->tokenizer->quote = Q_NONE;
+	return (token);
+}*/
+
+static int	process_complex_token_parts(t_minishell *shell, char **token,
+	t_token_quote *first_quote, int *mixed)
+{
+	char	*part;
+
+	while (shell->tokenizer->input[shell->tokenizer->pos]
+		&& shell->tokenizer->input[shell->tokenizer->pos] != ' '
+		&& shell->tokenizer->input[shell->tokenizer->pos] != '\t'
+		&& !ft_strchr("|<>", shell->tokenizer->input[shell->tokenizer->pos]))
+	{
+		part = get_next_token_part(shell);
+		if (!part)
+			return (0);
+		if (*first_quote == (t_token_quote)-1)
+			*first_quote = shell->tokenizer->quote;
+		else if (shell->tokenizer->quote != *first_quote)
+			*mixed = 1;
+		if (shell->tokenizer->quote == Q_SINGLE)
+			replace_char_inplace(part, '$', '\x07');
+		*token = join_free(*token, part);
+	}
+	return (1);
+}
+
+char	*extract_complex_token(t_minishell *shell)
+{
+	char			*token;
+	t_token_quote	first_quote;
+	int				mixed;
+
+	mixed = 0;
+	first_quote = (t_token_quote)-1;
+	token = ft_strdup("");
+	if (!token)
+	{
+		shell->tokenizer->err = 1;
+		return (NULL);
+	}
+	if (!process_complex_token_parts(shell, &token, &first_quote, &mixed))
+	{
+		free(token);
+		return (NULL);
+	}
+	shell->tokenizer->prev_type = T_WORD;
+	if (!mixed && first_quote != (t_token_quote)-1)
+		shell->tokenizer->quote = first_quote;
+	else
+		shell->tokenizer->quote = Q_NONE;
+	return (token);
 }
 
 static int	extract_double_metachar(t_minishell *shell)
@@ -1889,29 +1961,29 @@ t_token	*add_token(t_minishell *minishell, char *value)
 	return (new_node);
 }
 
-t_token *check_expansion(t_minishell *minishell, char *val)
+t_token	*check_expansion(t_minishell *minishell, char *val)
 {
-    t_token *new_token;
+	t_token	*new_token;
 
-    new_token = add_token(minishell, val);
-    if (!new_token)
-        return (NULL);
-    new_token->type = minishell->tokenizer->prev_type;
-    new_token->quote = minishell->tokenizer->quote;
-    if (new_token->type == T_WORD && new_token->value[0] == '$')
-    {
-        if (new_token->quote == Q_SINGLE)
-            new_token->expansion_type = NO_EXPANSION;
-        else if (new_token->value[1] == '?' && new_token->value[2] == '\0')
-            new_token->expansion_type = EXIT_STATUS_EXPANSION;
-        else
-            new_token->expansion_type = VAR_EXPANSION;
-    }
-    else
-        new_token->expansion_type = NO_EXPANSION;
-    if (new_token->quote == Q_SINGLE && ft_strchr(new_token->value, '\x07'))
-        replace_char_inplace(new_token->value, '\x07', '$');
-    return (new_token);
+	new_token = add_token(minishell, val);
+	if (!new_token)
+		return (NULL);
+	new_token->type = minishell->tokenizer->prev_type;
+	new_token->quote = minishell->tokenizer->quote;
+	if (new_token->type == T_WORD && new_token->value[0] == '$')
+	{
+		if (new_token->quote == Q_SINGLE)
+			new_token->expansion_type = NO_EXPANSION;
+		else if (new_token->value[1] == '?' && new_token->value[2] == '\0')
+			new_token->expansion_type = EXIT_STATUS_EXPANSION;
+		else
+			new_token->expansion_type = VAR_EXPANSION;
+	}
+	else
+		new_token->expansion_type = NO_EXPANSION;
+	if (new_token->quote == Q_SINGLE && ft_strchr(new_token->value, '\x07'))
+		replace_char_inplace(new_token->value, '\x07', '$');
+	return (new_token);
 }
 
 int	tokenize_input(t_minishell *minishell)
@@ -2049,31 +2121,31 @@ volatile sig_atomic_t	g_status = 0;
 
 int	check_syntax_pipes(t_token *tokenizer)
 {
-	   if (!tokenizer)
-		   return (1);
-	   if (tokenizer->type == T_PIPE)
-	   {
-		   ft_putstr("minishell: syntax error near unexpected token `|'\n", 2);
-		   g_status = 2;
-		   return (0);
-	   }
-	   while (tokenizer->next)
-	   {
-		   if (tokenizer->type == T_PIPE && tokenizer->next->type == T_PIPE)
-		   {
-			   ft_putstr("minishell: syntax error near unexpected token `|'\n", 2);
-			   g_status = 2;
-			   return (0);
-		   }
-		   tokenizer = tokenizer->next;
-	   }
-	   if (tokenizer->type == T_PIPE)
-	   {
-		   ft_putstr("minishell: syntax error near unexpected token `|'\n", 2);
-		   g_status = 2;
-		   return (0);
-	   }
-	   return (1);
+	if (!tokenizer)
+		return (1);
+	if (tokenizer->type == T_PIPE)
+	{
+		ft_putstr("minishell: syntax error near unexpected token `|'\n", 2);
+		g_status = 2;
+		return (0);
+	}
+	while (tokenizer->next)
+	{
+		if (tokenizer->type == T_PIPE && tokenizer->next->type == T_PIPE)
+		{
+			ft_putstr("minishell: syntax error near unexpected token `|'\n", 2);
+			g_status = 2;
+			return (0);
+		}
+		tokenizer = tokenizer->next;
+	}
+	if (tokenizer->type == T_PIPE)
+	{
+		ft_putstr("minishell: syntax error near unexpected token `|'\n", 2);
+		g_status = 2;
+		return (0);
+	}
+	return (1);
 }
 
 t_env	*create_env_list(char **envp, t_minishell *mini)
@@ -2111,10 +2183,7 @@ static int	execute_group_in_subshell(t_minishell *parent, char *inner)
 
 	pid = fork();
 	if (pid == -1)
-	{
-		perror("fork");
-		return (1);
-	}
+		return (perror("fork"), 1);
 	if (pid == 0)
 	{
 		env_arr = NULL;
@@ -2142,10 +2211,7 @@ static int	execute_group_in_subshell(t_minishell *parent, char *inner)
 		exit(g_status);
 	}
 	if (waitpid(pid, &status, 0) == -1)
-	{
-		perror("waitpid");
-		return (1);
-	}
+		return (perror("waitpid"), 1);
 	if (WIFEXITED(status))
 		g_status = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))
@@ -2153,7 +2219,7 @@ static int	execute_group_in_subshell(t_minishell *parent, char *inner)
 	return (g_status);
 }
 
-static int	split_by_logical_ops(char *input, char ***segments_out, char ***ops_out, int *count_out)
+/*static int	split_by_logical_ops(char *input, char ***segments_out, char ***ops_out, int *count_out)
 {
 	int		pos;
 	int		len;
@@ -2246,9 +2312,113 @@ static int	split_by_logical_ops(char *input, char ***segments_out, char ***ops_o
 	*ops_out = ops;
 	*count_out = seg_count;
 	return (1);
+}*/
+
+static int	split_by_logical_ops(char *input, char ***segments_out, char ***ops_out, int *count_out)
+{
+	int		pos;
+	int		len;
+	int		start;
+	int		paren_depth;
+	int		seg_count;
+	char	quote;
+	char	*seg;
+	char	*trimmed;
+	char	**segments;
+	char	**ops;
+
+	pos = 0;
+	segments = NULL;
+	ops = NULL;
+	seg_count = 0;
+	if (!input)
+		return (0);
+	len = ft_strlen(input);
+	start = 0;
+	quote = 0;
+	paren_depth = 0;
+	while (pos < len)
+	{
+		if ((input[pos] == '\'' || input[pos] == '"'))
+		{
+			if (!quote)
+				quote = input[pos];
+			else if (quote == input[pos])
+				quote = 0;
+			pos++;
+			continue ;
+		}
+		if (!quote)
+		{
+			if (input[pos] == '(')
+			{
+				paren_depth++;
+				pos++;
+				continue ;
+			}
+			else if (input[pos] == ')')
+			{
+				if (paren_depth > 0)
+					paren_depth--;
+				pos++;
+				continue ;
+			}
+		}
+		if (!quote && paren_depth == 0 && pos + 1 < len)
+		{
+			if (input[pos] == '&' && input[pos + 1] == '&')
+			{
+				seg = ft_substr(input, start, pos - start);
+				trimmed = trim_whitespace(seg);
+				free(seg);
+				segments = realloc(segments, sizeof(char *) * (seg_count + 1));
+				if (trimmed)
+					segments[seg_count] = trimmed;
+				else
+					segments[seg_count] = ft_strdup("");
+				seg_count++;
+				ops = realloc(ops, sizeof(char *) * (seg_count));
+				ops[seg_count - 1] = ft_strdup("&&");
+				pos += 2;
+				start = pos;
+				continue ;
+			}
+			if (input[pos] == '|' && input[pos + 1] == '|')
+			{
+				seg = ft_substr(input, start, pos - start);
+				trimmed = trim_whitespace(seg);
+				free(seg);
+				segments = realloc(segments, sizeof(char *) * (seg_count + 1));
+				if (trimmed)
+					segments[seg_count] = trimmed;
+				else
+					segments[seg_count] = ft_strdup("");
+				seg_count++;
+				ops = realloc(ops, sizeof(char *) * (seg_count));
+				ops[seg_count - 1] = ft_strdup("||");
+				pos += 2;
+				start = pos;
+				continue ;
+			}
+		}
+		pos++;
+	}
+	seg = ft_substr(input, start, len - start);
+	trimmed = trim_whitespace(seg);
+	free(seg);
+	segments = realloc(segments, sizeof(char *) * (seg_count + 1));
+	if (trimmed)
+		segments[seg_count] = trimmed;
+	else
+		segments[seg_count] = ft_strdup("");
+	seg_count++;
+	*segments_out = segments;
+	*ops_out = ops;
+	*count_out = seg_count;
+	return (1);
 }
 
-static char	*trim_whitespace(char *s)
+/*static char	*trim_whitespace(char *s)
 {
 	char	*start;
 	char	*end;
@@ -2262,9 +2432,9 @@ static char	*trim_whitespace(char *s)
 	while (end > start && (*(end - 1) == ' ' || *(end - 1) == '\t'))
 		end--;
 	return (ft_substr(start, 0, end - start));
-}
+}*/
 
-static int	is_outer_parenthesized(const char *s)
+/*static int	is_outer_parenthesized(const char *s)
 {
 	int		len;
 	int		i;
@@ -2299,9 +2469,9 @@ static int	is_outer_parenthesized(const char *s)
 		i++;
 	}
 	return (depth == 0 && i == len - 1);
-}
+}*/
 
-static char	*strip_outer_parentheses(char *s, int *removed)
+/*static char	*strip_outer_parentheses(char *s, int *removed)
 {
 	char	*cur;
 	char	*tmp;
@@ -2330,7 +2500,7 @@ static char	*strip_outer_parentheses(char *s, int *removed)
 	if (removed && did_remove)
 		*removed = 1;
 	return (cur);
-}
+}*/
 
 static char	*trim_whitespace(char *s)
 {
@@ -2408,8 +2578,7 @@ static char	*strip_outer_parentheses(char *s, int *removed)
 		if (!tmp)
 			return (NULL);
 		cur = trim_whitespace(tmp);
-		free(tmp);
-		did_remove = 1;
+		(free(tmp), did_remove = 1);
 	}
 	if (removed && did_remove)
 		*removed = 1;
