@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/11 16:16:23 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/09/11 16:41:32 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -390,7 +390,7 @@ void	update_node_value(t_env *tmp, char *value, int exported)
 	tmp->exported = exported;
 }
 
-int	update_existing_node(t_env *tmp, char *name, char *value, int exported)
+int	update_node(t_env *tmp, char *name, char *value, int exported)
 {
 	while (tmp)
 	{
@@ -454,7 +454,7 @@ void	add_env_node(t_minishell *mini, char *name, char *value, int exported)
 	t_env	*new;
 
 	tmp = mini->env_list;
-	if (update_existing_node(tmp, name, value, exported))
+	if (update_node(tmp, name, value, exported))
 		return ;
 	new = create_new_node(name, value, exported);
 	if (!new)
@@ -869,7 +869,7 @@ char	*create_path(char *possible_path, char *command)
 	return (path);
 }
 
-static void	try_exec_from_paths(char **paths, char *cmd, t_minishell *mini, char **envir)
+static void	exec_paths(char **paths, char *cmd, t_minishell *mini, char **envir)
 {
 	int		i;
 	char	*path;
@@ -907,7 +907,7 @@ void	execute_command(t_minishell *mini, char **paths, char **envir)
 		execve(cmd, mini->command_list->argv, envir);
 		check_errno(errno, mini);
 	}
-	try_exec_from_paths(paths, cmd, mini, envir);
+	exec_paths(paths, cmd, mini, envir);
 	mini->paths_execve = paths;
 	mini->envir_execve = envir;
 	(check_errno(ENOENT, mini), exit(127));
@@ -1065,7 +1065,7 @@ void	parse_red_out(t_minishell *mini, t_token **token)
 	*token = (*token)->next;
 }
 ////////////////////////
-char	*handle_heredoc_in_command(t_command *cmd, char *limiter, int index)
+char	*handle_heredoc(t_command *cmd, char *limiter, int index)
 {
 	char	*filename;
 	int		ret;
@@ -1101,7 +1101,7 @@ void	parse_heredoc(t_minishell *mini, t_token **token, int *index)
 		mini->curr->redirs = NULL;
 		exit_with_error("heredoc: missing limiter\n", 1, 2);
 	}
-	filename = handle_heredoc_in_command(mini->curr, (*token)->next->value,
+	filename = handle_heredoc(mini->curr, (*token)->next->value,
 			*index);
 	if (!filename)
 	{
@@ -1284,7 +1284,7 @@ void	parse_red_append(t_minishell *mini, t_token **token)
 	mini->curr->append = 1;
 	*token = (*token)->next;
 }
-//////////////
+
 void	process_token(t_minishell *mini, int *index)
 {
 	t_token	*token;
@@ -1748,7 +1748,7 @@ static char	*join_free(char *s1, char *s2)
 	return (res);
 }
 
-static int	process_complex_token_parts(t_minishell *shell, char **token,
+static int	process_token_part(t_minishell *shell, char **token,
 	t_token_quote *first_quote, int *mixed)
 {
 	char	*part;
@@ -1786,7 +1786,7 @@ char	*extract_complex_token(t_minishell *shell)
 		shell->tokenizer->err = 1;
 		return (NULL);
 	}
-	if (!process_complex_token_parts(shell, &token, &first_quote, &mixed))
+	if (!process_token_part(shell, &token, &first_quote, &mixed))
 	{
 		free(token);
 		return (NULL);
@@ -2143,7 +2143,7 @@ static int	execute_group_in_subshell(t_minishell *parent, char *inner)
 	return (g_status);
 }
 
-static int	split_by_logical_ops(char *input, char ***segments_out, char ***ops_out, int *count_out)
+static int	split_ops(char *input, char ***segments_out, char ***ops_out, int *count_out)
 {
 	int		pos;
 	int		len;
@@ -2374,7 +2374,7 @@ static void	process_input(char *input, t_minishell *minishell)
 	add_history(input);
 	g_status = 0;
 	is_group = 0;
-	if (!split_by_logical_ops(input, &segments, &ops, &seg_count))
+	if (!split_ops(input, &segments, &ops, &seg_count))
 	{
 		ft_putstr("minishell: internal split error\n", 2);
 		return ;

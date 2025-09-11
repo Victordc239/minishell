@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 14:02:20 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/11 16:22:00 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/09/11 16:41:21 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,7 +153,7 @@ int			ft_exit(t_minishell *mini);
 int			count_exported(t_minishell *mini);
 int			is_valid_identifier(char const *str);
 int			process_export_argument(char *arg, t_minishell *mini);
-int			update_existing_node(t_env *tmp, char *name, char *value, int exported);
+int			update_node(t_env *tmp, char *name, char *value, int exported);
 int			count_commands_list(t_minishell *mini);
 int			expand_and_add_glob(char *pattern, t_minishell *mini);
 int			is_limiter(char *line, char *limiter);
@@ -172,12 +172,10 @@ static int	handle_redirection_append(char *input, t_minishell *shell);
 static int	extract_double_metachar(t_minishell *shell);
 static int	extract_single_metachar(t_minishell *shell);
 static int	is_word_char(char c);
-static int	split_by_logical_ops(char *input, char ***segments_out, char ***ops_out, int *count_out);
+static int	split_ops(char *input, char ***segments_out, char ***ops_out, int *count_out);
 static int	execute_group_in_subshell(t_minishell *parent, char *inner);
 static int	is_outer_parenthesized(const char *s);
-static int	process_complex_token_parts(t_minishell *shell, char **token,
-	t_token_quote *first_quote, int *mixed);
-	
+static int	process_token_part(t_minishell *shell, char **token, t_token_quote *first_quote, int *mixed);
 void		execute_buitin(t_minishell *minishell);
 void		ft_cd(t_minishell *mini);
 void		ft_cmd(t_minishell *mini);
@@ -241,12 +239,11 @@ static void	append_variable(char **res, char *src, int *i, t_minishell *mini);
 static void	process_input(char *input, t_minishell *minishell);
 static void	replace_char_inplace(char *s, char find, char replace);
 static void	free_split_result(char **segments, char **ops, int count);
-static void	try_exec_from_paths(char **paths, char *cmd, t_minishell *mini, char **envir);
+static void	exec_paths(char **paths, char *cmd, t_minishell *mini, char **envir);
 static void	run_group_child(t_minishell *parent, char *inner);
-
 char		*get_env_value(char *name, t_env *env);
 char		*get_filename(int index);
-char		*handle_heredoc_in_command(t_command *cmd, char *limiter, int index);
+char		*handle_heredoc(t_command *cmd, char *limiter, int index);
 char		*env_entry(t_env *node);
 char		*find_execpath(char **envir);
 char		*create_path(char *possible_path, char *command);
@@ -264,22 +261,15 @@ char		**env_to_array(t_env *env_list);
 static char	*join_free(char *s1, char *s2);
 static char	*trim_whitespace(char *s);
 static char	*strip_outer_parentheses(char *s, int *removed);
-
-
 t_env		*create_new_node(char *name, char *value, int exported);
 t_env		*find_env(t_env *env_list, char const *name);
 t_env		*create_env_list(char **envp, t_minishell *mini);
-
 t_command	*init_new_command(void);
 t_command	*parse_commands(t_minishell *mini);
-
 t_token		*check_expansion(t_minishell *minishell, char *val);
 t_token		*add_token(t_minishell *minishell, char *value);
-
 t_redir		*init_redir(int type, char const *filename);
-
 t_pipex		*init_pipex(void);
-
 t_minishell	init_minishell(void);
 
 #endif
