@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 14:02:20 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/12 13:33:46 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/09/12 14:19:01 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,6 +138,17 @@ typedef struct s_minishell
 	char						**paths_execve;
 	char						**envir_execve;
 }								t_minishell;
+
+typedef struct	s_split_state {
+	int							pos;
+	int							len;
+	int 						start;
+	int 						paren_depth;
+	int 						seg_count;
+	char 						quote;
+	char 						**segments;
+	char 						**ops;
+}								t_split_state;
 
 typedef enum e_builtin_type
 {
@@ -275,8 +286,10 @@ t_minishell	init_minishell(void);
 static int prepare_segments(char *input, char ***segments, char ***ops, int *seg_count);
 static void process_segment(t_minishell *minishell, char *seg);
 static void update_env_status(t_minishell *minishell);
-static void handle_segments(t_minishell *minishell, char **segments, char **ops, int seg_count, int i);
+//static void handle_segments(t_minishell *minishell, char **segments, char **ops, int seg_count, int i);
 static void	process_input(char *input, t_minishell *minishell);
 static void process_command(t_minishell *minishell, char *seg, char *inner);
+
+static void	handle_segments(t_minishell *minishell, char **segments, char **ops, int seg_count);
 
 #endif
