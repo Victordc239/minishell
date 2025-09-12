@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 14:02:20 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/11 16:41:21 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/09/12 13:33:46 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -271,5 +271,12 @@ t_token		*add_token(t_minishell *minishell, char *value);
 t_redir		*init_redir(int type, char const *filename);
 t_pipex		*init_pipex(void);
 t_minishell	init_minishell(void);
+
+static int prepare_segments(char *input, char ***segments, char ***ops, int *seg_count);
+static void process_segment(t_minishell *minishell, char *seg);
+static void update_env_status(t_minishell *minishell);
+static void handle_segments(t_minishell *minishell, char **segments, char **ops, int seg_count, int i);
+static void	process_input(char *input, t_minishell *minishell);
+static void process_command(t_minishell *minishell, char *seg, char *inner);
 
 #endif

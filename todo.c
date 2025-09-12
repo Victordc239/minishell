@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/11 16:41:32 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/09/12 13:33:30 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1298,11 +1298,9 @@ void	process_token(t_minishell *mini, int *index)
 		if (token->value[0] == '\0' && token->quote != Q_SINGLE)
 			return ;
 		if (token->quote == Q_NONE && (ft_strchr(token->value, '*')
-				|| ft_strchr(token->value, '?') 
+				|| ft_strchr(token->value, '?')
 				|| ft_strchr(token->value, '[')))
-		{
 			expand_and_add_glob(token->value, mini);
-		}
 		else
 			add_arg_to_command(mini, token->value);
 	}
@@ -1761,7 +1759,7 @@ static int	process_token_part(t_minishell *shell, char **token,
 		part = get_next_token_part(shell);
 		if (!part)
 			return (0);
-		if (*first_quote == (t_token_quote)-1)
+		if (*first_quote == (t_token_quote) - 1)
 			*first_quote = shell->tokenizer->quote;
 		else if (shell->tokenizer->quote != *first_quote)
 			*mixed = 1;
@@ -2356,7 +2354,7 @@ static void	free_split_result(char **segments, char **ops, int count)
 	}
 }
 
-static void	process_input(char *input, t_minishell *minishell)
+/*static void	process_input(char *input, t_minishell *minishell)
 {
 	char	*status_str;
 	char	*inner;
@@ -2463,8 +2461,120 @@ static void	process_input(char *input, t_minishell *minishell)
 		i++;
 	}
 	free_split_result(segments, ops, seg_count);
+}*/
+
+static int	prepare_segments(char *input, char ***segments,
+	char ***ops, int *seg_count)
+{
+	add_history(input);
+	g_status = 0;
+	*seg_count = 0;
+	*ops = NULL;
+	*segments = NULL;
+	if (!split_ops(input, segments, ops, seg_count))
+	{
+		ft_putstr("minishell: internal split error\n", 2);
+		return (0);
+	}
+	return (1);
 }
 
+static void	process_segment(t_minishell *minishell, char *seg)
+{
+	char	*inner;
+	int		is_group;
+
+	is_group = 0;
+	if (!seg || *seg == '\0')
+		return ;
+	inner = strip_outer_parentheses(seg, &is_group);
+	if (is_group)
+	{
+		if (inner)
+			execute_group_in_subshell(minishell, inner);
+		else
+			execute_group_in_subshell(minishell, "");
+		if (inner)
+			free(inner);
+	}
+	else
+		process_command(minishell, seg, inner);
+}
+
+static void	update_env_status(t_minishell *minishell)
+{
+	char	*status_str;
+
+	status_str = ft_itoa(g_status);
+	if (status_str)
+	{
+		add_env_node(minishell, "?", status_str, 0);
+		free(status_str);
+	}
+}
+
+static void	handle_segments(t_minishell *minishell, char **segments,
+	char **ops, int seg_count, int i)
+{
+	if (i >= seg_count)
+		return ;
+	process_segment(minishell, segments[i]);
+	update_env_status(minishell);
+	if (i < seg_count - 1 && ops && ops[i])
+	{
+		if (!ft_strcmp(ops[i], "&&") && g_status != 0)
+			i = i + 1;
+		else if (!ft_strcmp(ops[i], "||") && g_status == 0)
+			i = i + 1;
+	}
+	handle_segments(minishell, segments, ops, seg_count, i + 1);
+}
+
+static void	process_input(char *input, t_minishell *minishell)
+{
+	char	**segments;
+	char	**ops;
+	int		seg_count;
+
+	segments = NULL;
+	ops = NULL;
+	seg_count = 0;
+	if (!prepare_segments(input, &segments, &ops, &seg_count))
+		return ;
+	handle_segments(minishell, segments, ops, seg_count, 0);
+	free_split_result(segments, ops, seg_count);
+}
+
+static void	process_command(t_minishell *minishell, char *seg, char *inner)
+{
+	if (!fill_tokens(minishell, seg))
+	{
+		ft_putstr("syntax error: unclosed quote\n", 2);
+		g_status = 2;
+		update_env_status(minishell);
+		free_t_list(minishell->t_list);
+		minishell->t_list = NULL;
+		if (inner)
+			free(inner);
+		return ;
+	}
+	if (!check_syntax_pipes(minishell->t_list))
+	{
+		update_env_status(minishell);
+		free_t_list(minishell->t_list);
+		minishell->t_list = NULL;
+		if (inner)
+			free(inner);
+		return ;
+	}
+	ft_execute(minishell);
+	free_t_list(minishell->t_list);
+	minishell->t_list = NULL;
+	if (inner)
+		free(inner);
+}
+
+////////
 char	*get_prompt(void)
 {
 	char	*cwd;
