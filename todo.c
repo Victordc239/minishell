@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/12 13:59:51 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/09/12 14:51:16 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -2141,110 +2141,6 @@ static int	execute_group_in_subshell(t_minishell *parent, char *inner)
 	return (g_status);
 }
 
-static int	split_ops(char *input, char ***segments_out, char ***ops_out, int *count_out)
-{
-	int		pos;
-	int		len;
-	int		start;
-	int		paren_depth;
-	int		seg_count;
-	char	quote;
-	char	*seg;
-	char	*trimmed;
-	char	**segments;
-	char	**ops;
-
-	pos = 0;
-	segments = NULL;
-	ops = NULL;
-	seg_count = 0;
-	if (!input)
-		return (0);
-	len = ft_strlen(input);
-	start = 0;
-	quote = 0;
-	paren_depth = 0;
-	while (pos < len)
-	{
-		if ((input[pos] == '\'' || input[pos] == '"'))
-		{
-			if (!quote)
-				quote = input[pos];
-			else if (quote == input[pos])
-				quote = 0;
-			pos++;
-			continue ;
-		}
-		if (!quote)
-		{
-			if (input[pos] == '(')
-			{
-				paren_depth++;
-				pos++;
-				continue ;
-			}
-			else if (input[pos] == ')')
-			{
-				if (paren_depth > 0)
-					paren_depth--;
-				pos++;
-				continue ;
-			}
-		}
-		if (!quote && paren_depth == 0 && pos + 1 < len)
-		{
-			if (input[pos] == '&' && input[pos + 1] == '&')
-			{
-				seg = ft_substr(input, start, pos - start);
-				trimmed = trim_whitespace(seg);
-				free(seg);
-				segments = realloc(segments, sizeof(char *) * (seg_count + 1));
-				if (trimmed)
-					segments[seg_count] = trimmed;
-				else
-					segments[seg_count] = ft_strdup("");
-				seg_count++;
-				ops = realloc(ops, sizeof(char *) * (seg_count));
-				ops[seg_count - 1] = ft_strdup("&&");
-				pos += 2;
-				start = pos;
-				continue ;
-			}
-			if (input[pos] == '|' && input[pos + 1] == '|')
-			{
-				seg = ft_substr(input, start, pos - start);
-				trimmed = trim_whitespace(seg);
-				free(seg);
-				segments = realloc(segments, sizeof(char *) * (seg_count + 1));
-				if (trimmed)
-					segments[seg_count] = trimmed;
-				else
-					segments[seg_count] = ft_strdup("");
-				seg_count++;
-				ops = realloc(ops, sizeof(char *) * (seg_count));
-				ops[seg_count - 1] = ft_strdup("||");
-				pos += 2;
-				start = pos;
-				continue ;
-			}
-		}
-		pos++;
-	}
-	seg = ft_substr(input, start, len - start);
-	trimmed = trim_whitespace(seg);
-	free(seg);
-	segments = realloc(segments, sizeof(char *) * (seg_count + 1));
-	if (trimmed)
-		segments[seg_count] = trimmed;
-	else
-		segments[seg_count] = ft_strdup("");
-	seg_count++;
-	*segments_out = segments;
-	*ops_out = ops;
-	*count_out = seg_count;
-	return (1);
-}
-
 static char	*trim_whitespace(char *s)
 {
 	char	*start;
@@ -2261,6 +2157,128 @@ static char	*trim_whitespace(char *s)
 	return (ft_substr(start, 0, end - start));
 }
 
+////
+static int	handle_quote_paren(char *input, t_split_state *st)
+{
+	if (input[st->pos] == '\'' || input[st->pos] == '"')
+	{
+		if (!st->quote)
+			st->quote = input[st->pos];
+		else if
+			(st->quote == input[st->pos]) st->quote = 0;
+		st->pos++;
+		return (1);
+	}
+	if (!st->quote && input[st->pos] == '(')
+	{
+		st->paren_depth++;
+		st->pos++;
+		return (1);
+	}
+	if (!st->quote && input[st->pos] == ')')
+	{
+		if (st->paren_depth > 0)
+			st->paren_depth--;
+		st->pos++;
+		return (1);
+	}
+	return (0);
+}
+
+static int	try_process_operator(char *input, t_split_state *st)
+{
+	char	*seg;
+	char	*trimmed;
+
+	if (!st->quote && st->paren_depth == 0 && st->pos + 1 < st->len)
+	{
+		if (input[st->pos] == '&' && input[st->pos + 1] == '&')
+		{
+			seg = ft_substr(input, st->start, st->pos - st->start);
+			trimmed = trim_whitespace(seg);
+			free(seg);
+			st->segments = realloc(st->segments,
+					sizeof(char *) * (st->seg_count + 1));
+			if (trimmed)
+				st->segments[st->seg_count] = trimmed;
+			else
+				st->segments[st->seg_count] = ft_strdup("");
+			st->seg_count++;
+			st->ops = realloc(st->ops, sizeof(char *) * (st->seg_count));
+			st->ops[st->seg_count - 1] = ft_strdup("&&");
+			st->pos += 2;
+			st->start = st->pos;
+			return (1);
+		}
+		if (input[st->pos] == '|' && input[st->pos + 1] == '|')
+		{
+			seg = ft_substr(input, st->start, st->pos - st->start);
+			trimmed = trim_whitespace(seg);
+			free(seg);
+			st->segments = realloc(st->segments,
+					sizeof(char *) * (st->seg_count + 1));
+			if (trimmed)
+				st->segments[st->seg_count] = trimmed;
+			else
+				st->segments[st->seg_count] = ft_strdup("");
+			st->seg_count++;
+			st->ops = realloc(st->ops, sizeof(char *) * (st->seg_count));
+			st->ops[st->seg_count - 1] = ft_strdup("||");
+			st->pos += 2;
+			st->start = st->pos;
+			return (1);
+		}
+	}
+	return (0);
+}
+
+static void	split_loop_and_append(char *input, t_split_state *st)
+{
+	char	*seg;
+	char	*trimmed;
+
+	while (st->pos < st->len)
+	{
+		if (handle_quote_paren(input, st))
+			continue ;
+		if (try_process_operator(input, st))
+			continue ;
+		st->pos++;
+	}
+	seg = ft_substr(input, st->start, st->len - st->start);
+	trimmed = trim_whitespace(seg);
+	free(seg);
+	st->segments = realloc(st->segments, sizeof(char *) * (st->seg_count + 1));
+	if (trimmed)
+		st->segments[st->seg_count] = trimmed;
+	else
+		st->segments[st->seg_count] = ft_strdup("");
+	st->seg_count++;
+}
+
+static int	split_ops(char *input, char ***segments_out,
+	char ***ops_out, int *count_out)
+{
+	t_split_state	st;
+
+	if (!input)
+		return (0);
+	st.pos = 0;
+	st.len = ft_strlen(input);
+	st.start = 0;
+	st.quote = 0;
+	st.paren_depth = 0;
+	st.seg_count = 0;
+	st.segments = NULL;
+	st.ops = NULL;
+	split_loop_and_append(input, &st);
+	*segments_out = st.segments;
+	*ops_out = st.ops;
+	*count_out = st.seg_count;
+	return (1);
+}
+
+/////
 static int	is_outer_parenthesized(const char *s)
 {
 	int		len;
@@ -2317,10 +2335,9 @@ static char	*strip_outer_parentheses(char *s, int *removed)
 	{
 		len = ft_strlen(cur);
 		tmp = ft_substr(cur, 1, len - 2);
-		free(cur);
 		if (!tmp)
 			return (NULL);
-		cur = trim_whitespace(tmp);
+		(free(cur), cur = trim_whitespace(tmp));
 		(free(tmp), did_remove = 1);
 	}
 	if (removed && did_remove)

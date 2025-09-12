@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 14:02:20 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/12 14:19:01 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/09/12 15:00:15 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,15 +139,16 @@ typedef struct s_minishell
 	char						**envir_execve;
 }								t_minishell;
 
-typedef struct	s_split_state {
+typedef struct s_split_state
+{
 	int							pos;
 	int							len;
-	int 						start;
-	int 						paren_depth;
-	int 						seg_count;
-	char 						quote;
-	char 						**segments;
-	char 						**ops;
+	int							start;
+	int							paren_depth;
+	int							seg_count;
+	char						quote;
+	char						**segments;
+	char						**ops;
 }								t_split_state;
 
 typedef enum e_builtin_type
@@ -183,10 +184,12 @@ static int	handle_redirection_append(char *input, t_minishell *shell);
 static int	extract_double_metachar(t_minishell *shell);
 static int	extract_single_metachar(t_minishell *shell);
 static int	is_word_char(char c);
-static int	split_ops(char *input, char ***segments_out, char ***ops_out, int *count_out);
+static int	split_ops(char *input, char ***segments_out,
+				char ***ops_out, int *count_out);
 static int	execute_group_in_subshell(t_minishell *parent, char *inner);
 static int	is_outer_parenthesized(const char *s);
-static int	process_token_part(t_minishell *shell, char **token, t_token_quote *first_quote, int *mixed);
+static int	process_token_part(t_minishell *shell, char **token,
+				t_token_quote *first_quote, int *mixed);
 void		execute_buitin(t_minishell *minishell);
 void		ft_cd(t_minishell *mini);
 void		ft_cmd(t_minishell *mini);
@@ -203,7 +206,8 @@ void		remove_env_var(char const *name, t_minishell *mini);
 void		mark_as_exported(char *name, t_minishell *mini);
 void		append_node_to_list(t_minishell *mini, t_env *new);
 void		update_node_value(t_env *tmp, char *value, int exported);
-void		add_env_node(t_minishell *mini, char *name, char *value, int exported);
+void		add_env_node(t_minishell *mini, char *name,
+				char *value, int exported);
 void		execute_buitin_args(char **argv, char ***env, t_minishell *mini);
 void		add_command_to_list(t_minishell *mini);
 void		add_arg_to_command(t_minishell *mini, char *arg);
@@ -250,7 +254,8 @@ static void	append_variable(char **res, char *src, int *i, t_minishell *mini);
 static void	process_input(char *input, t_minishell *minishell);
 static void	replace_char_inplace(char *s, char find, char replace);
 static void	free_split_result(char **segments, char **ops, int count);
-static void	exec_paths(char **paths, char *cmd, t_minishell *mini, char **envir);
+static void	exec_paths(char **paths, char *cmd,
+				t_minishell *mini, char **envir);
 static void	run_group_child(t_minishell *parent, char *inner);
 char		*get_env_value(char *name, t_env *env);
 char		*get_filename(int index);
@@ -283,13 +288,18 @@ t_redir		*init_redir(int type, char const *filename);
 t_pipex		*init_pipex(void);
 t_minishell	init_minishell(void);
 
-static int prepare_segments(char *input, char ***segments, char ***ops, int *seg_count);
-static void process_segment(t_minishell *minishell, char *seg);
-static void update_env_status(t_minishell *minishell);
-//static void handle_segments(t_minishell *minishell, char **segments, char **ops, int seg_count, int i);
+static int	prepare_segments(char *input, char ***segments,
+				char ***ops, int *seg_count);
+static void	process_segment(t_minishell *minishell, char *seg);
+static void	update_env_status(t_minishell *minishell);
+static void	handle_segments(t_minishell *minishell, char **segments,
+				char **ops, int seg_count);
 static void	process_input(char *input, t_minishell *minishell);
-static void process_command(t_minishell *minishell, char *seg, char *inner);
+static void	process_command(t_minishell *minishell, char *seg, char *inner);
 
-static void	handle_segments(t_minishell *minishell, char **segments, char **ops, int seg_count);
-
+static int	handle_quote_paren(char *input, t_split_state *st);
+static int	try_process_operator(char *input, t_split_state *st);
+static void	split_loop_and_append(char *input, t_split_state *st);
+static int	split_ops(char *input, char ***segments_out,
+				char ***ops_out, int *count_out);
 #endif
