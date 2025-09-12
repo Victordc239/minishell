@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/12 13:33:30 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/09/12 13:59:51 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ void	ft_freedoom(char **str)
 	}
 	free(str);
 }
-////////////////////v
+////////////////////
 void	free_minishell(t_minishell *shell)
 {
 	if (!shell)
@@ -2354,115 +2354,6 @@ static void	free_split_result(char **segments, char **ops, int count)
 	}
 }
 
-/*static void	process_input(char *input, t_minishell *minishell)
-{
-	char	*status_str;
-	char	*inner;
-	char	*seg;
-	char	**segments;
-	char	**ops;
-	int		seg_count;
-	int		i;
-	int		is_group;
-
-	i = 0;
-	seg_count = 0;
-	ops = NULL;
-	segments = NULL;
-	add_history(input);
-	g_status = 0;
-	is_group = 0;
-	if (!split_ops(input, &segments, &ops, &seg_count))
-	{
-		ft_putstr("minishell: internal split error\n", 2);
-		return ;
-	}
-	i = 0;
-	while (i < seg_count)
-	{
-		is_group = 0;
-		seg = segments[i];
-		inner = NULL;
-		if (!seg || *seg == '\0')
-		{
-			i++;
-			continue ;
-		}
-		inner = strip_outer_parentheses(seg, &is_group);
-		if (is_group)
-		{
-			if (inner)
-				execute_group_in_subshell(minishell, inner);
-			else
-				execute_group_in_subshell(minishell, "");
-			if (inner)
-				free(inner);
-		}
-		else
-		{
-			if (!fill_tokens(minishell, seg))
-			{
-				ft_putstr("syntax error: unclosed quote\n", 2);
-				g_status = 2;
-				status_str = ft_itoa(g_status);
-				if (status_str)
-				{
-					add_env_node(minishell, "?", status_str, 0);
-					free(status_str);
-				}
-				if (minishell->t_list)
-				{
-					free_t_list(minishell->t_list);
-					minishell->t_list = NULL;
-				}
-				if (inner)
-					free(inner);
-				break ;
-			}
-			if (!check_syntax_pipes(minishell->t_list))
-			{
-				status_str = ft_itoa(g_status);
-				if (status_str)
-				{
-					add_env_node(minishell, "?", status_str, 0);
-					free(status_str);
-				}
-				if (minishell->t_list)
-				{
-					free_t_list(minishell->t_list);
-					minishell->t_list = NULL;
-				}
-				if (inner)
-					free(inner);
-				break ;
-			}
-			ft_execute(minishell);
-			if (minishell->t_list)
-			{
-				free_t_list(minishell->t_list);
-				minishell->t_list = NULL;
-			}
-			if (inner)
-				free(inner);
-		}
-		status_str = ft_itoa(g_status);
-		if (status_str)
-		{
-			add_env_node(minishell, "?", status_str, 0);
-			free(status_str);
-		}
-		if (i < seg_count - 1 && ops != NULL && ops[i] != NULL)
-		{
-			if (!ft_strcmp(ops[i], "&&") && g_status != 0)
-				i += 1;
-			else if (!ft_strcmp(ops[i], "||") && g_status == 0)
-				i += 1;
-		}
-		i++;
-	}
-	free_split_result(segments, ops, seg_count);
-}*/
-
 static int	prepare_segments(char *input, char ***segments,
 	char ***ops, int *seg_count)
 {
@@ -2513,21 +2404,29 @@ static void	update_env_status(t_minishell *minishell)
 	}
 }
 
-static void	handle_segments(t_minishell *minishell, char **segments,
-	char **ops, int seg_count, int i)
+static void	handle_segments(t_minishell *minishell,
+							char **segments, char **ops, int seg_count)
 {
-	if (i >= seg_count)
+	if (seg_count <= 0)
 		return ;
-	process_segment(minishell, segments[i]);
+	process_segment(minishell, *segments);
 	update_env_status(minishell);
-	if (i < seg_count - 1 && ops && ops[i])
+	if (seg_count > 1 && ops && *ops)
 	{
-		if (!ft_strcmp(ops[i], "&&") && g_status != 0)
-			i = i + 1;
-		else if (!ft_strcmp(ops[i], "||") && g_status == 0)
-			i = i + 1;
+		if (!ft_strcmp(*ops, "&&") && g_status != 0)
+		{
+			segments++;
+			ops++;
+			seg_count--;
+		}
+		else if (!ft_strcmp(*ops, "||") && g_status == 0)
+		{
+			segments++;
+			ops++;
+			seg_count--;
+		}
 	}
-	handle_segments(minishell, segments, ops, seg_count, i + 1);
+	handle_segments(minishell, segments + 1, ops + 1, seg_count - 1);
 }
 
 static void	process_input(char *input, t_minishell *minishell)
@@ -2541,7 +2440,7 @@ static void	process_input(char *input, t_minishell *minishell)
 	seg_count = 0;
 	if (!prepare_segments(input, &segments, &ops, &seg_count))
 		return ;
-	handle_segments(minishell, segments, ops, seg_count, 0);
+	handle_segments(minishell, segments, ops, seg_count);
 	free_split_result(segments, ops, seg_count);
 }
 
