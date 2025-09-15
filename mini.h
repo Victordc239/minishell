@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vdiez-cu <vdiez-cu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 14:02:20 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/15 15:07:26 by vdiez-cu         ###   ########.fr       */
+/*   Updated: 2025/09/15 16:36:48 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -287,6 +287,10 @@ t_token		*add_token(t_minishell *minishell, char *value);
 t_redir		*init_redir(int type, char const *filename);
 t_pipex		*init_pipex(void);
 t_minishell	init_minishell(void);
+
+static void	handle_word_token(t_minishell *mini, t_token *token);
+
+static int	handle_operator(char *input, t_split_state *st, char *op);
 
 static int	prepare_segments(char *input, char ***segments,
 				char ***ops, int *seg_count);

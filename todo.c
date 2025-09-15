@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   todo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vdiez-cu <vdiez-cu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/15 16:31:10 by vdiez-cu         ###   ########.fr       */
+/*   Updated: 2025/09/15 16:39:19 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1656,7 +1656,7 @@ void	parse_red_append(t_minishell *mini, t_token **token)
 	*token = (*token)->next;
 }
 
-void	process_token(t_minishell *mini, int *index)
+/*void	process_token(t_minishell *mini, int *index)
 {
 	t_token	*token;
 
@@ -1675,6 +1675,39 @@ void	process_token(t_minishell *mini, int *index)
 		else
 			add_arg_to_command(mini, token->value);
 	}
+	else if (token->type == T_RED_IN && token->next)
+		parse_red_in(mini, &mini->t_list);
+	else if (token->type == T_RED_OUT && token->next)
+		parse_red_out(mini, &mini->t_list);
+	else if (token->type == T_RED_APPEND && token->next)
+		parse_red_append(mini, &mini->t_list);
+	else if (token->type == T_HEREDOC && token->next)
+		parse_heredoc(mini, &mini->t_list, index);
+	else if (token->type == T_PIPE)
+		mini->curr = NULL;
+}*/
+
+static void	handle_word_token(t_minishell *mini, t_token *token)
+{
+	if (token->quote != Q_SINGLE && (ft_strchr(token->value, '$')
+			|| ft_strchr(token->value, '\x07')))
+		expand_token(token, mini);
+	if (token->value[0] == '\0' && token->quote != Q_SINGLE)
+		return ;
+	if (token->quote == Q_NONE && (ft_strchr(token->value, '*')
+			|| ft_strchr(token->value, '?') || ft_strchr(token->value, '[')))
+		expand_and_add_glob(token->value, mini);
+	else
+		add_arg_to_command(mini, token->value);
+}
+
+void	process_token(t_minishell *mini, int *index)
+{
+	t_token	*token;
+
+	token = mini->t_list;
+	if (token->type == T_WORD)
+		handle_word_token(mini, token);
 	else if (token->type == T_RED_IN && token->next)
 		parse_red_in(mini, &mini->t_list);
 	else if (token->type == T_RED_OUT && token->next)
@@ -2556,49 +2589,35 @@ static int	handle_quote_paren(char *input, t_split_state *st)
 	return (0);
 }
 
-static int	try_process_operator(char *input, t_split_state *st)
+static int	handle_operator(char *input, t_split_state *st, char *op)
 {
 	char	*seg;
 	char	*trimmed;
 
+	seg = ft_substr(input, st->start, st->pos - st->start);
+	trimmed = trim_whitespace(seg);
+	free(seg);
+	st->segments = realloc(st->segments, sizeof(char *) * (st->seg_count + 1));
+	if (trimmed)
+		st->segments[st->seg_count] = trimmed;
+	else
+		st->segments[st->seg_count] = ft_strdup("");
+	st->seg_count++;
+	st->ops = realloc(st->ops, sizeof(char *) * (st->seg_count));
+	st->ops[st->seg_count - 1] = ft_strdup(op);
+	st->pos += 2;
+	st->start = st->pos;
+	return (1);
+}
+
+static int	try_process_operator(char *input, t_split_state *st)
+{
 	if (!st->quote && st->paren_depth == 0 && st->pos + 1 < st->len)
 	{
 		if (input[st->pos] == '&' && input[st->pos + 1] == '&')
-		{
-			seg = ft_substr(input, st->start, st->pos - st->start);
-			trimmed = trim_whitespace(seg);
-			free(seg);
-			st->segments = realloc(st->segments,
-					sizeof(char *) * (st->seg_count + 1));
-			if (trimmed)
-				st->segments[st->seg_count] = trimmed;
-			else
-				st->segments[st->seg_count] = ft_strdup("");
-			st->seg_count++;
-			st->ops = realloc(st->ops, sizeof(char *) * (st->seg_count));
-			st->ops[st->seg_count - 1] = ft_strdup("&&");
-			st->pos += 2;
-			st->start = st->pos;
-			return (1);
-		}
+			return (handle_operator(input, st, "&&"));
 		if (input[st->pos] == '|' && input[st->pos + 1] == '|')
-		{
-			seg = ft_substr(input, st->start, st->pos - st->start);
-			trimmed = trim_whitespace(seg);
-			free(seg);
-			st->segments = realloc(st->segments,
-					sizeof(char *) * (st->seg_count + 1));
-			if (trimmed)
-				st->segments[st->seg_count] = trimmed;
-			else
-				st->segments[st->seg_count] = ft_strdup("");
-			st->seg_count++;
-			st->ops = realloc(st->ops, sizeof(char *) * (st->seg_count));
-			st->ops[st->seg_count - 1] = ft_strdup("||");
-			st->pos += 2;
-			st->start = st->pos;
-			return (1);
-		}
+			return (handle_operator(input, st, "||"));
 	}
 	return (0);
 }
