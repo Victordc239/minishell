@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
+/*   By: vdiez-cu <vdiez-cu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 14:02:20 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/12 15:00:15 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/09/15 15:07:26 by vdiez-cu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
-# include <glob.h>
+# include <dirent.h>
 # define ERR_FLASH "Error\n"
 # define ERR_ARG "Error Arg or Pipe\n"
 # define ERR_PIPE "Error Pipe\n"

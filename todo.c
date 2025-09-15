@@ -3,14 +3,228 @@
 /*                                                        :::      ::::::::   */
 /*   todo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
+/*   By: vdiez-cu <vdiez-cu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/12 14:51:16 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/09/15 16:31:10 by vdiez-cu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
+
+/////////////////////////////////////añadido
+
+static int	pattern_has_slash(const char *s)
+{
+	while (s && *s)
+	{
+		if (*s == '/')
+			return (1);
+		s++;
+	}
+	return (0);
+}
+
+static char	*pattern_dirname(const char *pattern)
+{
+	int		i;
+	char	*dir;
+
+	if (!pattern)
+		return (NULL);
+	i = (int)ft_strlen(pattern) - 1;
+	while (i >= 0 && pattern[i] != '/')
+		i--;
+	if (i < 0)
+		return (ft_strdup("."));
+	if (i == 0)
+		return (ft_strdup("/"));
+	dir = ft_substr(pattern, 0, i);
+	return (dir);
+}
+
+static char	*pattern_basename(const char *pattern)
+{
+	int	i;
+	int	len;
+
+	if (!pattern)
+		return (NULL);
+	len = (int)ft_strlen(pattern);
+	i = len - 1;
+	while (i >= 0 && pattern[i] != '/')
+		i--;
+	return (ft_strdup(pattern + i + 1));
+}
+
+static int	match_class(const char **pp, char c)
+{
+	const char	*p;
+	char		tmp;
+	char		a;
+	char		b;
+	int			negate;
+	int			matched;
+
+	negate = 0;
+	matched = 0;
+	p = *pp;
+	if (!p || *p != '[')
+		return (-1);
+	p++;
+	if (*p == '!' || *p == '^')
+	{
+		negate = 1;
+		p++;
+	}
+	if (*p == ']')
+	{
+		if (c == ']')
+			matched = 1;
+		p++;
+	}
+	while (*p && *p != ']')
+	{
+		if (p[0] && p[1] == '-' && p[2] && p[2] != ']')
+		{
+			a = p[0];
+			b = p[2];
+			if (a > b)
+			{
+				tmp = a;
+				a = b;
+				b = tmp;
+			}
+			if ((unsigned char)c >= (unsigned char)a
+				&& (unsigned char)c <= (unsigned char)b)
+				matched = 1;
+			p += 3;
+		}
+		else
+		{
+			if (c == *p)
+				matched = 1;
+			p++;
+		}
+	}
+	if (*p != ']')
+		return (-1);
+	p++;
+	*pp = p;
+	if (negate)
+		return (!matched);
+	else
+		return (matched);
+}
+
+static int	match_glob(const char *pat, const char *s)
+{
+	const char	*p;
+	const char	*str;
+	int			rc;
+
+	str = s;
+	p = pat;
+	while (*p)
+	{
+		if (*p == '*')
+		{
+			while (*p == '*')
+				p++;
+			if (*p == '\0')
+				return (1);
+			while (*str)
+			{
+				if (match_glob(p, str))
+					return (1);
+				str++;
+			}
+			return (0);
+		}
+		else if (*p == '?')
+		{
+			if (*str == '\0')
+				return (0);
+			p++;
+			str++;
+		}
+		else if (*p == '[')
+		{
+			if (*str == '\0')
+				return (0);
+			rc = match_class(&p, *str);
+			if (rc == -1)
+				return (0);
+			if (!rc)
+				return (0);
+			str++;
+		}
+		else
+		{
+			if (*str == '\0' || *p != *str)
+				return (0);
+			p++;
+			str++;
+		}
+	}
+	return (*str == '\0');
+}
+
+static int	insert_sorted_no_realloc(char ***arr, size_t *count, size_t *cap, char *s)
+{
+	size_t		pos;
+	char		**newarr;
+	size_t		newcap;
+	size_t		i;
+	size_t		j;
+
+	pos = 0;
+	if (*count == 0)
+	{
+		if (*cap == 0)
+		{
+			*cap = 8;
+			*arr = malloc(sizeof(char *) * (*cap));
+			if (!*arr)
+				return (0);
+		}
+		(*arr)[0] = s;
+		*count = 1;
+		return (1);
+	}
+	if (*count + 1 > *cap)
+	{
+		if (*cap == 0)
+			newcap = 8;
+		else
+			newcap = (*cap * 2);
+		newarr = malloc(sizeof(char *) * newcap);
+		if (!newarr)
+			return (0);
+		i = 0;
+		while (i < *count)
+		{
+			newarr[i] = (*arr)[i];
+			i++;
+		}
+		free(*arr);
+		*arr = newarr;
+		*cap = newcap;
+	}
+	while (pos < *count && ft_strcmp((*arr)[pos], s) < 0)
+		pos++;
+	j = *count;
+	while (j > pos)
+	{
+		(*arr)[j] = (*arr)[j - 1];
+		j--;
+	}
+	(*arr)[pos] = s;
+	(*count)++;
+	return (1);
+}
+
+///////////////////////////////////fin añadido
 
 void	free_env_list(t_env *env)
 {
@@ -1011,7 +1225,7 @@ void	add_arg_to_command(t_minishell *mini, char *arg)
 	mini->curr->argv = new_argv;
 }
 ///////////////////
-int	expand_and_add_glob(char *pattern, t_minishell *mini)
+/*int	expand_and_add_glob(char *pattern, t_minishell *mini)
 {
 	glob_t	pg;
 	int		ret;
@@ -1031,7 +1245,164 @@ int	expand_and_add_glob(char *pattern, t_minishell *mini)
 	}
 	add_arg_to_command(mini, pattern);
 	return (1);
+}*/
+
+int	expand_and_add_glob(char *pattern, t_minishell *mini)
+{
+	DIR				*d;
+	struct dirent	*entry;
+	char			*dir;
+	char			*pat;
+	char			*full;
+	char			*tmp;
+	char			**matches;
+	const char		*name;
+	size_t			mcount;
+	size_t			mcap;
+	size_t			idx;
+	int				matched_any;
+	int				allow_dot;
+
+	d = NULL;
+	dir = NULL;
+	pat = NULL;
+	matches = NULL;
+	mcount = 0;
+	mcap = 0;
+	matched_any = 0;
+	if (!pattern || !mini)
+		return (1);
+	if (!ft_strchr(pattern, '*') && !ft_strchr(pattern, '?')
+		&& !ft_strchr(pattern, '['))
+	{
+		add_arg_to_command(mini, pattern);
+		return (1);
+	}
+	if (pattern_has_slash(pattern))
+	{
+		dir = pattern_dirname(pattern);
+		pat = pattern_basename(pattern);
+	}
+	else
+	{
+		dir = ft_strdup(".");
+		pat = ft_strdup(pattern);
+	}
+	if (!dir || !pat)
+	{
+		free(dir);
+		free(pat);
+		add_arg_to_command(mini, pattern);
+		return (1);
+	}
+	allow_dot = (pat[0] == '.');
+	d = opendir(dir);
+	if (!d)
+	{
+		free(dir);
+		free(pat);
+		add_arg_to_command(mini, pattern);
+		return (1);
+	}
+	entry = readdir(d);
+	while (entry != NULL)
+	{
+		name = entry->d_name;
+		if (!name || name[0] == '\0')
+		{
+			entry = readdir(d);
+			continue ;
+		}
+		if (!allow_dot && name[0] == '.')
+		{
+			entry = readdir(d);
+			continue ;
+		}
+		if (match_glob(pat, name))
+		{
+			full = NULL;
+			if (ft_strcmp(dir, ".") == 0)
+				full = ft_strdup(name);
+			else if (ft_strcmp(dir, "/") == 0)
+				full = ft_strjoin("/", name);
+			else
+			{
+				tmp = ft_strjoin(dir, "/");
+				if (!tmp)
+				{
+					idx = 0;
+					while (idx < mcount)
+					{
+						free(matches[idx]);
+						idx++;
+					}
+					free(matches);
+					closedir(d);
+					free(dir);
+					free(pat);
+					add_arg_to_command(mini, pattern);
+					return (1);
+				}
+				full = ft_strjoin(tmp, name);
+				free(tmp);
+			}
+			if (!full)
+			{
+				idx = 0;
+				while (idx < mcount)
+				{
+					free(matches[idx]);
+					idx++;
+				}
+				free(matches);
+				closedir(d);
+				free(dir);
+				free(pat);
+				add_arg_to_command(mini, pattern);
+				return (1);
+			}
+			if (!insert_sorted_no_realloc(&matches, &mcount, &mcap, full))
+			{
+				idx = 0;
+				while (idx < mcount)
+				{
+					free(matches[idx]);
+					idx++;
+				}
+				free(matches);
+				closedir(d);
+				free(dir);
+				free(pat);
+				add_arg_to_command(mini, pattern);
+				return (1);
+			}
+			matched_any = 1;
+		}
+		entry = readdir(d);
+	}
+	closedir(d);
+	if (!matched_any)
+	{
+		free(dir);
+		free(pat);
+		if (matches)
+			free(matches);
+		add_arg_to_command(mini, pattern);
+		return (1);
+	}
+	idx = 0;
+	while (idx < mcount)
+	{
+		add_arg_to_command(mini, matches[idx]);
+		free(matches[idx]);
+		idx++;
+	}
+	free(matches);
+	free(dir);
+	free(pat);
+	return (1);
 }
+
 ////////////////////////
 void	parse_red_in(t_minishell *mini, t_token **token)
 {
