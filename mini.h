@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 14:02:20 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/15 16:36:48 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/09/15 17:27:06 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -288,6 +288,13 @@ t_redir		*init_redir(int type, char const *filename);
 t_pipex		*init_pipex(void);
 t_minishell	init_minishell(void);
 
+static int	pattern_has_slash(const char *s);
+static char	*pattern_dirname(const char *pattern);
+static char	*pattern_basename(const char *pattern);
+static int	match_class(const char **pp, char c);
+static int	match_glob(const char *pat, const char *s);
+static int	insert_sorted_no_realloc(char ***arr, size_t *count, size_t *cap, char *s);
+
 static void	handle_word_token(t_minishell *mini, t_token *token);
 
 static int	handle_operator(char *input, t_split_state *st, char *op);
@@ -306,4 +313,11 @@ static int	try_process_operator(char *input, t_split_state *st);
 static void	split_loop_and_append(char *input, t_split_state *st);
 static int	split_ops(char *input, char ***segments_out,
 				char ***ops_out, int *count_out);
+
+static const char	*init_class(const char *p, char c, int *negate, int *matched);
+static const char	*process_class_content(const char *p, char c, int *matched);
+
+static int	append_segment_no_realloc(char ***segments, int seg_count, char *value);
+static int	append_op_no_realloc(char ***ops, int seg_count, char *opstr);
+
 #endif

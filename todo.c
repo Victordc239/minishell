@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   todo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vdiez-cu <vdiez-cu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/15 17:14:06 by vdiez-cu         ###   ########.fr       */
+/*   Updated: 2025/09/15 17:26:19 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
 
-//////////////////////////////AÑADIDO
-
+//////////////////////////////////
 static int	append_segment_no_realloc(char ***segments, int seg_count, char *value)
 {
 	char	**newarr;
@@ -62,8 +61,6 @@ static int	append_op_no_realloc(char ***ops, int seg_count, char *opstr)
 	return (1);
 }
 
-//////////////////////////////FIN AÑADIDO
-
 static int	pattern_has_slash(const char *s)
 {
 	while (s && *s)
@@ -107,64 +104,72 @@ static char	*pattern_basename(const char *pattern)
 	return (ft_strdup(pattern + i + 1));
 }
 
-static int	match_class(const char **pp, char c)
+static const char	*init_class(const char *p, char c, int *neg, int *matched)
 {
-	const char	*p;
-	char		tmp;
-	char		a;
-	char		b;
-	int			negate;
-	int			matched;
-
-	negate = 0;
-	matched = 0;
-	p = *pp;
+	*neg = 0;
+	*matched = 0;
 	if (!p || *p != '[')
-		return (-1);
+		return (NULL);
 	p++;
 	if (*p == '!' || *p == '^')
 	{
-		negate = 1;
+		*neg = 1;
 		p++;
 	}
 	if (*p == ']')
 	{
 		if (c == ']')
-			matched = 1;
+			*matched = 1;
 		p++;
 	}
-	while (*p && *p != ']')
+	return (p);
+}
+
+static const char	*process_class_content(const char *p, char c, int *matched)
+{
+	char	a;
+	char	b;
+	char	tmp;
+
+	if (!p || *p == '\0' || *p == ']')
+		return (p);
+	if (p[0] && p[1] == '-' && p[2] && p[2] != ']')
 	{
-		if (p[0] && p[1] == '-' && p[2] && p[2] != ']')
+		a = p[0];
+		b = p[2];
+		if (a > b)
 		{
-			a = p[0];
-			b = p[2];
-			if (a > b)
-			{
-				tmp = a;
-				a = b;
-				b = tmp;
-			}
-			if ((unsigned char)c >= (unsigned char)a
-				&& (unsigned char)c <= (unsigned char)b)
-				matched = 1;
-			p += 3;
+			tmp = a;
+			a = b;
+			b = tmp;
 		}
-		else
-		{
-			if (c == *p)
-				matched = 1;
-			p++;
-		}
+		if ((unsigned char)c >= (unsigned char)a
+			&& (unsigned char)c <= (unsigned char)b)
+			*matched = 1;
+		return (process_class_content(p + 3, c, matched));
 	}
+	if (c == *p)
+		*matched = 1;
+	return (process_class_content(p + 1, c, matched));
+}
+
+static int	match_class(const char **pp, char c)
+{
+	const char	*p;
+	int			negate;
+	int			matched;
+
+	p = init_class(*pp, c, &negate, &matched);
+	if (!p)
+		return (-1);
+	p = process_class_content(p, c, &matched);
 	if (*p != ']')
 		return (-1);
 	p++;
 	*pp = p;
 	if (negate)
 		return (!matched);
-	else
-		return (matched);
+	return (matched);
 }
 
 static int	match_glob(const char *pat, const char *s)
@@ -273,6 +278,8 @@ static int	insert_sorted_no_realloc(char ***arr, size_t *count, size_t *cap, cha
 	(*count)++;
 	return (1);
 }
+
+///////////////////////////////////
 
 void	free_env_list(t_env *env)
 {
@@ -1273,28 +1280,6 @@ void	add_arg_to_command(t_minishell *mini, char *arg)
 	mini->curr->argv = new_argv;
 }
 ///////////////////
-/*int	expand_and_add_glob(char *pattern, t_minishell *mini)
-{
-	glob_t	pg;
-	int		ret;
-	size_t	i;
-
-	ret = glob(pattern, 0, NULL, &pg);
-	if (ret == 0)
-	{
-		i = 0;
-		while (pg.gl_pathv[i])
-		{
-			add_arg_to_command(mini, pg.gl_pathv[i]);
-			i++;
-		}
-		globfree(&pg);
-		return (1);
-	}
-	add_arg_to_command(mini, pattern);
-	return (1);
-}*/
-
 int	expand_and_add_glob(char *pattern, t_minishell *mini)
 {
 	DIR				*d;
@@ -1450,7 +1435,6 @@ int	expand_and_add_glob(char *pattern, t_minishell *mini)
 	free(pat);
 	return (1);
 }
-
 ////////////////////////
 void	parse_red_in(t_minishell *mini, t_token **token)
 {
@@ -2636,27 +2620,6 @@ static int	handle_quote_paren(char *input, t_split_state *st)
 	}
 	return (0);
 }
-
-/*static int	handle_operator(char *input, t_split_state *st, char *op)
-{
-	char	*seg;
-	char	*trimmed;
-
-	seg = ft_substr(input, st->start, st->pos - st->start);
-	trimmed = trim_whitespace(seg);
-	free(seg);
-	st->segments = realloc(st->segments, sizeof(char *) * (st->seg_count + 1));
-	if (trimmed)
-		st->segments[st->seg_count] = trimmed;
-	else
-		st->segments[st->seg_count] = ft_strdup("");
-	st->seg_count++;
-	st->ops = realloc(st->ops, sizeof(char *) * (st->seg_count));
-	st->ops[st->seg_count - 1] = ft_strdup(op);
-	st->pos += 2;
-	st->start = st->pos;
-	return (1);
-}*/
 
 static int	handle_operator(char *input, t_split_state *st, char *op)
 {
