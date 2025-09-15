@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   todo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
+/*   By: vdiez-cu <vdiez-cu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/15 18:02:55 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/09/15 18:12:47 by vdiez-cu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,21 +196,12 @@ static int	match_glob(const char *pat, const char *s)
 			}
 			return (0);
 		}
-		else if (*p == '?')
-		{
-			if (*str == '\0')
-				return (0);
-			p++;
-			str++;
-		}
 		else if (*p == '[')
 		{
 			if (*str == '\0')
 				return (0);
 			rc = match_class(&p, *str);
-			if (rc == -1)
-				return (0);
-			if (!rc)
+			if (rc == -1 || !rc)
 				return (0);
 			str++;
 		}
