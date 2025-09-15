@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   todo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vdiez-cu <vdiez-cu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/15 18:12:47 by vdiez-cu         ###   ########.fr       */
+/*   Updated: 2025/09/15 18:21:47 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -2713,22 +2713,20 @@ static int	split_ops(char *input, char ***segments_out,
 /////
 static int	is_outer_parenthesized(const char *s)
 {
-	int		len;
-	int		i;
 	int		depth;
+	int		i;
+	int		len;
 	char	quote;
 
-	if (!s)
-		return (0);
-	if (s[0] != '(')
-		return (0);
-	len = ft_strlen(s);
 	depth = 1;
-	quote = 0;
 	i = 1;
+	len = ft_strlen(s);
+	quote = 0;
+	if (!s || s[0] != '(')
+		return (0);
 	while (i < len)
 	{
-		if ((s[i] == '\'' || s[i] == '"') && quote == 0)
+		if ((s[i] == '\'' || s[i] == '"') && !quote)
 			quote = s[i];
 		else if (s[i] == quote)
 			quote = 0;
@@ -2737,11 +2735,8 @@ static int	is_outer_parenthesized(const char *s)
 			if (s[i] == '(')
 				depth++;
 			else if (s[i] == ')')
-			{
-				depth--;
-				if (depth == 0)
+				if (--depth == 0)
 					break ;
-			}
 		}
 		i++;
 	}
