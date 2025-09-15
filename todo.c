@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/15 17:26:19 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/09/15 17:51:49 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -2409,19 +2409,6 @@ int	fill_tokens(t_minishell *minishell, char *input)
 	return (success);
 }
 
-void	free_tokens(t_token *head)
-{
-	t_token	*temp;
-
-	while (head != NULL)
-	{
-		temp = head;
-		head = head->next;
-		free(temp->value);
-		free(temp);
-	}
-}
-
 t_minishell	init_minishell(void)
 {
 	t_minishell	minishell;
@@ -2660,37 +2647,33 @@ static int	try_process_operator(char *input, t_split_state *st)
 	return (0);
 }
 
-/*static void	split_loop_and_append(char *input, t_split_state *st)
+static int	append_segment_dynamic(char ***segments, int seg_count, char *value)
 {
-	char	*seg;
-	char	*trimmed;
+	char	**newarr;
+	int		i;
 
-	while (st->pos < st->len)
+	newarr = malloc(sizeof(char *) * (seg_count + 1));
+	if (!newarr)
+		return (0);
+	i = 0;
+	if (*segments)
 	{
-		if (handle_quote_paren(input, st))
-			continue ;
-		if (try_process_operator(input, st))
-			continue ;
-		st->pos++;
+		while (i < seg_count)
+		{
+			newarr[i] = (*segments)[i];
+			i++;
+		}
+		free(*segments);
 	}
-	seg = ft_substr(input, st->start, st->len - st->start);
-	trimmed = trim_whitespace(seg);
-	free(seg);
-	st->segments = realloc(st->segments, sizeof(char *) * (st->seg_count + 1));
-	if (trimmed)
-		st->segments[st->seg_count] = trimmed;
-	else
-		st->segments[st->seg_count] = ft_strdup("");
-	st->seg_count++;
-}*/
+	newarr[seg_count] = value;
+	*segments = newarr;
+	return (1);
+}
 
 static void	split_loop_and_append(char *input, t_split_state *st)
 {
 	char	*seg;
 	char	*trimmed;
-	char	*to_add;
-	int		i;
-	int		j;
 
 	while (st->pos < st->len)
 	{
@@ -2703,67 +2686,14 @@ static void	split_loop_and_append(char *input, t_split_state *st)
 	seg = ft_substr(input, st->start, st->len - st->start);
 	trimmed = trim_whitespace(seg);
 	free(seg);
-	if (trimmed)
-		to_add = trimmed;
-	else
+
+	if (trimmed == NULL)
+		trimmed = ft_strdup("");
+
+	if (!append_segment_dynamic(&st->segments, st->seg_count, trimmed))
 	{
-		to_add = ft_strdup("");
-		if (!to_add)
-		{
-			ft_putstr("minishell: internal split error\n", 2);
-			if (st->segments)
-			{
-				i = 0;
-				while (i < st->seg_count)
-				{
-					free(st->segments[i]);
-					i++;
-				}
-				free(st->segments);
-				st->segments = NULL;
-			}
-			if (st->ops)
-			{
-				j = 0;
-				while (j < st->seg_count - 1)
-				{
-					free(st->ops[j]);
-					j++;
-				}
-				free(st->ops);
-				st->ops = NULL;
-			}
-			st->seg_count = 0;
-			return ;
-		}
-	}
-	if (!append_segment_no_realloc(&st->segments, st->seg_count, to_add))
-	{
-		free(to_add);
-		ft_putstr("minishell: internal split error\n", 2);
-		if (st->segments)
-		{
-			i = 0;
-			while (i < st->seg_count)
-			{
-				free(st->segments[i]);
-				i++;
-			}
-			free(st->segments);
-			st->segments = NULL;
-		}
-		if (st->ops)
-		{
-			j = 0;
-			while (j < st->seg_count - 1)
-			{
-				free(st->ops[j]);
-				j++;
-			}
-			free(st->ops);
-			st->ops = NULL;
-		}
-		st->seg_count = 0;
+		if (trimmed)
+			free(trimmed);
 		return ;
 	}
 	st->seg_count++;
@@ -3035,7 +2965,7 @@ void	mini_loop(t_minishell *mini)
 		if (!input)
 		{
 			(free_env_list(mini->env_list), free_tokenizer(mini->tokenizer),
-				free_tokens(mini->t_list), close(saved_stdin));
+				free_t_list(mini->t_list), close(saved_stdin));
 			break ;
 		}
 		if (*input == '\0' || g_status == 128 + SIGINT)

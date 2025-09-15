@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 14:02:20 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/15 17:27:06 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/09/15 17:55:11 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -246,7 +246,6 @@ void		do_signal(void);
 void		append_var(char **res, char *src, int *i, t_minishell *mini);
 void		append_literal(char **res, char *src, int len);
 void		cleanup_tokenizer(t_minishell *minishell, int success);
-void		free_tokens(t_token *head);
 void		expand_token(t_token *token, t_minishell *mini);
 void		mini_loop(t_minishell *mini);
 static void	append_exit_code(char **res, int *i, t_minishell *mini);
@@ -319,5 +318,7 @@ static const char	*process_class_content(const char *p, char c, int *matched);
 
 static int	append_segment_no_realloc(char ***segments, int seg_count, char *value);
 static int	append_op_no_realloc(char ***ops, int seg_count, char *opstr);
+
+static int	append_segment_dynamic(char ***segments, int seg_count, char *value);
 
 #endif
