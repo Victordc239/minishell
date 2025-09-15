@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/15 17:51:49 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/09/15 18:02:55 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -2686,10 +2686,8 @@ static void	split_loop_and_append(char *input, t_split_state *st)
 	seg = ft_substr(input, st->start, st->len - st->start);
 	trimmed = trim_whitespace(seg);
 	free(seg);
-
 	if (trimmed == NULL)
 		trimmed = ft_strdup("");
-
 	if (!append_segment_dynamic(&st->segments, st->seg_count, trimmed))
 	{
 		if (trimmed)
