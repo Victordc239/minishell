@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
+/*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 14:02:20 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/15 17:55:11 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/09/16 11:46:09 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -316,9 +316,9 @@ static int	split_ops(char *input, char ***segments_out,
 static const char	*init_class(const char *p, char c, int *negate, int *matched);
 static const char	*process_class_content(const char *p, char c, int *matched);
 
-static int	append_segment_no_realloc(char ***segments, int seg_count, char *value);
-static int	append_op_no_realloc(char ***ops, int seg_count, char *opstr);
+//static int	append_segment_no_realloc(char ***segments, int seg_count, char *value);
+//static int	append_op_no_realloc(char ***ops, int seg_count, char *opstr);
 
-static int	append_segment_dynamic(char ***segments, int seg_count, char *value);
+//static int	append_segment_dynamic(char ***segments, int seg_count, char *value);
 
 #endif

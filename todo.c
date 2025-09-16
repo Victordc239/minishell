@@ -3,17 +3,42 @@
 /*                                                        :::      ::::::::   */
 /*   todo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
+/*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/15 18:21:47 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/09/16 11:50:10 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
 
-//////////////////////////////////
-static int	append_segment_no_realloc(char ***segments, int seg_count, char *value)
+///////////////////////////////////// AÑADIDO
+static int	append_ptr_array(char ***arr, int new_size, int copy_count, char *value)
+{
+	char	**newarr;
+	int		i;
+
+	newarr = malloc(sizeof(char *) * new_size);
+	if (!newarr)
+		return (0);
+	i = 0;
+	if (*arr)
+	{
+		while (i < copy_count)
+		{
+			newarr[i] = (*arr)[i];
+			i++;
+		}
+		free(*arr);
+	}
+	newarr[copy_count] = value;
+	*arr = newarr;
+	return (1);
+}
+///////////////////////////////////// FIN AÑADIDO
+
+////////////////////////////////// INICIO ELIMINAR
+/*static int	append_segment_no_realloc(char ***segments, int seg_count, char *value)
 {
 	char	**newarr;
 	int		i;
@@ -59,7 +84,7 @@ static int	append_op_no_realloc(char ***ops, int seg_count, char *opstr)
 		free(*ops);
 	*ops = newops;
 	return (1);
-}
+}		FIN ELIMINAR		*/
 
 static int	pattern_has_slash(const char *s)
 {
@@ -2599,7 +2624,7 @@ static int	handle_quote_paren(char *input, t_split_state *st)
 	return (0);
 }
 
-static int	handle_operator(char *input, t_split_state *st, char *op)
+/*static int	handle_operator(char *input, t_split_state *st, char *op)
 {
 	char	*seg;
 	char	*trimmed;
@@ -2624,7 +2649,35 @@ static int	handle_operator(char *input, t_split_state *st, char *op)
 	st->pos += 2;
 	st->start = st->pos;
 	return (1);
+}	MODIFICADA / CAMBIADA	*/
+
+static int	handle_operator(char *input, t_split_state *st, char *op)
+{
+	char	*seg;
+	char	*trimmed;
+	char	*to_add;
+
+	seg = ft_substr(input, st->start, st->pos - st->start);
+	trimmed = trim_whitespace(seg);
+	free(seg);
+	if (trimmed)
+		to_add = trimmed;
+	else
+	{
+		to_add = ft_strdup("");
+		if (!to_add)
+			return (0);
+	}
+	if (!append_ptr_array(&st->segments, st->seg_count + 1, st->seg_count, to_add))
+		return (free(to_add), 0);
+	st->seg_count++;
+	if (!append_ptr_array(&st->ops, st->seg_count, st->seg_count - 1, ft_strdup(op)))
+		return (free(st->segments[st->seg_count - 1]), st->seg_count--, 0);
+	st->pos += 2;
+	st->start = st->pos;
+	return (1);
 }
+
 
 static int	try_process_operator(char *input, t_split_state *st)
 {
@@ -2638,7 +2691,7 @@ static int	try_process_operator(char *input, t_split_state *st)
 	return (0);
 }
 
-static int	append_segment_dynamic(char ***segments, int seg_count, char *value)
+/* ELIMINAR static int	append_segment_dynamic(char ***segments, int seg_count, char *value)
 {
 	char	**newarr;
 	int		i;
@@ -2659,7 +2712,34 @@ static int	append_segment_dynamic(char ***segments, int seg_count, char *value)
 	newarr[seg_count] = value;
 	*segments = newarr;
 	return (1);
-}
+}		FIN ELIMINADA	*/
+
+/*static void	split_loop_and_append(char *input, t_split_state *st)
+{
+	char	*seg;
+	char	*trimmed;
+
+	while (st->pos < st->len)
+	{
+		if (handle_quote_paren(input, st))
+			continue ;
+		if (try_process_operator(input, st))
+			continue ;
+		st->pos++;
+	}
+	seg = ft_substr(input, st->start, st->len - st->start);
+	trimmed = trim_whitespace(seg);
+	free(seg);
+	if (trimmed == NULL)
+		trimmed = ft_strdup("");
+	if (!append_segment_dynamic(&st->segments, st->seg_count, trimmed))
+	{
+		if (trimmed)
+			free(trimmed);
+		return ;
+	}
+	st->seg_count++;
+}	MODIFICADA / CAMBIADA	*/
 
 static void	split_loop_and_append(char *input, t_split_state *st)
 {
@@ -2679,7 +2759,7 @@ static void	split_loop_and_append(char *input, t_split_state *st)
 	free(seg);
 	if (trimmed == NULL)
 		trimmed = ft_strdup("");
-	if (!append_segment_dynamic(&st->segments, st->seg_count, trimmed))
+	if (!append_ptr_array(&st->segments, st->seg_count + 1, st->seg_count, trimmed))
 	{
 		if (trimmed)
 			free(trimmed);
