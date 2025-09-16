@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   todo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
+/*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/16 15:42:59 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/09/16 17:01:57 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -2746,9 +2746,38 @@ static int	split_ops(char *input, char ***segments_out,
 }
 
 /////
+/*static int	is_outer_parenthesized(const char *s, int	depth)
+{
+	size_t	i;
+	char	quote;
+
+	depth = 1;
+	i = 1;
+	quote = 0;
+	if (!s || s[0] != '(')
+		return (0);
+	while (i < ft_strlen(s))
+	{
+		if ((s[i] == '\'' || s[i] == '"') && !quote)
+			quote = s[i];
+		else if (s[i] == quote)
+			quote = 0;
+		else if (!quote)
+		{
+			if (s[i] == '(')
+				depth++;
+			else if (s[i] == ')')
+				if (--depth == 0)
+					break ;
+		}
+		i++;
+	}
+	return (depth == 0 && i == ft_strlen(s) - 1);
+}*/
+
 static int	is_outer_parenthesized(const char *s)
 {
-	int		depth;
+	int	depth;
 	size_t	i;
 	char	quote;
 
