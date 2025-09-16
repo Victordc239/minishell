@@ -6,7 +6,7 @@
 /*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/16 11:50:10 by victor           ###   ########.fr       */
+/*   Updated: 2025/09/16 12:24:29 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,7 +197,7 @@ static int	match_class(const char **pp, char c)
 	return (matched);
 }
 
-static int	match_glob(const char *pat, const char *s)
+/*static int	match_glob(const char *pat, const char *s)
 {
 	const char	*p;
 	const char	*str;
@@ -237,6 +237,42 @@ static int	match_glob(const char *pat, const char *s)
 			p++;
 			str++;
 		}
+	}
+	return (*str == '\0');
+}		MODIFICADA / CAMBIADA			*/
+static int	match_glob(const char *p, const char *s)
+{
+	const char	*str;
+	int			rc;
+
+	str = s;
+	while (*p)
+	{
+		if (*p == '*')
+		{
+			while (*p == '*')
+				p++;
+			if (*p == '\0')
+				return (1);
+			while (*str)
+				if (match_glob(p, str++))
+					return (1);
+			return (0);
+		}
+		if (*p == '[')
+		{
+			if (*str == '\0')
+				return (0);
+			rc = match_class(&p, *str);
+			if (rc == -1 || !rc)
+				return (0);
+			str++;
+			continue ;
+		}
+		if (*str == '\0' || *p != *str)
+			return (0);
+		p++;
+		str++;
 	}
 	return (*str == '\0');
 }
@@ -1451,6 +1487,7 @@ int	expand_and_add_glob(char *pattern, t_minishell *mini)
 	free(pat);
 	return (1);
 }
+
 ////////////////////////
 void	parse_red_in(t_minishell *mini, t_token **token)
 {
@@ -2791,7 +2828,7 @@ static int	split_ops(char *input, char ***segments_out,
 }
 
 /////
-static int	is_outer_parenthesized(const char *s)
+/*static int	is_outer_parenthesized(const char *s)
 {
 	int		depth;
 	int		i;
@@ -2821,6 +2858,36 @@ static int	is_outer_parenthesized(const char *s)
 		i++;
 	}
 	return (depth == 0 && i == len - 1);
+}		MODIFICADA / CAMBIADA	*/
+
+static int	is_outer_parenthesized(const char *s)
+{
+	int		depth;
+	size_t		i;
+	char	quote;
+
+	depth = 1;
+	i = 1;
+	quote = 0;
+	if (!s || s[0] != '(')
+		return (0);
+	while (i < ft_strlen(s))
+	{
+		if ((s[i] == '\'' || s[i] == '"') && !quote)
+			quote = s[i];
+		else if (s[i] == quote)
+			quote = 0;
+		else if (!quote)
+		{
+			if (s[i] == '(')
+				depth++;
+			else if (s[i] == ')')
+				if (--depth == 0)
+					break ;
+		}
+		i++;
+	}
+	return (depth == 0 && i == ft_strlen(s) - 1);
 }
 
 static char	*strip_outer_parentheses(char *s, int *removed)
