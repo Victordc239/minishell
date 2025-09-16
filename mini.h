@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 14:02:20 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/16 11:46:09 by victor           ###   ########.fr       */
+/*   Updated: 2025/09/16 15:45:25 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -292,7 +292,7 @@ static char	*pattern_dirname(const char *pattern);
 static char	*pattern_basename(const char *pattern);
 static int	match_class(const char **pp, char c);
 static int	match_glob(const char *pat, const char *s);
-static int	insert_sorted_no_realloc(char ***arr, size_t *count, size_t *cap, char *s);
+static int	insert_sorted(char ***arr, size_t *count, size_t *cap, char *s);
 
 static void	handle_word_token(t_minishell *mini, t_token *token);
 
@@ -316,9 +316,6 @@ static int	split_ops(char *input, char ***segments_out,
 static const char	*init_class(const char *p, char c, int *negate, int *matched);
 static const char	*process_class_content(const char *p, char c, int *matched);
 
-//static int	append_segment_no_realloc(char ***segments, int seg_count, char *value);
-//static int	append_op_no_realloc(char ***ops, int seg_count, char *opstr);
-
-//static int	append_segment_dynamic(char ***segments, int seg_count, char *value);
+static int	append_ptr(char ***arr, int new_size, int copy_count, char *value);
 
 #endif
