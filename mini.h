@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 14:02:20 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/16 17:02:03 by victor           ###   ########.fr       */
+/*   Updated: 2025/09/16 17:54:28 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,6 +151,18 @@ typedef struct s_split_state
 	char						**ops;
 }								t_split_state;
 
+typedef struct s_glob_ctx
+{
+	char						*dir;
+	char						*pat;
+	char						**matches;
+	size_t						mcount;
+	size_t						mcap;
+	int							matched_any;
+	int							allow_dot;
+	DIR							*d;
+}								t_glob_ctx;
+
 typedef enum e_builtin_type
 {
 	NO_BUITIN = -1,
@@ -167,7 +179,6 @@ int			is_valid_identifier(char const *str);
 int			process_export_argument(char *arg, t_minishell *mini);
 int			update_node(t_env *tmp, char *name, char *value, int exported);
 int			count_commands_list(t_minishell *mini);
-int			expand_and_add_glob(char *pattern, t_minishell *mini);
 int			is_limiter(char *line, char *limiter);
 int			here_doc(char *limiter, char const *filename);
 int			process_heredoc(int fd, char *limiter);
@@ -317,5 +328,13 @@ static const char	*init_class(const char *p, char c, int *negate, int *matched);
 static const char	*process_class_content(const char *p, char c, int *matched);
 
 static int	append_ptr(char ***arr, int new_size, int copy_count, char *value);
+
+int			expand_and_add_glob(char *pattern, t_minishell *mini);
+static void	add_results(t_minishell *mini, t_glob_ctx *ctx, size_t idx);
+static int	process_dir(t_glob_ctx *ctx, char *pattern, t_minishell *mini);
+static int	process_and_insert(t_glob_ctx *ctx, const char *name);
+static void	free_matches_recursive(t_glob_ctx *ctx, size_t idx);
+static int	open_dir_or_error(t_glob_ctx *ctx, char *pattern, t_minishell *mini);
+static int	glob_init(const char *pattern, t_minishell *mini, t_glob_ctx *ctx);
 
 #endif
