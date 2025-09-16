@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   todo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
+/*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/16 17:51:31 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/09/16 18:03:10 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,36 +46,28 @@ static int	pattern_has_slash(const char *s)
 	return (0);
 }
 
-static char	*pattern_dirname(const char *pattern)
+static void	split_path(const char *pattern, char **dir_out, char **base_out)
 {
-	int		i;
-	char	*dir;
+	int	i;
 
+	*dir_out = NULL;
+	*base_out = NULL;
 	if (!pattern)
-		return (NULL);
+		return ;
 	i = (int)ft_strlen(pattern) - 1;
 	while (i >= 0 && pattern[i] != '/')
 		i--;
 	if (i < 0)
-		return (ft_strdup("."));
+	{
+		*dir_out = ft_strdup(".");
+		*base_out = ft_strdup(pattern);
+		return ;
+	}
 	if (i == 0)
-		return (ft_strdup("/"));
-	dir = ft_substr(pattern, 0, i);
-	return (dir);
-}
-
-static char	*pattern_basename(const char *pattern)
-{
-	int	i;
-	int	len;
-
-	if (!pattern)
-		return (NULL);
-	len = (int)ft_strlen(pattern);
-	i = len - 1;
-	while (i >= 0 && pattern[i] != '/')
-		i--;
-	return (ft_strdup(pattern + i + 1));
+		*dir_out = ft_strdup("/");
+	else
+		*dir_out = ft_substr(pattern, 0, i);
+	*base_out = ft_strdup(pattern + i + 1);
 }
 
 static const char	*init_class(const char *p, char c, int *neg, int *matched)
@@ -1342,10 +1334,7 @@ static int	glob_init(const char *pattern, t_minishell *mini, t_glob_ctx *ctx)
 		return (0);
 	}
 	if (pattern_has_slash(pattern))
-	{
-		ctx->dir = pattern_dirname((char *)pattern);
-		ctx->pat = pattern_basename((char *)pattern);
-	}
+		split_path(pattern, &ctx->dir, &ctx->pat);
 	else
 	{
 		ctx->dir = ft_strdup(".");

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
+/*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 14:02:20 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/16 17:54:28 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/09/16 18:00:28 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -299,8 +299,6 @@ t_pipex		*init_pipex(void);
 t_minishell	init_minishell(void);
 
 static int	pattern_has_slash(const char *s);
-static char	*pattern_dirname(const char *pattern);
-static char	*pattern_basename(const char *pattern);
 static int	match_class(const char **pp, char c);
 static int	match_glob(const char *pat, const char *s);
 static int	insert_sorted(char ***arr, size_t *count, size_t *cap, char *s);
@@ -336,5 +334,7 @@ static int	process_and_insert(t_glob_ctx *ctx, const char *name);
 static void	free_matches_recursive(t_glob_ctx *ctx, size_t idx);
 static int	open_dir_or_error(t_glob_ctx *ctx, char *pattern, t_minishell *mini);
 static int	glob_init(const char *pattern, t_minishell *mini, t_glob_ctx *ctx);
+
+static void split_path(const char *pattern, char **dir_out, char **base_out);
 
 #endif
