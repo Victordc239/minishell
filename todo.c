@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   todo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/16 17:01:57 by victor           ###   ########.fr       */
+/*   Updated: 2025/09/16 17:51:31 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1323,163 +1323,170 @@ void	add_arg_to_command(t_minishell *mini, char *arg)
 
 ///////////////////
 
-int	expand_and_add_glob(char *pattern, t_minishell *mini)
+static int	glob_init(const char *pattern, t_minishell *mini, t_glob_ctx *ctx)
 {
-	DIR				*d;
-	struct dirent	*entry;
-	char			*dir;
-	char			*pat;
-	char			*full;
-	char			*tmp;
-	char			**matches;
-	const char		*name;
-	size_t			mcount;
-	size_t			mcap;
-	size_t			idx;
-	int				matched_any;
-	int				allow_dot;
-
-	d = NULL;
-	dir = NULL;
-	pat = NULL;
-	matches = NULL;
-	mcount = 0;
-	mcap = 0;
-	matched_any = 0;
+	ctx->dir = NULL;
+	ctx->pat = NULL;
+	ctx->matches = NULL;
+	ctx->mcount = 0;
+	ctx->mcap = 0;
+	ctx->matched_any = 0;
+	ctx->d = NULL;
+	ctx->allow_dot = 0;
 	if (!pattern || !mini)
-		return (1);
+		return (0);
 	if (!ft_strchr(pattern, '*') && !ft_strchr(pattern, '?')
 		&& !ft_strchr(pattern, '['))
 	{
-		add_arg_to_command(mini, pattern);
-		return (1);
+		add_arg_to_command(mini, (char *)pattern);
+		return (0);
 	}
 	if (pattern_has_slash(pattern))
 	{
-		dir = pattern_dirname(pattern);
-		pat = pattern_basename(pattern);
+		ctx->dir = pattern_dirname((char *)pattern);
+		ctx->pat = pattern_basename((char *)pattern);
 	}
 	else
 	{
-		dir = ft_strdup(".");
-		pat = ft_strdup(pattern);
+		ctx->dir = ft_strdup(".");
+		ctx->pat = ft_strdup(pattern);
 	}
-	if (!dir || !pat)
+	if (!ctx->dir || !ctx->pat)
 	{
-		free(dir);
-		free(pat);
+		free(ctx->dir);
+		free(ctx->pat);
+		add_arg_to_command(mini, (char *)pattern);
+		return (0);
+	}
+	ctx->allow_dot = (ctx->pat[0] == '.');
+	return (1);
+}
+
+static int	open_dir_or_error(t_glob_ctx *ctx, char *pattern, t_minishell *mini)
+{
+	ctx->d = opendir(ctx->dir);
+	if (!ctx->d)
+	{
+		free(ctx->dir);
+		free(ctx->pat);
+		add_arg_to_command(mini, pattern);
+		return (0);
+	}
+	return (1);
+}
+
+static void	free_matches_recursive(t_glob_ctx *ctx, size_t idx)
+{
+	if (!ctx->matches)
+		return ;
+	if (idx >= ctx->mcount)
+	{
+		free(ctx->matches);
+		ctx->matches = NULL;
+		return ;
+	}
+	free(ctx->matches[idx]);
+	free_matches_recursive(ctx, idx + 1);
+}
+
+static int	process_and_insert(t_glob_ctx *ctx, const char *name)
+{
+	char	*tmp;
+	char	*full;
+
+	tmp = NULL;
+	full = NULL;
+	if (ft_strcmp(ctx->dir, ".") == 0)
+		full = ft_strdup(name);
+	else if (ft_strcmp(ctx->dir, "/") == 0)
+		full = ft_strjoin("/", name);
+	else
+	{
+		tmp = ft_strjoin(ctx->dir, "/");
+		if (!tmp)
+			return (0);
+		full = ft_strjoin(tmp, name);
+		free(tmp);
+	}
+	if (!full)
+		return (0);
+	if (!insert_sorted(&ctx->matches, &ctx->mcount, &ctx->mcap, full))
+	{
+		free(full);
+		return (0);
+	}
+	ctx->matched_any = 1;
+	return (1);
+}
+
+static int	process_dir(t_glob_ctx *ctx, char *pattern, t_minishell *mini)
+{
+	struct dirent	*entry;
+	const char		*name;
+
+	entry = readdir(ctx->d);
+	if (!entry)
+		return (1);
+	name = entry->d_name;
+	if (!name || name[0] == '\0')
+		return (process_dir(ctx, pattern, mini));
+	if (!ctx->allow_dot && name[0] == '.')
+		return (process_dir(ctx, pattern, mini));
+	if (match_glob(ctx->pat, name))
+	{
+		if (!process_and_insert(ctx, name))
+		{
+			free_matches_recursive(ctx, 0);
+			closedir(ctx->d);
+			free(ctx->dir);
+			free(ctx->pat);
+			add_arg_to_command(mini, pattern);
+			return (0);
+		}
+	}
+	return (process_dir(ctx, pattern, mini));
+}
+
+static void	add_results(t_minishell *mini, t_glob_ctx *ctx, size_t idx)
+{
+	if (idx >= ctx->mcount)
+		return ;
+	add_arg_to_command(mini, ctx->matches[idx]);
+	free(ctx->matches[idx]);
+	add_results(mini, ctx, idx + 1);
+}
+
+int	expand_and_add_glob(char *pattern, t_minishell *mini)
+{
+	t_glob_ctx	ctx;
+	int			ok;
+
+	if (!glob_init(pattern, mini, &ctx))
+		return (1);
+	if (!open_dir_or_error(&ctx, pattern, mini))
+		return (1);
+	ok = process_dir(&ctx, pattern, mini);
+	if (!ok)
+		return (1);
+	closedir(ctx.d);
+	if (!ctx.matched_any)
+	{
+		free(ctx.dir);
+		free(ctx.pat);
+		if (ctx.matches)
+			free_matches_recursive(&ctx, 0);
 		add_arg_to_command(mini, pattern);
 		return (1);
 	}
-	allow_dot = (pat[0] == '.');
-	d = opendir(dir);
-	if (!d)
-	{
-		free(dir);
-		free(pat);
-		add_arg_to_command(mini, pattern);
-		return (1);
-	}
-	entry = readdir(d);
-	while (entry != NULL)
-	{
-		name = entry->d_name;
-		if (!name || name[0] == '\0')
-		{
-			entry = readdir(d);
-			continue ;
-		}
-		if (!allow_dot && name[0] == '.')
-		{
-			entry = readdir(d);
-			continue ;
-		}
-		if (match_glob(pat, name))
-		{
-			full = NULL;
-			if (ft_strcmp(dir, ".") == 0)
-				full = ft_strdup(name);
-			else if (ft_strcmp(dir, "/") == 0)
-				full = ft_strjoin("/", name);
-			else
-			{
-				tmp = ft_strjoin(dir, "/");
-				if (!tmp)
-				{
-					idx = 0;
-					while (idx < mcount)
-					{
-						free(matches[idx]);
-						idx++;
-					}
-					free(matches);
-					closedir(d);
-					free(dir);
-					free(pat);
-					add_arg_to_command(mini, pattern);
-					return (1);
-				}
-				full = ft_strjoin(tmp, name);
-				free(tmp);
-			}
-			if (!full)
-			{
-				idx = 0;
-				while (idx < mcount)
-				{
-					free(matches[idx]);
-					idx++;
-				}
-				free(matches);
-				closedir(d);
-				free(dir);
-				free(pat);
-				add_arg_to_command(mini, pattern);
-				return (1);
-			}
-			if (!insert_sorted(&matches, &mcount, &mcap, full))
-			{
-				idx = 0;
-				while (idx < mcount)
-				{
-					free(matches[idx]);
-					idx++;
-				}
-				free(matches);
-				closedir(d);
-				free(dir);
-				free(pat);
-				add_arg_to_command(mini, pattern);
-				return (1);
-			}
-			matched_any = 1;
-		}
-		entry = readdir(d);
-	}
-	closedir(d);
-	if (!matched_any)
-	{
-		free(dir);
-		free(pat);
-		if (matches)
-			free(matches);
-		add_arg_to_command(mini, pattern);
-		return (1);
-	}
-	idx = 0;
-	while (idx < mcount)
-	{
-		add_arg_to_command(mini, matches[idx]);
-		free(matches[idx]);
-		idx++;
-	}
-	free(matches);
-	free(dir);
-	free(pat);
+	add_results(mini, &ctx, 0);
+	free(ctx.matches);
+	free(ctx.dir);
+	free(ctx.pat);
 	return (1);
 }
 
 ////////////////////////
+
 void	parse_red_in(t_minishell *mini, t_token **token)
 {
 	if (!(*token)->next || (*token)->type != T_RED_IN)
@@ -2746,38 +2753,9 @@ static int	split_ops(char *input, char ***segments_out,
 }
 
 /////
-/*static int	is_outer_parenthesized(const char *s, int	depth)
-{
-	size_t	i;
-	char	quote;
-
-	depth = 1;
-	i = 1;
-	quote = 0;
-	if (!s || s[0] != '(')
-		return (0);
-	while (i < ft_strlen(s))
-	{
-		if ((s[i] == '\'' || s[i] == '"') && !quote)
-			quote = s[i];
-		else if (s[i] == quote)
-			quote = 0;
-		else if (!quote)
-		{
-			if (s[i] == '(')
-				depth++;
-			else if (s[i] == ')')
-				if (--depth == 0)
-					break ;
-		}
-		i++;
-	}
-	return (depth == 0 && i == ft_strlen(s) - 1);
-}*/
-
 static int	is_outer_parenthesized(const char *s)
 {
-	int	depth;
+	int		depth;
 	size_t	i;
 	char	quote;
 
