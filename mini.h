@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 14:02:20 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/18 14:11:31 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/09/18 14:13:06 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -335,7 +335,7 @@ static void	free_matches_recursive(t_glob_ctx *ctx, size_t idx);
 static int	open_dir_or_error(t_glob_ctx *ctx, char *pattern, t_minishell *mini);
 static int	glob_init(const char *pattern, t_minishell *mini, t_glob_ctx *ctx);
 
-static void split_path(const char *pattern, char **dir_out, char **base_out);
+static void	split_path(const char *pattern, char **dir_out, char **base_out);
 
 static int	ensure_capacity(char ***arr, size_t *count, size_t *cap);
 
