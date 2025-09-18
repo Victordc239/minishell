@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 14:02:20 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/18 11:53:16 by victor           ###   ########.fr       */
+/*   Updated: 2025/09/18 14:11:31 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -337,6 +337,6 @@ static int	glob_init(const char *pattern, t_minishell *mini, t_glob_ctx *ctx);
 
 static void split_path(const char *pattern, char **dir_out, char **base_out);
 
-static int	ensure_capacity_for_insert(char ***arr, size_t *count, size_t *cap);
+static int	ensure_capacity(char ***arr, size_t *count, size_t *cap);
 
 #endif

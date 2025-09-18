@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   todo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/18 12:22:18 by victor           ###   ########.fr       */
+/*   Updated: 2025/09/18 14:11:49 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,142 +138,46 @@ static int	match_class(const char **pp, char c)
 	return (matched);
 }
 
-/*static int	match_glob(const char *pat, const char *s)
+static int	match_glob_star(const char *p, const char *str)
 {
-	const char	*p;
-	const char	*str;
-	int			rc;
-
-	str = s;
-	p = pat;
-	while (*p)
-	{
-		if (*p == '*')
-		{
-			while (*p == '*')
-				p++;
-			if (*p == '\0')
-				return (1);
-			while (*str)
-			{
-				if (match_glob(p, str))
-					return (1);
-				str++;
-			}
-			return (0);
-		}
-		else if (*p == '[')
-		{
-			if (*str == '\0')
-				return (0);
-			rc = match_class(&p, *str);
-			if (rc == -1 || !rc)
-				return (0);
-			str++;
-		}
-		else
-		{
-			if (*str == '\0' || *p != *str)
-				return (0);
-			p++;
-			str++;
-		}
-	}
-	return (*str == '\0');
-}*/
-
-static int	match_glob(const char *p, const char *s)
-{
-	const char	*str;
-	int			rc;
-
-	str = s;
-	while (*p)
-	{
-		if (*p == '*')
-		{
-			while (*p == '*')
-				p++;
-			if (*p == '\0')
-				return (1);
-			while (*str)
-				if (match_glob(p, str++))
-					return (1);
-			return (0);
-		}
-		if (*p == '[')
-		{
-			if (*str == '\0')
-				return (0);
-			rc = match_class(&p, *str);
-			if (rc == -1 || !rc)
-				return (0);
-			str++;
-			continue ;
-		}
-		if (*str == '\0' || *p != *str)
-			return (0);
-		p++;
-		str++;
-	}
-	return (*str == '\0');
+	if (*p == '\0')
+		return (1);
+	if (*str == '\0')
+		return (0);
+	if (match_glob(p, str))
+		return (1);
+	return (match_glob_star(p, str + 1));
 }
 
-/*static int	insert_sorted(char ***arr, size_t *count, size_t *cap, char *s)
+static int	match_glob(const char *p, const char *str)
 {
-	size_t		pos;
-	char		**newarr;
-	size_t		newcap;
-	size_t		i;
-	size_t		j;
+	int	rc;
 
-	pos = 0;
-	if (*count == 0)
+	if (*p == '\0')
+		return (*str == '\0');
+	if (*p == '*')
 	{
-		if (*cap == 0)
-		{
-			*cap = 8;
-			*arr = malloc(sizeof(char *) * (*cap));
-			if (!*arr)
-				return (0);
-		}
-		(*arr)[0] = s;
-		*count = 1;
-		return (1);
+		while (*p == '*')
+			p++;
+		if (*p == '\0')
+			return (1);
+		return (match_glob_star(p, str));
 	}
-	if (*count + 1 > *cap)
+	if (*p == '[')
 	{
-		if (*cap == 0)
-			newcap = 8;
-		else
-			newcap = (*cap * 2);
-		newarr = malloc(sizeof(char *) * newcap);
-		if (!newarr)
+		if (*str == '\0')
 			return (0);
-		i = 0;
-		while (i < *count)
-		{
-			newarr[i] = (*arr)[i];
-			i++;
-		}
-		free(*arr);
-		*arr = newarr;
-		*cap = newcap;
+		rc = match_class(&p, *str);
+		if (rc == -1 || rc == 0)
+			return (0);
+		return (match_glob(p, str + 1));
 	}
-	while (pos < *count && ft_strcmp((*arr)[pos], s) < 0)
-		pos++;
-	j = *count;
-	while (j > pos)
-	{
-		(*arr)[j] = (*arr)[j - 1];
-		j--;
-	}
-	(*arr)[pos] = s;
-	(*count)++;
-	return (1);
-}*/
+	if (*str == '\0' || *p != *str)
+		return (0);
+	return (match_glob(p + 1, str + 1));
+}
 
-static int	ensure_capacity_for_insert(char ***arr, size_t *count, size_t *cap)
+static int	ensure_capacity(char ***arr, size_t *count, size_t *cap)
 {
 	size_t		newcap;
 	char		**newarr;
@@ -308,7 +212,7 @@ static int	insert_sorted(char ***arr, size_t *count, size_t *cap, char *s)
 	size_t	j;
 
 	pos = 0;
-	if (!ensure_capacity_for_insert(arr, count, cap))
+	if (!ensure_capacity(arr, count, cap))
 		return (0);
 	while (pos < *count && ft_strcmp((*arr)[pos], s) < 0)
 		pos++;
@@ -2783,35 +2687,6 @@ static int	split_ops(char *input, char ***segments_out,
 
 /////
 
-/*static int	is_outer_parenthesized(const char *s, int depth)
-{
-	size_t	i;
-	char	quote;
-
-	depth = 1;
-	i = 1;
-	quote = 0;
-	if (!s || s[0] != '(')
-		return (0);
-	while (i < ft_strlen(s))
-	{
-		if ((s[i] == '\'' || s[i] == '"') && !quote)
-			quote = s[i];
-		else if (s[i] == quote)
-			quote = 0;
-		else if (!quote)
-		{
-			if (s[i] == '(')
-				depth++;
-			else if (s[i] == ')')
-				if (--depth == 0)
-					break ;
-		}
-		i++;
-	}
-	return (depth == 0 && i == ft_strlen(s) - 1);
-}*/
-
 static int	is_outer_parenthesized(const char *s)
 {
 	int		depth;
@@ -2833,9 +2708,8 @@ static int	is_outer_parenthesized(const char *s)
 		{
 			if (s[i] == '(')
 				depth++;
-			else if (s[i] == ')')
-				if (--depth == 0)
-					break ;
+			else if (s[i] == ')' && --depth == 0)
+				break ;
 		}
 		i++;
 	}
