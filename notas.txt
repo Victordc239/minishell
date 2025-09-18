@@ -1,0 +1,81 @@
+
+COSAS A CAMBIAR:
+
+- /home/victor/Escritorio/42_Madrid/cursus/mini Minishell> << hola
+	> sdad
+	> asd
+	> as
+	> das
+	> ^C
+	heredoc delimited by EOF
+	/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo $?
+	0
+	tiene que dar salida 130.
+- al hacer control+c tiene que dar salida 130
+
+- /home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo "$HO"ME HOLA
+	/home/victor HOLA
+	tiene que dar:
+	ME HOLA
+
+- /home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo $"HOME" HOLA
+	/home/victor HOLA
+	tiene que dar:
+	HOME HOLA
+
+- /home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo "$"HOME HOLA
+	/home/victor HOLA
+	tiene que dar:
+	$HOME HOLA
+
+- /home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo "$"HOME HOLA"
+	no da nada
+	tiene que dar:
+	victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo "$"HOME HOLA"
+	> df
+	> d
+	> d
+	> d
+	> cat
+	> la
+	> ls
+	> cd ..
+	> "
+	$HOME HOLA
+	df
+	d
+	d
+	d
+	cat
+	la
+	ls
+	cd ..
+
+- /home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo "$HOME HOLA"'
+	no hace nada
+	tiene que dar:
+	victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo "$HOME HOLA"'
+	> cat
+	> ls
+	> cd
+	> hola
+	> '
+	/home/victor HOLA
+	cat
+	ls
+	cd
+	hola
+
+- /home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo '"
+	no hace nada
+	tiene que dar:
+	victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo '"
+	> "
+	> '
+	"
+	"
+
+
+
+
+
