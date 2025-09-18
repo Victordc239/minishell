@@ -6,7 +6,7 @@
 /*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 14:02:20 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/16 18:00:28 by victor           ###   ########.fr       */
+/*   Updated: 2025/09/18 11:53:16 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -336,5 +336,7 @@ static int	open_dir_or_error(t_glob_ctx *ctx, char *pattern, t_minishell *mini);
 static int	glob_init(const char *pattern, t_minishell *mini, t_glob_ctx *ctx);
 
 static void split_path(const char *pattern, char **dir_out, char **base_out);
+
+static int	ensure_capacity_for_insert(char ***arr, size_t *count, size_t *cap);
 
 #endif

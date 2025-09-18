@@ -6,7 +6,7 @@
 /*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/16 18:03:10 by victor           ###   ########.fr       */
+/*   Updated: 2025/09/18 12:22:18 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,7 +219,7 @@ static int	match_glob(const char *p, const char *s)
 	return (*str == '\0');
 }
 
-static int	insert_sorted(char ***arr, size_t *count, size_t *cap, char *s)
+/*static int	insert_sorted(char ***arr, size_t *count, size_t *cap, char *s)
 {
 	size_t		pos;
 	char		**newarr;
@@ -260,6 +260,56 @@ static int	insert_sorted(char ***arr, size_t *count, size_t *cap, char *s)
 		*arr = newarr;
 		*cap = newcap;
 	}
+	while (pos < *count && ft_strcmp((*arr)[pos], s) < 0)
+		pos++;
+	j = *count;
+	while (j > pos)
+	{
+		(*arr)[j] = (*arr)[j - 1];
+		j--;
+	}
+	(*arr)[pos] = s;
+	(*count)++;
+	return (1);
+}*/
+
+static int	ensure_capacity_for_insert(char ***arr, size_t *count, size_t *cap)
+{
+	size_t		newcap;
+	char		**newarr;
+	size_t		i;
+
+	if (*cap == 0)
+	{
+		*cap = 8;
+		*arr = malloc(sizeof(char *) * (*cap));
+		if (!*arr)
+			return (0);
+		return (1);
+	}
+	if (*count + 1 > *cap)
+	{
+		newcap = (*cap * 2);
+		newarr = malloc(sizeof(char *) * newcap);
+		if (!newarr)
+			return (0);
+		i = 0;
+		while (i++ < *count)
+			newarr[i - 1] = (*arr)[i - 1];
+		(free(*arr), *arr = newarr);
+		*cap = newcap;
+	}
+	return (1);
+}
+
+static int	insert_sorted(char ***arr, size_t *count, size_t *cap, char *s)
+{
+	size_t	pos;
+	size_t	j;
+
+	pos = 0;
+	if (!ensure_capacity_for_insert(arr, count, cap))
+		return (0);
 	while (pos < *count && ft_strcmp((*arr)[pos], s) < 0)
 		pos++;
 	j = *count;
@@ -1329,10 +1379,7 @@ static int	glob_init(const char *pattern, t_minishell *mini, t_glob_ctx *ctx)
 		return (0);
 	if (!ft_strchr(pattern, '*') && !ft_strchr(pattern, '?')
 		&& !ft_strchr(pattern, '['))
-	{
-		add_arg_to_command(mini, (char *)pattern);
-		return (0);
-	}
+		return (add_arg_to_command(mini, (char *)pattern), 0);
 	if (pattern_has_slash(pattern))
 		split_path(pattern, &ctx->dir, &ctx->pat);
 	else
@@ -1341,12 +1388,8 @@ static int	glob_init(const char *pattern, t_minishell *mini, t_glob_ctx *ctx)
 		ctx->pat = ft_strdup(pattern);
 	}
 	if (!ctx->dir || !ctx->pat)
-	{
-		free(ctx->dir);
-		free(ctx->pat);
-		add_arg_to_command(mini, (char *)pattern);
-		return (0);
-	}
+		return (free(ctx->dir), free(ctx->pat),
+			add_arg_to_command(mini, (char *)pattern), 0);
 	ctx->allow_dot = (ctx->pat[0] == '.');
 	return (1);
 }
@@ -1400,10 +1443,7 @@ static int	process_and_insert(t_glob_ctx *ctx, const char *name)
 	if (!full)
 		return (0);
 	if (!insert_sorted(&ctx->matches, &ctx->mcount, &ctx->mcap, full))
-	{
-		free(full);
-		return (0);
-	}
+		return (free(full), 0);
 	ctx->matched_any = 1;
 	return (1);
 }
@@ -2742,6 +2782,36 @@ static int	split_ops(char *input, char ***segments_out,
 }
 
 /////
+
+/*static int	is_outer_parenthesized(const char *s, int depth)
+{
+	size_t	i;
+	char	quote;
+
+	depth = 1;
+	i = 1;
+	quote = 0;
+	if (!s || s[0] != '(')
+		return (0);
+	while (i < ft_strlen(s))
+	{
+		if ((s[i] == '\'' || s[i] == '"') && !quote)
+			quote = s[i];
+		else if (s[i] == quote)
+			quote = 0;
+		else if (!quote)
+		{
+			if (s[i] == '(')
+				depth++;
+			else if (s[i] == ')')
+				if (--depth == 0)
+					break ;
+		}
+		i++;
+	}
+	return (depth == 0 && i == ft_strlen(s) - 1);
+}*/
+
 static int	is_outer_parenthesized(const char *s)
 {
 	int		depth;
