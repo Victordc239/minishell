@@ -1,17 +1,6 @@
 
 COSAS A CAMBIAR:
 
-- /home/victor/Escritorio/42_Madrid/cursus/mini Minishell> << hola
-	> sdad
-	> asd
-	> as
-	> das
-	> ^C
-	heredoc delimited by EOF
-	/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo $?
-	0
-	tiene que dar salida 130.
-
 - al hacer control+c tiene que dar salida 130
 
 - al hacer sleep 123 y pararlo con control+c tiene que dar salida 130
@@ -40,6 +29,19 @@ COSAS A CAMBIAR:
 	victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ ls | exit 1
 	victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo $?
 	1
+
+- mirar si esto es valido o no:
+	minishell:
+		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> unset PATH
+		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> ls
+		Error with path
+	bash:
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ unset PATH
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ ls
+		bash: ls: No such file or directory
+
+
+SOLUCIONADO:
 
 - /home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo "$HO"ME HOLA
 	/home/victor HOLA
@@ -119,8 +121,13 @@ COSAS A CAMBIAR:
 	victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ ls
 	bash: ls: No existe el archivo o el directorio
 
-
-
-
-
-
+- /home/victor/Escritorio/42_Madrid/cursus/mini Minishell> << hola
+	> sdad
+	> asd
+	> as
+	> das
+	> ^C
+	heredoc delimited by EOF
+	/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo $?
+	0
+	tiene que dar salida 130.
