@@ -7,6 +7,8 @@ COSAS A CAMBIAR:
 
 - controlar el cd -
 
+- controlar bien el $PWD y el $OLDPWD
+
 - controlar el exit -: 
 	me da:
 	/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> exit -
