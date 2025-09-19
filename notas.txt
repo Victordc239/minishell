@@ -11,7 +11,35 @@ COSAS A CAMBIAR:
 	/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo $?
 	0
 	tiene que dar salida 130.
+
 - al hacer control+c tiene que dar salida 130
+
+- al hacer sleep 123 y pararlo con control+c tiene que dar salida 130
+
+- controlar el cd -
+
+- controlar el exit -: 
+	me da:
+	/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> exit -
+	victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo $?
+	0
+
+	bash:
+	victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ exit -
+	exit
+	bash: exit: -: se requiere un argumento numérico
+	victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo $?
+	2
+
+- controlar el exit con el pipe:
+	minishell:
+	/home/victor/Escritorio/42_Madrid/cursus/mini Minishell>  ls | exit 1
+	/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo $?
+	0
+	bash:
+	victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ ls | exit 1
+	victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo $?
+	1
 
 - /home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo "$HO"ME HOLA
 	/home/victor HOLA
@@ -74,6 +102,23 @@ COSAS A CAMBIAR:
 	> '
 	"
 	"
+
+- si hacemos unset PATH no funciona pero si hacemos export PATH= y lo dejamos vacio si que funciona:
+	mini:
+	/home/victor/Escritorio/42_Madrid Minishell> unset PATH
+	/home/victor/Escritorio/42_Madrid Minishell> /bin/ls
+	Error with path
+	/home/victor/Escritorio/42_Madrid Minishell> ls
+	Error with path
+
+	bash:
+	victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ unset PATH
+	victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ /bin/ls
+	es.subject.pdf	Makefile  minishell	    minishell_tester1  notas.txt  todo.c
+	libft		mini.h	  minishell_0.temp  minishell_tester2  obj
+	victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ ls
+	bash: ls: No existe el archivo o el directorio
+
 
 
 
