@@ -5,33 +5,6 @@ COSAS A CAMBIAR:
 
 - al hacer sleep 123 y pararlo con control+c tiene que dar salida 130
 
-- controlar el cd -
-
-- controlar bien el $PWD y el $OLDPWD
-
-- controlar el exit -: 
-	me da:
-	/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> exit -
-	victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo $?
-	0
-
-	bash:
-	victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ exit -
-	exit
-	bash: exit: -: se requiere un argumento numérico
-	victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo $?
-	2
-
-- controlar el exit con el pipe:
-	minishell:
-	/home/victor/Escritorio/42_Madrid/cursus/mini Minishell>  ls | exit 1
-	/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo $?
-	0
-	bash:
-	victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ ls | exit 1
-	victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo $?
-	1
-
 - mirar si esto es valido o no:
 	minishell:
 		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> unset PATH
@@ -133,3 +106,30 @@ SOLUCIONADO:
 	/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo $?
 	0
 	tiene que dar salida 130.
+
+- controlar el cd -
+
+- controlar bien el $PWD y el $OLDPWD
+
+- controlar el exit -: 
+	me da:
+	/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> exit -
+	victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo $?
+	0
+
+	bash:
+	victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ exit -
+	exit
+	bash: exit: -: numeric argument required
+	victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo $?
+	2
+
+- controlar el exit con el pipe:
+	minishell:
+	/home/victor/Escritorio/42_Madrid/cursus/mini Minishell>  ls | exit 1
+	/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo $?
+	0
+	bash:
+	victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ ls | exit 1
+	victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo $?
+	1

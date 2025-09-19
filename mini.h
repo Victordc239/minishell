@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
+/*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 14:02:20 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/18 17:16:00 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/09/19 13:41:15 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,7 +202,8 @@ int			tokenize_input(t_minishell *minishell);
  int	process_token_part(t_minishell *shell, char **token,
 				t_token_quote *first_quote, int *mixed);
 void		execute_buitin(t_minishell *minishell);
-void		ft_cd(t_minishell *mini);
+//void		ft_cd(t_minishell *mini);
+void		ft_cd(t_minishell *mini, int path_allocated, int print_new);
 void		ft_cmd(t_minishell *mini);
 void		ft_echo_arg(char **argv);
 void		ft_env(char **argv, char **env);
