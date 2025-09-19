@@ -6,7 +6,7 @@
 /*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/18 23:31:19 by victor           ###   ########.fr       */
+/*   Updated: 2025/09/19 13:01:29 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1210,7 +1210,7 @@ void	free_struct(t_pipex *data, char *message, int exit_code, int std)
 	exit(exit_code);
 }
 
-void	ft_cmd(t_minishell *mini)
+/*void	ft_cmd(t_minishell *mini)
 {
 	char	**possible_paths;
 	char	*path_line;
@@ -1223,6 +1223,45 @@ void	ft_cmd(t_minishell *mini)
 		ft_freedoom(envir);
 		free_minishell(mini);
 		exit(0);
+	}
+	if (!envir || !*envir)
+		(exit_with_error("Missing environment\n", 1, 2), free_minishell(mini),
+			ft_freedoom(envir));
+	path_line = find_execpath(envir);
+	if (!path_line)
+		(exit_with_error("Error with path\n", 1, 2), free_minishell(mini),
+			ft_freedoom(envir));
+	possible_paths = ft_split(path_line, ':');
+	if (!possible_paths)
+		(exit_with_error("Error with possible path\n", 1, 2),
+			free_minishell(mini), ft_freedoom(envir));
+	execute_command(mini, possible_paths, envir);
+}*/
+
+void	ft_cmd(t_minishell *mini)
+{
+	char	**possible_paths;
+	char	*path_line;
+	char	**envir;
+	char	*cmd;
+
+	envir = env_to_array(mini->env_list);
+	if (is_builtin_str(mini->command_list->argv[0]))
+	{
+		execute_buitin_args(mini->command_list->argv, &envir, mini);
+		ft_freedoom(envir);
+		free_minishell(mini);
+		exit(0);
+	}
+	cmd = mini->command_list->argv[0];
+	if (cmd && ft_strchr(cmd, '/'))
+	{
+		if (access(cmd, F_OK) == -1)
+			(perror(cmd), free_minishell(mini), ft_freedoom(envir), exit(127));
+		if (access(cmd, X_OK) == -1)
+			(perror(cmd), free_minishell(mini), ft_freedoom(envir), exit(126));
+		execve(cmd, mini->command_list->argv, envir);
+		check_errno(errno, mini);
 	}
 	if (!envir || !*envir)
 		(exit_with_error("Missing environment\n", 1, 2), free_minishell(mini),
