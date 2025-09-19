@@ -1,0 +1,90 @@
+/home/vdiez-cu/Desktop/42_Madrid/cursus/mini Minishell> echo $PWD
+/home/vdiez-cu/Desktop/42_Madrid/cursus/mini
+==2287638== 
+==2287638== HEAP SUMMARY:
+==2287638==     in use at exit: 208,356 bytes in 230 blocks
+==2287638==   total heap usage: 934 allocs, 704 frees, 246,389 bytes allocated
+==2287638== 
+==2287638== LEAK SUMMARY:
+==2287638==    definitely lost: 1 bytes in 1 blocks
+==2287638==    indirectly lost: 0 bytes in 0 blocks
+==2287638==      possibly lost: 0 bytes in 0 blocks
+==2287638==    still reachable: 208,355 bytes in 229 blocks
+==2287638==         suppressed: 0 bytes in 0 blocks
+==2287638== Rerun with --leak-check=full to see details of leaked memory
+==2287638== 
+==2287638== For lists of detected and suppressed errors, rerun with: -s
+==2287638== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
+
+
+
+/home/vdiez-cu/Desktop/42_Madrid/cursus/mini Minishell> echo "'
+> '
+> '
+> "
+'
+'
+'
+
+==2288687== 
+==2288687== HEAP SUMMARY:
+==2288687==     in use at exit: 208,417 bytes in 239 blocks
+==2288687==   total heap usage: 957 allocs, 718 frees, 246,586 bytes allocated
+==2288687== 
+==2288687== LEAK SUMMARY:
+==2288687==    definitely lost: 64 bytes in 1 blocks
+==2288687==    indirectly lost: 0 bytes in 0 blocks
+==2288687==      possibly lost: 0 bytes in 0 blocks
+==2288687==    still reachable: 208,353 bytes in 238 blocks
+==2288687==         suppressed: 0 bytes in 0 blocks
+==2288687== Rerun with --leak-check=full to see details of leaked memory
+==2288687== 
+==2288687== For lists of detected and suppressed errors, rerun with: -s
+==2288687== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
+
+
+
+/home/vdiez-cu/Desktop/42_Madrid/cursus/mini Minishell> echo "$"HOME
+$HOME
+==2288716== 
+==2288716== HEAP SUMMARY:
+==2288716==     in use at exit: 208,434 bytes in 232 blocks
+==2288716==   total heap usage: 934 allocs, 702 frees, 246,338 bytes allocated
+==2288716== 
+==2288716== LEAK SUMMARY:
+==2288716==    definitely lost: 67 bytes in 3 blocks
+==2288716==    indirectly lost: 0 bytes in 0 blocks
+==2288716==      possibly lost: 0 bytes in 0 blocks
+==2288716==    still reachable: 208,367 bytes in 229 blocks
+==2288716==         suppressed: 0 bytes in 0 blocks
+==2288716== Rerun with --leak-check=full to see details of leaked memory
+==2288716== 
+==2288716== For lists of detected and suppressed errors, rerun with: -s
+==2288716== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
+
+
+
+/home/vdiez-cu/Desktop/42_Madrid/cursus/mini Minishell> echo $
+$
+==2288744== 
+==2288744== HEAP SUMMARY:
+==2288744==     in use at exit: 208,404 bytes in 235 blocks
+==2288744==   total heap usage: 974 allocs, 739 frees, 251,007 bytes allocated
+==2288744== 
+==2288744== LEAK SUMMARY:
+==2288744==    definitely lost: 1 bytes in 1 blocks
+==2288744==    indirectly lost: 0 bytes in 0 blocks
+==2288744==      possibly lost: 0 bytes in 0 blocks
+==2288744==    still reachable: 208,403 bytes in 234 blocks
+==2288744==         suppressed: 0 bytes in 0 blocks
+==2288744== Rerun with --leak-check=full to see details of leaked memory
+==2288744== 
+==2288744== For lists of detected and suppressed errors, rerun with: -s
+==2288744== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
+
+
+
