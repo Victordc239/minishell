@@ -6,7 +6,7 @@
 /*   By: vdiez-cu <vdiez-cu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/22 14:51:08 by vdiez-cu         ###   ########.fr       */
+/*   Updated: 2025/09/22 15:05:53 by vdiez-cu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1089,6 +1089,20 @@ void check_errno(int err, t_minishell *mini)
 	}
 }
 
+/*char	*create_path(char *possible_path, char *command)
+{
+	char	*path;
+	char	*temp;
+
+	if (ft_strchr(command, '/'))
+		return (ft_strdup(command));
+	temp = ft_strjoin(possible_path, "/");
+	if (!temp)
+		return (NULL);
+	path = ft_strjoin(temp, command);
+	free(temp);
+	return (path);
+}*/
 
 char	*create_path(char *possible_path, char *command)
 {
@@ -1096,6 +1110,8 @@ char	*create_path(char *possible_path, char *command)
 	char	*temp;
 
 	if (ft_strchr(command, '/'))
+		return (ft_strdup(command));
+	if (possible_path && possible_path[0] == '\0')
 		return (ft_strdup(command));
 	temp = ft_strjoin(possible_path, "/");
 	if (!temp)
@@ -1767,35 +1783,8 @@ void	free_struct(t_pipex *data, char *message, int exit_code, int std)
 	char	**possible_paths;
 	char	*path_line;
 	char	**envir;
-
-	envir = env_to_array(mini->env_list);
-	if (is_builtin_str(mini->command_list->argv[0]))
-	{
-		execute_buitin_args(mini->command_list->argv, &envir, mini);
-		ft_freedoom(envir);
-		free_minishell(mini);
-		exit(0);
-	}
-	if (!envir || !*envir)
-		(exit_with_error("Missing environment\n", 1, 2), free_minishell(mini),
-			ft_freedoom(envir));
-	path_line = find_execpath(envir);
-	if (!path_line)
-		(exit_with_error("Error with path\n", 1, 2), free_minishell(mini),
-			ft_freedoom(envir));
-	possible_paths = ft_split(path_line, ':');
-	if (!possible_paths)
-		(exit_with_error("Error with possible path\n", 1, 2),
-			free_minishell(mini), ft_freedoom(envir));
-	execute_command(mini, possible_paths, envir);
-}*/
-
-/*void	ft_cmd(t_minishell *mini)      funciona
-{
-	char	**possible_paths;
-	char	*path_line;
-	char	**envir;
 	char	*cmd;
+	struct stat st;
 
 	envir = env_to_array(mini->env_list);
 	if (is_builtin_str(mini->command_list->argv[0]))
@@ -1809,6 +1798,9 @@ void	free_struct(t_pipex *data, char *message, int exit_code, int std)
 	cmd = mini->command_list->argv[0];
 	if (cmd && ft_strchr(cmd, '/'))
 	{
+		if (stat(cmd, &st) == 0 && S_ISDIR(st.st_mode))
+			(ft_putstr(cmd, 2), ft_putstr(": ", 2), ft_putstr("Is a directory\n", 2),
+				free_minishell(mini), ft_freedoom(envir), exit(126));
 		if (access(cmd, F_OK) == -1)
 			(perror(cmd), free_minishell(mini), ft_freedoom(envir), exit(127));
 		if (access(cmd, X_OK) == -1)
@@ -1864,9 +1856,12 @@ void	ft_cmd(t_minishell *mini)
 		(exit_with_error("Missing environment\n", 1, 2), free_minishell(mini),
 			ft_freedoom(envir));
 	path_line = find_execpath(envir);
+	if (path_line && path_line[0] == '\0')
+		(execve(cmd, mini->command_list->argv, envir), perror(cmd),
+			free_minishell(mini), ft_freedoom(envir), exit(127));
 	if (!path_line)
-		(exit_with_error("Error with path\n", 1, 2), free_minishell(mini),
-			ft_freedoom(envir));
+		(execve(cmd, mini->command_list->argv, envir), perror(cmd),
+			free_minishell(mini), ft_freedoom(envir), exit(127));
 	possible_paths = ft_split(path_line, ':');
 	if (!possible_paths)
 		(exit_with_error("Error with possible path\n", 1, 2),

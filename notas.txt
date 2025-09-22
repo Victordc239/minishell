@@ -5,6 +5,11 @@ COSAS A CAMBIAR:
 
 - al hacer sleep 123 y pararlo con control+c tiene que dar salida 130
 
+
+
+
+SOLUCIONADO:
+
 - mirar si esto es valido o no:
 	minishell:
 		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> unset PATH
@@ -37,10 +42,6 @@ COSAS A CAMBIAR:
 		vdiez-cu@c2r7s4:~/Desktop/42_Madrid/cursus/mini$ export PATH=
 		vdiez-cu@c2r7s4:~/Desktop/42_Madrid/cursus/mini$ ls
 		bash: ls: No such file or directory
-
-
-
-SOLUCIONADO:
 
 - /home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo "$HO"ME HOLA
 	/home/victor HOLA
