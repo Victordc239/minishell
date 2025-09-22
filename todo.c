@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   todo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
+/*   By: vdiez-cu <vdiez-cu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/22 10:09:32 by victor           ###   ########.fr       */
+/*   Updated: 2025/09/22 13:10:36 by vdiez-cu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,42 @@ void	remove_marker_inplace(char *s)
 	}
 	s[j] = '\0';
 }
+
+int parse_exit_code(const char *s, unsigned char *out_code)
+{
+	int i;
+	int neg;
+	unsigned int r;
+
+	if (!s)
+		return (0);
+	i = 0;
+	neg = 0;
+	if (s[i] == '+' || s[i] == '-')
+	{
+		if (s[i + 1] == '\0')
+			return (0);
+		if (s[i] == '-')
+			neg = 1;
+		i++;
+	}
+	if (!s[i])
+		return (0);
+	r = 0;
+	while (s[i])
+	{
+		if (!ft_isdigit((unsigned char)s[i]))
+			return (0);
+		r = (r * 10 + (s[i] - '0')) & 0xFF;
+		i++;
+	}
+	if (neg)
+		*out_code = (unsigned char)((256 - (r & 0xFF)) & 0xFF);
+	else
+		*out_code = (unsigned char)(r & 0xFF);
+	return (1);
+}
+
 //////// FIN AÑADIDO
 
 int	match_glob_star(const char *p, const char *str)
@@ -296,7 +332,7 @@ int	is_numeric(char const *str)
 	return (1);
 }
 
-int	ft_exit(t_minishell *mini)
+/*int	ft_exit(t_minishell *mini)
 {
 	int	code;
 
@@ -322,6 +358,33 @@ int	ft_exit(t_minishell *mini)
 	code = ft_atoi(mini->command_list->argv[1]);
 	free_minishell(mini);
 	exit(code % 256);
+}*/
+
+int ft_exit(t_minishell *mini)
+{
+    unsigned char code;
+
+    if (!mini->command_list->argv[1])
+    {
+        free_minishell(mini);
+        exit((unsigned char)g_status);
+    }
+    if (mini->command_list->argv[2])
+    {
+        ft_putstr("exit: too many arguments\n", 2);
+        g_status = 1;
+        return (1);
+    }
+    if (!parse_exit_code(mini->command_list->argv[1], &code))
+    {
+        ft_putstr("exit: ", 2);
+        ft_putstr(mini->command_list->argv[1], 2);
+        ft_putstr(": numeric argument required\n", 2);
+        free_minishell(mini);
+        exit(2);
+    }
+    free_minishell(mini);
+    exit((int)code);
 }
 
 /*void	ft_cd(t_minishell *mini)
@@ -1527,10 +1590,11 @@ void	ft_cmd(t_minishell *mini)
 	envir = env_to_array(mini->env_list);
 	if (is_builtin_str(mini->command_list->argv[0]))
 	{
+		cmd = mini->command_list->argv[0];
+		if (cmd && ft_strcmp(cmd, "exit") == 0)
+			(ft_freedoom(envir), ft_exit(mini));
 		execute_buitin_args(mini->command_list->argv, &envir, mini);
-		ft_freedoom(envir);
-		free_minishell(mini);
-		exit(0);
+		(ft_freedoom(envir), free_minishell(mini), exit(0));
 	}
 	cmd = mini->command_list->argv[0];
 	if (cmd && ft_strchr(cmd, '/'))
@@ -2747,7 +2811,7 @@ t_token	*add_token(t_minishell *minishell, char *value)
 	return (new_node);
 }
 
-t_token	*check_expansion(t_minishell *minishell, char *val)
+/*t_token	*check_expansion(t_minishell *minishell, char *val)
 {
 	t_token	*new_token;
 
@@ -2767,6 +2831,34 @@ t_token	*check_expansion(t_minishell *minishell, char *val)
 	}
 	else
 		new_token->expansion_type = NO_EXPANSION;
+	if (new_token->quote == Q_SINGLE && ft_strchr(new_token->value, '\x07'))
+		replace_char_inplace(new_token->value, '\x07', '$');
+	return (new_token);
+}*/
+
+t_token *check_expansion(t_minishell *minishell, char *val)
+{
+	t_token *new_token;
+
+	new_token = add_token(minishell, val);
+	if (!new_token)
+		return (NULL);
+	new_token->type = minishell->tokenizer->prev_type;
+	new_token->quote = minishell->tokenizer->quote;
+	if (ft_strchr(new_token->value, '\x01') && !ft_strchr(new_token->value, '$'))
+		remove_marker_inplace(new_token->value);
+	if (new_token->type == T_WORD && new_token->value[0] == '$')
+	{
+		if (new_token->quote == Q_SINGLE)
+			new_token->expansion_type = NO_EXPANSION;
+		else if (new_token->value[1] == '?' && new_token->value[2] == '\0')
+			new_token->expansion_type = EXIT_STATUS_EXPANSION;
+		else
+			new_token->expansion_type = VAR_EXPANSION;
+	}
+	else
+		new_token->expansion_type = NO_EXPANSION;
+
 	if (new_token->quote == Q_SINGLE && ft_strchr(new_token->value, '\x07'))
 		replace_char_inplace(new_token->value, '\x07', '$');
 	return (new_token);
@@ -3438,7 +3530,7 @@ void	mini_loop(t_minishell *mini)
 		if (!input)
 		{
 			(free_env_list(mini->env_list), free_tokenizer(mini->tokenizer),
-			free_t_list(mini->t_list), close(saved_stdin));
+				free_t_list(mini->t_list), close(saved_stdin));
 			break ;
 		}
 		if (*input == '\0' || g_status == 128 + SIGINT)

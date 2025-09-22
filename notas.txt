@@ -16,6 +16,20 @@ COSAS A CAMBIAR:
 		bash: ls: No such file or directory
 
 
+Test 133: ✅⚠️  $PWD 
+mini error = ( Permission denied)
+bash error = ( Is a directory)
+
+
+
+
+
+
+
+
+
+
+
 SOLUCIONADO:
 
 - /home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo "$HO"ME HOLA
@@ -55,6 +69,17 @@ SOLUCIONADO:
 	la
 	ls
 	cd ..
+
+
+- controlar el exit con el pipe:
+	minishell:
+	/home/victor/Escritorio/42_Madrid/cursus/mini Minishell>  ls | exit 1
+	/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo $?
+	0
+	bash:
+	victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ ls | exit 1
+	victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo $?
+	1
 
 - /home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo "$HOME HOLA"'
 	no hace nada
@@ -124,12 +149,3 @@ SOLUCIONADO:
 	victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo $?
 	2
 
-- controlar el exit con el pipe:
-	minishell:
-	/home/victor/Escritorio/42_Madrid/cursus/mini Minishell>  ls | exit 1
-	/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo $?
-	0
-	bash:
-	victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ ls | exit 1
-	victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo $?
-	1
