@@ -6,7 +6,7 @@
 /*   By: vdiez-cu <vdiez-cu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/22 14:40:10 by vdiez-cu         ###   ########.fr       */
+/*   Updated: 2025/09/22 14:51:08 by vdiez-cu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -950,7 +950,7 @@ char	**env_to_array(t_env *env_list)
 	}
 }*/
 
-/*void check_errno(int err, t_minishell *mini)			me da bien el $PWD pero mal KO TEST 140
+/*void check_errno(int err, t_minishell *mini)			da bien el $PWD pero mal KO TEST 140
 {
 	const char *cmd = NULL;
 	struct stat st;
@@ -1001,7 +1001,7 @@ char	**env_to_array(t_env *env_list)
 	}
 }*/
 
-/*void check_errno(int err, t_minishell *mini)		me da mal el $PWD pero bien KO TEST 140
+/*void check_errno(int err, t_minishell *mini)		da mal el $PWD pero bien KO TEST 140
 {
 	const char *cmd = NULL;
 
