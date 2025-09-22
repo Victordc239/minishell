@@ -1,14 +1,14 @@
 
 COSAS A CAMBIAR:
 
-- al hacer control+c tiene que dar salida 130
-
-- al hacer sleep 123 y pararlo con control+c tiene que dar salida 130
-
 
 
 
 SOLUCIONADO:
+
+- al hacer control+c tiene que dar salida 130
+
+- al hacer sleep 123 y pararlo con control+c tiene que dar salida 130
 
 - mirar si esto es valido o no:
 	minishell:
