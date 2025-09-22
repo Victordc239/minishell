@@ -6,7 +6,7 @@
 /*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/19 14:21:05 by victor           ###   ########.fr       */
+/*   Updated: 2025/09/22 10:09:32 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -470,7 +470,7 @@ void	ft_unset(t_minishell *mini)
 	}
 }
 
-int	count_exported(t_minishell *mini)
+/*int	count_exported(t_minishell *mini)
 {
 	int		count;
 	t_env	*tmp;
@@ -484,6 +484,24 @@ int	count_exported(t_minishell *mini)
 		mini->env_list = mini->env_list->next;
 	}
 	mini->env_list = tmp;
+	return (count);
+}*/
+
+int	count_exported(t_minishell *mini)
+{
+	int		count;
+	t_env	*tmp;
+	t_env	*iter;
+
+	tmp = mini->env_list;
+	count = 0;
+	iter = tmp;
+	while (iter)
+	{
+		if (iter->exported)
+			count++;
+		iter = iter->next;
+	}
 	return (count);
 }
 
@@ -595,7 +613,7 @@ int	update_node(t_env *tmp, char *name, char *value, int exported)
 	return (0);
 }
 
-t_env	*create_new_node(char *name, char *value, int exported)
+/*t_env	*create_new_node(char *name, char *value, int exported)
 {
 	t_env	*new;
 
@@ -616,6 +634,34 @@ t_env	*create_new_node(char *name, char *value, int exported)
 	{
 		new->value = NULL;
 	}
+	new->exported = exported;
+	new->signal = 0;
+	new->next = NULL;
+	return (new);
+}*/
+
+t_env	*create_new_node(char *name, char *value, int exported)
+{
+	t_env	*new;
+
+	new = malloc(sizeof(t_env));
+	if (!new)
+		return (NULL);
+	new->name = ft_strdup(name);
+	if (!new->name)
+		return (free(new), NULL);
+	if (value)
+	{
+		new->value = ft_strdup(value);
+		if (!new->value)
+		{
+			free(new->name);
+			free(new);
+			return (NULL);
+		}
+	}
+	else
+		new->value = NULL;
 	new->exported = exported;
 	new->signal = 0;
 	new->next = NULL;
@@ -757,7 +803,7 @@ char	*env_entry(t_env *node)
 	return (result);
 }
 
-char	**env_to_array(t_env *env_list)
+/*char	**env_to_array(t_env *env_list)
 {
 	char	**env_array;
 	int		i;
@@ -775,6 +821,35 @@ char	**env_to_array(t_env *env_list)
 			env_array[i] = env_entry(env_list);
 			if (!env_array)
 				return (ft_freedoom(env_array), NULL);
+			i++;
+		}
+		env_list = env_list->next;
+	}
+	env_array[i] = NULL;
+	return (env_array);
+}*/
+
+char	**env_to_array(t_env *env_list)
+{
+	char	**env_array;
+	int		i;
+	int		size;
+
+	size = env_list_size(env_list);
+	i = 0;
+	env_array = malloc(sizeof(char *) * (size + 1));
+	if (!env_array)
+		return (NULL);
+	while (env_list)
+	{
+		if (env_list->exported && env_list->name)
+		{
+			env_array[i] = env_entry(env_list);
+			if (!env_array[i])
+			{
+				env_array[i] = NULL;
+				return (ft_freedoom(env_array), NULL);
+			}
 			i++;
 		}
 		env_list = env_list->next;
@@ -975,10 +1050,19 @@ void	free_t_list(t_token *list)
 	}
 }
 
+/*void	free_tokenizer(t_tokenizer *tokenizer)
+{
+	if (!tokenizer)
+		return ;
+	free(tokenizer);
+}*/
+
 void	free_tokenizer(t_tokenizer *tokenizer)
 {
 	if (!tokenizer)
 		return ;
+	if (tokenizer->input)
+		free(tokenizer->input);
 	free(tokenizer);
 }
 
@@ -998,7 +1082,7 @@ void	ft_freedoom(char **str)
 	free(str);
 }
 
-void	free_minishell(t_minishell *shell)
+/*void	free_minishell(t_minishell *shell)
 {
 	if (!shell)
 		return ;
@@ -1013,6 +1097,29 @@ void	free_minishell(t_minishell *shell)
 		free_tokenizer(shell->tokenizer);
 		shell->tokenizer = NULL;
 	}
+	ft_freedoom(shell->envir_execve);
+	ft_freedoom(shell->paths_execve);
+	shell->curr_token = NULL;
+	shell->new_token = NULL;
+	shell->new_node = NULL;
+	shell->current = NULL;
+	shell->head = NULL;
+	shell->tmp = NULL;
+	shell->curr = NULL;
+}*/
+
+void	free_minishell(t_minishell *shell)
+{
+	if (!shell)
+		return ;
+	if (shell->env_list)
+		(free_env_list(shell->env_list), shell->env_list = NULL);
+	if (shell->t_list)
+		(free_t_list(shell->t_list), shell->t_list = NULL);
+	if (shell->pipex_data)
+		(free_pipex_data(shell->pipex_data), shell->pipex_data = NULL);
+	if (shell->tokenizer)
+		(free_tokenizer(shell->tokenizer), shell->tokenizer = NULL);
 	ft_freedoom(shell->envir_execve);
 	ft_freedoom(shell->paths_execve);
 	shell->curr_token = NULL;
@@ -1051,7 +1158,7 @@ t_env	*find_env(t_env *env_list, char const *name)
 	return (NULL);
 }
 
-void	add_or_update_env(char *arg, t_minishell *mini)
+/*void	add_or_update_env(char *arg, t_minishell *mini)
 {
 	t_env	*var;
 	char	*equal;
@@ -1071,6 +1178,32 @@ void	add_or_update_env(char *arg, t_minishell *mini)
 	}
 	else
 		add_env_node(mini, name, value, 1);
+	free(name);
+}*/
+
+void	add_or_update_env(char *arg, t_minishell *mini)
+{
+	t_env	*var;
+	char	*equal;
+	char	*name;
+	char	*value;
+
+	equal = ft_strchr(arg, '=');
+	if (!equal)
+		return ;
+	name = ft_substr(arg, 0, equal - arg);
+	value = ft_strdup(equal + 1);
+	var = find_env(mini->env_list, name);
+	if (var)
+	{
+		free(var->value);
+		var->value = value;
+	}
+	else
+	{
+		add_env_node(mini, name, value, 1);
+		free(value);
+	}
 	free(name);
 }
 
@@ -1139,7 +1272,7 @@ char	*env_value(char const *name, t_env *env)
 	return (NULL);
 }
 
-void	append_variable(char **res, char *src, int *i, t_minishell *mini)
+/*void	append_variable(char **res, char *src, int *i, t_minishell *mini)
 {
 	char	*var;
 	char	*val;
@@ -1162,6 +1295,39 @@ void	append_variable(char **res, char *src, int *i, t_minishell *mini)
 	}
 	else
 		*res = ft_strjoin(*res, "$");
+	*i = j;
+}*/
+
+void	append_variable(char **res, char *src, int *i, t_minishell *mini)
+{
+	char	*var;
+	char	*val;
+	int		j;
+	int		len;
+	char	*tmp;
+
+	j = *i + 1;
+	while (src[j] && (ft_isalnum(src[j]) || src[j] == '_'))
+		j++;
+	len = j - (*i + 1);
+	if (len > 0)
+	{
+		var = ft_substr(src, *i + 1, len);
+		val = env_value(var, mini->env_list);
+		free(var);
+		tmp = *res;
+		if (val)
+			*res = ft_strjoin(tmp, val);
+		else
+			*res = ft_strjoin(tmp, "");
+		free(tmp);
+	}
+	else
+	{
+		tmp = *res;
+		*res = ft_strjoin(tmp, "$");
+		free(tmp);
+	}
 	*i = j;
 }
 
@@ -1724,12 +1890,24 @@ void	add_command_to_list(t_minishell *mini)
 	mini->tmp->next = mini->curr;
 }
 
-void	append_literal(char **res, char *src, int len)
+/*void	append_literal(char **res, char *src, int len)
 {
 	char	*lit;
 
 	lit = ft_substr(src, 0, len);
 	*res = ft_strjoin(*res, lit);
+	free(lit);
+}*/
+
+void	append_literal(char **res, char *src, int len)
+{
+	char	*lit;
+	char	*tmp;
+
+	lit = ft_substr(src, 0, len);
+	tmp = *res;
+	*res = ft_strjoin(tmp, lit);
+	free(tmp);
 	free(lit);
 }
 
@@ -2112,7 +2290,7 @@ void	delete_heredoc_files(int n)
 	}
 }
 
-/*void	ft_execute(t_minishell *mini)
+void	ft_execute(t_minishell *mini)
 {
 	int		i;
 	t_token	*tokken;
@@ -2140,59 +2318,6 @@ void	delete_heredoc_files(int n)
 	if (mini->pipex_data->n_cmds > 1
 		&& mini->pipex_data->builtins == BUILTIN_PARENT)
 		mini->pipex_data->builtins = NO_BUITIN;
-	mini->pipex_data->pid = malloc(sizeof(pid_t) * mini->pipex_data->n_cmds);
-	if (!mini->pipex_data->pid)
-		exit_with_error("Error malloc pid failed\n", 1, 2);
-	while (i < mini->pipex_data->n_cmds)
-		mini->pipex_data->pid[i++] = -1;
-	execute_pipeline(mini);
-	delete_heredoc_files(mini->pipex_data->count_heredoc);
-	if (mini->pipex_data)
-		free_pipex_data(mini->pipex_data);
-}*/
-
-void	ft_execute(t_minishell *mini)
-{
-	int			i;
-	t_token		*tokken;
-	t_command	*last;
-
-	i = 0;
-	mini->pipex_data = init_pipex();
-	if (!mini->pipex_data)
-		exit_with_error("Error init_pipex\n", 1, 2);
-	tokken = mini->t_list;
-	mini->command_list = parse_commands(mini);
-	if (g_status == 130)
-	{
-		g_status = -g_status;
-		delete_heredoc_files(mini->pipex_data->count_heredoc);
-		if (mini->pipex_data)
-			free_pipex_data(mini->pipex_data);
-		mini->pipex_data = NULL;
-		mini->t_list = tokken;
-		return ;
-	}
-	mini->t_list = tokken;
-	mini->pipex_data->commands = mini->command_list;
-	mini->pipex_data->n_cmds = count_commands_list(mini);
-	last = mini->command_list;
-	mini->pipex_data->builtins = NO_BUITIN;
-	if (last)
-	{
-		while (last->next)
-			last = last->next;
-		if (last->argv && last->argv[0])
-		{
-			if (!ft_strcmp(last->argv[0], "exit")
-				|| !ft_strcmp(last->argv[0], "cd")
-				|| !ft_strcmp(last->argv[0], "export")
-				|| !ft_strcmp(last->argv[0], "unset"))
-			{
-				mini->pipex_data->builtins = BUILTIN_PARENT;
-			}
-		}
-	}
 	mini->pipex_data->pid = malloc(sizeof(pid_t) * mini->pipex_data->n_cmds);
 	if (!mini->pipex_data->pid)
 		exit_with_error("Error malloc pid failed\n", 1, 2);
@@ -2292,6 +2417,7 @@ char	*extract_quoted_token(t_minishell *shell)
 	size_t		bufcap;
 	char		*more;
 	char		*tmp;
+	char		*cdup;
 	char		c;
 	char		next;
 
@@ -2343,9 +2469,12 @@ char	*extract_quoted_token(t_minishell *shell)
 			buf[bi] = '\0';
 			shell->tokenizer->prev_type = T_WORD;
 			shell->tokenizer->pos = pos + 1;
-			return (ft_strdup(buf));
+			cdup = ft_strdup(buf);
+			free(buf);
+			return (cdup);
 		}
-		if (quote_char == '"' && c == '\\' && pos + 1 < ft_strlen(shell->tokenizer->input))
+		if (quote_char == '"' && c == '\\'
+			&& pos + 1 < ft_strlen(shell->tokenizer->input))
 		{
 			next = shell->tokenizer->input[pos + 1];
 			if (next == '"' || next == '\\' || next == '$' || next == '`')
@@ -2690,7 +2819,10 @@ int	init_tokenizer(t_minishell *minishell, char *input)
 		minishell->t_list = NULL;
 	}
 	if (minishell->tokenizer)
-		free(minishell->tokenizer);
+	{
+		free_tokenizer(minishell->tokenizer);
+		minishell->tokenizer = NULL;
+	}
 	minishell->tokenizer = malloc(sizeof(t_tokenizer));
 	if (!minishell->tokenizer)
 		return (0);
@@ -3306,7 +3438,7 @@ void	mini_loop(t_minishell *mini)
 		if (!input)
 		{
 			(free_env_list(mini->env_list), free_tokenizer(mini->tokenizer),
-				free_t_list(mini->t_list), close(saved_stdin));
+			free_t_list(mini->t_list), close(saved_stdin));
 			break ;
 		}
 		if (*input == '\0' || g_status == 128 + SIGINT)

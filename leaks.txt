@@ -1,3 +1,6 @@
+
+SOLUCIONADOS:
+
 /home/vdiez-cu/Desktop/42_Madrid/cursus/mini Minishell> echo $PWD
 /home/vdiez-cu/Desktop/42_Madrid/cursus/mini
 ==2287638== 
@@ -45,7 +48,6 @@
 
 
 
-
 /home/vdiez-cu/Desktop/42_Madrid/cursus/mini Minishell> echo "$"HOME
 $HOME
 ==2288716== 
@@ -66,7 +68,6 @@ $HOME
 
 
 
-
 /home/vdiez-cu/Desktop/42_Madrid/cursus/mini Minishell> echo $
 $
 ==2288744== 
@@ -84,7 +85,3 @@ $
 ==2288744== 
 ==2288744== For lists of detected and suppressed errors, rerun with: -s
 ==2288744== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-
-
-
-
