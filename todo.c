@@ -6,11 +6,12 @@
 /*   By: vdiez-cu <vdiez-cu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/22 14:00:16 by vdiez-cu         ###   ########.fr       */
+/*   Updated: 2025/09/22 14:40:10 by vdiez-cu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
+#include <sys/stat.h>
 
 //////// AÑADIDO
 
@@ -921,7 +922,7 @@ char	**env_to_array(t_env *env_list)
 	return (env_array);
 }
 
-void	check_errno(int err, t_minishell *mini)
+/*void	check_errno(int err, t_minishell *mini)
 {
 	if (err == EISDIR)
 	{
@@ -947,7 +948,147 @@ void	check_errno(int err, t_minishell *mini)
 		(ft_putstr(": ", 2), ft_putstr(strerror(err), 2),
 			ft_putstr("\n", 2), free_minishell(mini), exit(1));
 	}
+}*/
+
+/*void check_errno(int err, t_minishell *mini)			me da bien el $PWD pero mal KO TEST 140
+{
+	const char *cmd = NULL;
+	struct stat st;
+
+	if (mini && mini->command_list && mini->command_list->argv
+		&& mini->command_list->argv[0])
+		cmd = mini->command_list->argv[0];
+
+	if (cmd)
+	{
+		ft_putstr((char *)cmd, 2);
+		ft_putstr(": ", 2);
+	}
+	if (cmd && stat(cmd, &st) == 0 && S_ISDIR(st.st_mode))
+	{
+		ft_putstr("Is a directory\n", 2);
+		free_minishell(mini);
+		exit(126);
+	}
+	if (err == EISDIR)
+	{
+		ft_putstr("Is a directory\n", 2);
+		free_minishell(mini);
+		exit(126);
+	}
+	else if (err == EACCES)
+	{
+		if (cmd && !ft_strchr(cmd, '/'))
+			ft_putstr("command not found\n", 2);
+		else
+			ft_putstr("Permission denied\n", 2);
+		free_minishell(mini);
+		exit(126);
+	}
+	else if (err == ENOENT)
+	{
+		ft_putstr("command not found\n", 2);
+		free_minishell(mini);
+		exit(127);
+	}
+	else
+	{
+		ft_putstr(": ", 2);
+		ft_putstr(strerror(err), 2);
+		ft_putstr("\n", 2);
+		free_minishell(mini);
+		exit(1);
+	}
+}*/
+
+/*void check_errno(int err, t_minishell *mini)		me da mal el $PWD pero bien KO TEST 140
+{
+	const char *cmd = NULL;
+
+	if (mini && mini->command_list && mini->command_list->argv
+		&& mini->command_list->argv[0])
+		cmd = mini->command_list->argv[0];
+	if (cmd)
+	{
+		ft_putstr((char *)cmd, 2);
+		ft_putstr(": ", 2);
+	}
+	if (err == EISDIR)
+	{
+		ft_putstr("Is a directory\n", 2);
+		free_minishell(mini);
+		exit(126);
+	}
+	else if (err == EACCES)
+	{
+		if (cmd && !ft_strchr(cmd, '/'))
+			ft_putstr("command not found\n", 2);
+		else
+			ft_putstr("Permission denied\n", 2);
+		free_minishell(mini);
+		exit(126);
+	}
+	else if (err == ENOENT)
+	{
+		ft_putstr("command not found\n", 2);
+		free_minishell(mini);
+		exit(127);
+	}
+	else
+	{
+		ft_putstr(": ", 2);
+		ft_putstr(strerror(err), 2);
+		ft_putstr("\n", 2);
+		free_minishell(mini);
+		exit(1);
+	}
+}*/
+
+void check_errno(int err, t_minishell *mini)
+{
+	const char *cmd = NULL;
+
+	if (mini && mini->command_list && mini->command_list->argv
+		&& mini->command_list->argv[0])
+		cmd = mini->command_list->argv[0];
+
+	if (cmd)
+	{
+		ft_putstr((char *)cmd, 2);
+		ft_putstr(": ", 2);
+	}
+
+	if (err == EISDIR)
+	{
+		ft_putstr("Is a directory\n", 2);
+		free_minishell(mini);
+		exit(126);
+	}
+	else if (err == EACCES)
+	{
+		if (cmd && !ft_strchr(cmd, '/'))
+			ft_putstr("command not found\n", 2);
+		else
+			ft_putstr("Permission denied\n", 2);
+		free_minishell(mini);
+		exit(126);
+	}
+	else if (err == ENOENT)
+	{
+		ft_putstr("command not found\n", 2);
+		free_minishell(mini);
+		exit(127);
+	}
+	else
+	{
+		ft_putstr(": ", 2);
+		ft_putstr(strerror(err), 2);
+		ft_putstr("\n", 2);
+		free_minishell(mini);
+		exit(1);
+	}
 }
+
 
 char	*create_path(char *possible_path, char *command)
 {
@@ -971,7 +1112,7 @@ void	free_and_exit(char **args, char **paths, int exit_code)
 	exit(exit_code);
 }
 
-void	exec_paths(char **paths, char *cmd, t_minishell *mini, char **envir)
+/*void	exec_paths(char **paths, char *cmd, t_minishell *mini, char **envir)
 {
 	int		i;
 	char	*path;
@@ -991,9 +1132,51 @@ void	exec_paths(char **paths, char *cmd, t_minishell *mini, char **envir)
 		free(path);
 		i++;
 	}
+}*/
+
+void exec_paths(char **paths, char *cmd, t_minishell *mini, char **envir)
+{
+	int i;
+	char *path;
+	struct stat st;
+	int saved_errno;
+
+	if (!paths)
+		return ;
+
+	i = 0;
+	while (paths[i])
+	{
+		path = create_path(paths[i], cmd);
+		if (!path)
+			free_and_exit(mini->command_list->argv, paths, 0);
+		if (stat(path, &st) == 0)
+		{
+			if (S_ISDIR(st.st_mode))
+			{
+				free(path);
+				i++;
+				continue;
+			}
+			if (S_ISREG(st.st_mode) && access(path, X_OK) == 0)
+			{
+				execve(path, mini->command_list->argv, envir);
+				saved_errno = errno;
+				free(path);
+				if (saved_errno == EISDIR)
+				{
+					i++;
+					continue ;
+				}
+				check_errno(saved_errno, mini);
+			}
+		}
+		free(path);
+		i++;
+	}
 }
 
-void	execute_command(t_minishell *mini, char **paths, char **envir)
+/*void	execute_command(t_minishell *mini, char **paths, char **envir)
 {
 	char	*cmd;
 
@@ -1006,6 +1189,33 @@ void	execute_command(t_minishell *mini, char **paths, char **envir)
 			(perror(cmd), free_minishell(mini), exit(127));
 		if (access(cmd, X_OK) == -1)
 			(perror(cmd), free_minishell(mini), exit(126));
+		execve(cmd, mini->command_list->argv, envir);
+		check_errno(errno, mini);
+	}
+	exec_paths(paths, cmd, mini, envir);
+	mini->paths_execve = paths;
+	mini->envir_execve = envir;
+	(check_errno(ENOENT, mini), exit(127));
+}*/
+
+void execute_command(t_minishell *mini, char **paths, char **envir)
+{
+	struct stat st;
+	char *cmd;
+
+	if (!envir || !*envir)
+		free_struct(mini->pipex_data, "Missing environment\n", 1, 2);
+	cmd = mini->command_list->argv[0];
+	if (ft_strchr(cmd, '/'))
+	{
+		if (stat(cmd, &st) == 0 && S_ISDIR(st.st_mode))
+		{
+			ft_putstr(cmd, 2);
+			ft_putstr(": ", 2);
+			ft_putstr("Is a directory\n", 2);
+			free_minishell(mini);
+			exit(126);
+		}
 		execve(cmd, mini->command_list->argv, envir);
 		check_errno(errno, mini);
 	}
@@ -1580,7 +1790,7 @@ void	free_struct(t_pipex *data, char *message, int exit_code, int std)
 	execute_command(mini, possible_paths, envir);
 }*/
 
-void	ft_cmd(t_minishell *mini)
+/*void	ft_cmd(t_minishell *mini)      funciona
 {
 	char	**possible_paths;
 	char	*path_line;
@@ -1599,6 +1809,50 @@ void	ft_cmd(t_minishell *mini)
 	cmd = mini->command_list->argv[0];
 	if (cmd && ft_strchr(cmd, '/'))
 	{
+		if (access(cmd, F_OK) == -1)
+			(perror(cmd), free_minishell(mini), ft_freedoom(envir), exit(127));
+		if (access(cmd, X_OK) == -1)
+			(perror(cmd), free_minishell(mini), ft_freedoom(envir), exit(126));
+		execve(cmd, mini->command_list->argv, envir);
+		check_errno(errno, mini);
+	}
+	if (!envir || !*envir)
+		(exit_with_error("Missing environment\n", 1, 2), free_minishell(mini),
+			ft_freedoom(envir));
+	path_line = find_execpath(envir);
+	if (!path_line)
+		(exit_with_error("Error with path\n", 1, 2), free_minishell(mini),
+			ft_freedoom(envir));
+	possible_paths = ft_split(path_line, ':');
+	if (!possible_paths)
+		(exit_with_error("Error with possible path\n", 1, 2),
+			free_minishell(mini), ft_freedoom(envir));
+	execute_command(mini, possible_paths, envir);
+}*/
+
+void	ft_cmd(t_minishell *mini)
+{
+	char	**possible_paths;
+	char	*path_line;
+	char	**envir;
+	char	*cmd;
+	struct stat st;
+
+	envir = env_to_array(mini->env_list);
+	if (is_builtin_str(mini->command_list->argv[0]))
+	{
+		cmd = mini->command_list->argv[0];
+		if (cmd && ft_strcmp(cmd, "exit") == 0)
+			(ft_freedoom(envir), ft_exit(mini));
+		execute_buitin_args(mini->command_list->argv, &envir, mini);
+		(ft_freedoom(envir), free_minishell(mini), exit(0));
+	}
+	cmd = mini->command_list->argv[0];
+	if (cmd && ft_strchr(cmd, '/'))
+	{
+		if (stat(cmd, &st) == 0 && S_ISDIR(st.st_mode))
+			(ft_putstr(cmd, 2), ft_putstr(": ", 2), ft_putstr("Is a directory\n", 2),
+				free_minishell(mini), ft_freedoom(envir), exit(126));
 		if (access(cmd, F_OK) == -1)
 			(perror(cmd), free_minishell(mini), ft_freedoom(envir), exit(127));
 		if (access(cmd, X_OK) == -1)
