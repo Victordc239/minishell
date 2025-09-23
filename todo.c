@@ -6,7 +6,7 @@
 /*   By: vdiez-cu <vdiez-cu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/23 14:15:17 by vdiez-cu         ###   ########.fr       */
+/*   Updated: 2025/09/23 14:21:54 by vdiez-cu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1136,24 +1136,19 @@ void	append_variable(char **res, char *src, int *i, t_minishell *mini)
 	while (src[j] && (ft_isalnum(src[j]) || src[j] == '_'))
 		j++;
 	len = j - (*i + 1);
+	tmp = *res;
 	if (len > 0)
 	{
 		var = ft_substr(src, *i + 1, len);
 		val = env_value(var, mini->env_list);
+		if (!val)
+			val = "";
+		*res = ft_strjoin(tmp, val);
 		free(var);
-		tmp = *res;
-		if (val)
-			*res = ft_strjoin(tmp, val);
-		else
-			*res = ft_strjoin(tmp, "");
-		free(tmp);
 	}
 	else
-	{
-		tmp = *res;
 		*res = ft_strjoin(tmp, "$");
-		free(tmp);
-	}
+	free(tmp);
 	*i = j;
 }
 
