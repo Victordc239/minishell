@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   todo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
+/*   By: vdiez-cu <vdiez-cu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/23 11:20:46 by victor           ###   ########.fr       */
+/*   Updated: 2025/09/23 14:15:17 by vdiez-cu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,21 +93,8 @@ int	parse_exit_code(const char *s, unsigned char *out_code)
 	return (1);
 }
 
-int	match_glob_star(const char *p, const char *str)
-{
-	if (*p == '\0')
-		return (1);
-	if (*str == '\0')
-		return (0);
-	if (match_glob(p, str))
-		return (1);
-	return (match_glob_star(p, str + 1));
-}
-
 int	match_glob(const char *p, const char *str)
 {
-	int	rc;
-
 	if (*p == '\0')
 		return (*str == '\0');
 	if (*p == '*')
@@ -116,14 +103,15 @@ int	match_glob(const char *p, const char *str)
 			p++;
 		if (*p == '\0')
 			return (1);
-		return (match_glob_star(p, str));
+		while (*str != '\0' && !match_glob(p, str))
+			str++;
+		return (match_glob(p, str));
 	}
 	if (*p == '[')
 	{
 		if (*str == '\0')
 			return (0);
-		rc = match_class(&p, *str);
-		if (rc == -1 || rc == 0)
+		if (match_class(&p, *str) <= 0)
 			return (0);
 		return (match_glob(p, str + 1));
 	}
@@ -289,26 +277,6 @@ void	free_pipex_data(t_pipex *data)
 		free_command_list(data->commands);
 	free(data);
 }
-
-/*int	is_numeric(char const *str)		no se usa
-{
-	int	i;
-
-	if (!str)
-		return (0);
-	i = 0;
-	if (str[i] == '-' || str[i] == '+')
-		i++;
-	if (str[i] == '\0')
-		return (0);
-	while (str[i])
-	{
-		if (!ft_isdigit(str[i]))
-			return (0);
-		i++;
-	}
-	return (1);
-}*/
 
 int	ft_exit(t_minishell *mini)
 {
@@ -1766,20 +1734,6 @@ void	replace_char_inplace(char *s, char find, char replace)
 	}
 }
 
-/*void	expand_token(t_token *token, t_minishell *mini)
-{
-	char	*expanded;
-
-	if (token->quote == Q_SINGLE)
-		return ;
-	expanded = expand_env_in_str(token->value, mini);
-	free(token->value);
-	token->value = expanded;
-	remove_marker_inplace(token->value);
-	if (ft_strchr(token->value, '\x07'))
-		replace_char_inplace(token->value, '\x07', '$');
-}*/
-
 void	expand_token(t_token *token, t_minishell *mini)
 {
 	char	*expanded;
@@ -1824,20 +1778,6 @@ void	parse_red_append(t_minishell *mini, t_token **token)
 	mini->curr->append = 1;
 	*token = (*token)->next;
 }
-
-/*void	handle_word_token(t_minishell *mini, t_token *token)
-{
-	if (token->quote != Q_SINGLE && (ft_strchr(token->value, '$')
-			|| ft_strchr(token->value, '\x07')))
-		expand_token(token, mini);
-	if (token->value[0] == '\0' && token->quote != Q_SINGLE)
-		return ;
-	if (token->quote == Q_NONE && (ft_strchr(token->value, '*')
-			|| ft_strchr(token->value, '?') || ft_strchr(token->value, '[')))
-		expand_and_add_glob(token->value, mini);
-	else
-		add_arg_to_command(mini, token->value);
-}*/
 
 void	handle_word_token(t_minishell *mini, t_token *token)
 {
@@ -1956,31 +1896,6 @@ int	has_redir_type(t_command *cmd, int type)
 	return (0);
 }
 
-/*void	child_process(t_minishell *mini, int fd[2])
-{
-	apply_redirections(mini);
-	if (!has_redir_type(mini->command_list, T_RED_IN)
-		&& !has_redir_type(mini->command_list, T_HEREDOC)
-		&& mini->pipex_data->prev_fd != -1)
-	{
-		if (dup2(mini->pipex_data->prev_fd, STDIN_FILENO) == -1)
-			exit_with_error("dup2 prev_fd failed\n", 1, 2);
-	}
-	if (mini->pipex_data->prev_fd != -1)
-		close(mini->pipex_data->prev_fd);
-	if (!has_redir_type(mini->command_list, T_RED_OUT)
-		&& !has_redir_type(mini->command_list, T_RED_APPEND))
-	{
-		if (dup2(fd[1], STDOUT_FILENO) == -1)
-			exit_with_error("dup2 pipe write failed\n", 1, 2);
-	}
-	close(fd[0]);
-	close(fd[1]);
-	if (!mini->command_list->argv || !mini->command_list->argv[0])
-		exit(0);
-	ft_cmd(mini);
-}*/
-
 void	child_process(t_minishell *mini, int fd[2])
 {
 	signal(SIGINT, SIG_DFL);
@@ -2008,25 +1923,6 @@ void	child_process(t_minishell *mini, int fd[2])
 	ft_cmd(mini);
 }
 
-/*void	process_and_exec(t_minishell *mini, int i)
-{
-	int	fd[2];
-
-	if (pipe(fd) == -1)
-		free_struct(mini->pipex_data, ERR_PIPE, 1, 2);
-	mini->pipex_data->pid[i] = fork();
-	if (mini->pipex_data->pid[i] == -1)
-		free_struct(mini->pipex_data, ERR_FORK, 1, 2);
-	if (mini->pipex_data->pid[i] == 0)
-		child_process(mini, fd);
-	else
-	{
-		if (mini->pipex_data->prev_fd != -1)
-			close(mini->pipex_data->prev_fd);
-		mini->pipex_data->prev_fd = fd[0];
-		close(fd[1]);
-	}
-}*/
 void	process_and_exec(t_minishell *mini, int i)
 {
 	int	fd[2];
@@ -2051,35 +1947,6 @@ void	process_and_exec(t_minishell *mini, int i)
 		close(fd[1]);
 	}
 }
-
-/*void	execute_last_command(t_minishell *mini, int i)
-{
-	if (mini->pipex_data->builtins == 1)
-	{
-		(apply_redirections(mini), execute_buitin(mini));
-		if (mini->pipex_data->prev_fd != -1)
-			close(mini->pipex_data->prev_fd);
-	}
-	else
-	{
-		mini->pipex_data->pid[i] = fork();
-		if (mini->pipex_data->pid[i] == -1)
-			free_struct(mini->pipex_data, ERR_FORK, 1, 2);
-		if (mini->pipex_data->pid[i] == 0)
-		{
-			if (mini->pipex_data->prev_fd != -1)
-			{
-				if (dup2(mini->pipex_data->prev_fd, STDIN_FILENO) == -1)
-					exit_with_error("dup2 final prev_fd failed\n", 1, 2);
-				close(mini->pipex_data->prev_fd);
-			}
-			apply_redirections(mini);
-			if (!mini->command_list->argv || !mini->command_list->argv[0])
-				exit(0);
-			ft_cmd(mini);
-		}
-	}
-}*/
 
 void	execute_last_command(t_minishell *mini, int i)
 {
@@ -2111,31 +1978,6 @@ void	execute_last_command(t_minishell *mini, int i)
 	}
 }
 
-/*void	wait_status(t_pipex *data)
-{
-	int		status;
-	pid_t	pid;
-	int		count;
-
-	count = 0;
-	while (count < data->n_cmds && data->pid[count] != -1)
-	{
-		pid = waitpid(data->pid[count], &status, 0);
-		if (pid == -1)
-			perror("waitpid");
-		if (pid == -1)
-			exit_with_error("Waitpid failed\n", 1, 2);
-		if (pid == data->pid[data->n_cmds - 1])
-		{
-			if (WIFEXITED(status))
-				g_status = WEXITSTATUS(status);
-			else if (WIFSIGNALED(status))
-				g_status = 128 + WTERMSIG(status);
-		}
-		count++;
-	}
-}*/
-
 void	wait_status(t_pipex *data)
 {
 	int		status;
@@ -2164,23 +2006,6 @@ void	wait_status(t_pipex *data)
 		count++;
 	}
 }
-
-/*void	execute_pipeline(t_minishell *mini)
-{
-	int	i;
-
-	i = 0;
-	while (mini->command_list && i < mini->pipex_data->n_cmds - 1)
-	{
-		process_and_exec(mini, i);
-		mini->command_list = mini->command_list->next;
-		i++;
-	}
-	execute_last_command(mini, i);
-	if (mini->pipex_data->prev_fd != -1)
-		close(mini->pipex_data->prev_fd);
-	wait_status(mini->pipex_data);
-}*/
 
 void	execute_pipeline(t_minishell *mini)
 {
@@ -2304,18 +2129,6 @@ void	ft_execute(t_minishell *mini)
 	if (mini->pipex_data)
 		free_pipex_data(mini->pipex_data);
 }
-
-/*void	sighandler(int signal)
-{
-	if (signal == SIGINT)
-	{
-		g_status = SIGINT;
-		write(STDOUT_FILENO, "\n", 1);
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-	}
-}*/
 
 void	sighandler(int signal)
 {
@@ -3330,36 +3143,6 @@ char	*get_prompt(void)
 	}
 	return (pront);
 }
-
-/*
-void	mini_loop(t_minishell *mini)
-{
-	int		saved_stdin;
-	char	*prompt;
-	char	*input;
-
-	while (1)
-	{
-		saved_stdin = dup(STDIN_FILENO);
-		prompt = get_prompt();
-		input = readline(prompt);
-		free(prompt);
-		if (!input)
-		{
-			(free_env_list(mini->env_list), free_tokenizer(mini->tokenizer),
-				free_t_list(mini->t_list), close(saved_stdin));
-			break ;
-		}
-		if (*input == '\0' || g_status == 128 + SIGINT)
-		{
-			(free(input), g_status = 0, dup2(saved_stdin, STDIN_FILENO),
-				close(saved_stdin));
-			continue ;
-		}
-		(process_input(input, mini), free(input), dup2(saved_stdin,
-				STDIN_FILENO), close(saved_stdin));
-	}
-}*/
 
 void	mini_loop(t_minishell *mini)
 {
