@@ -2,9 +2,89 @@
 COSAS A CAMBIAR:
 
 
+- arreglar:
+	minishell:
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ ./minishell
+		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo hi |
+		minishell: syntax error near unexpected token `|'
+	bash:
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo hi |
+		> ls
+		borrar.c        libft      minishell_tester1  out_from_dir
+		es.subject.pdf  Makefile   minishell_tester2  results
+		leaks.txt       mini.h     notas.txt          todo.c
+		leak_tester.sh  minishell  obj                valgrind_results
+
+- ARREGLAR:
+	minishell:
+		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo a ||| wc
+		a
+	bash:
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo a ||| wc
+		bash: error sintáctico cerca del elemento inesperado `|'
+
+-ARREGLAR:
+	minishell:
+		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> cat <
+		notas.txt
+	bash:
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ cat <
+		bash: error sintáctico cerca del elemento inesperado `newline'
+
+
+-ARREGLAR:
+	minishell:
+		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> cat <<
+		^C
+	bash:
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ cat <<
+		bash: error sintáctico cerca del elemento inesperado `newline'
+
+
+-ARREGLAR:
+	minishell:
+		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> ( echo x
+		(: command not found
+	bash:
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ ( echo x
+		> sd
+		> s
+		> sd
+		> f
+		> s^C
+
+-ARREGLAR
+	minishell:
+		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo hi > | wc
+		bash: syntax error near unexpected token `newline'
+		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo $?
+		1
+	bash:
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo hi > | wc
+		bash: error sintáctico cerca del elemento inesperado `|'
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo $?
+		2
+
+-ARREGLAR:
+	minishell:
+		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo hello >>
+		hello
+		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo $?
+		0
+	bash:
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo hello >>
+		bash: error sintáctico cerca del elemento inesperado `newline'
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo $?
+		2
+
+
 
 
 SOLUCIONADO:
+
+- cd ~
+
+- cd /
 
 - al hacer control+c tiene que dar salida 130
 

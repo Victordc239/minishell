@@ -6,7 +6,7 @@
 /*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/22 17:54:19 by victor           ###   ########.fr       */
+/*   Updated: 2025/09/23 11:20:46 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,11 +58,11 @@ void	remove_marker_inplace(char *s)
 	s[j] = '\0';
 }
 
-int parse_exit_code(const char *s, unsigned char *out_code)
+int	parse_exit_code(const char *s, unsigned char *out_code)
 {
-	int i;
-	int neg;
-	unsigned int r;
+	int			i;
+	int			neg;
+	unsigned int	r;
 
 	if (!s)
 		return (0);
@@ -290,7 +290,7 @@ void	free_pipex_data(t_pipex *data)
 	free(data);
 }
 
-int	is_numeric(char const *str)
+/*int	is_numeric(char const *str)		no se usa
 {
 	int	i;
 
@@ -308,33 +308,33 @@ int	is_numeric(char const *str)
 		i++;
 	}
 	return (1);
-}
+}*/
 
-int ft_exit(t_minishell *mini)
+int	ft_exit(t_minishell *mini)
 {
-    unsigned char code;
+	unsigned char	code;
 
-    if (!mini->command_list->argv[1])
-    {
-        free_minishell(mini);
-        exit((unsigned char)g_status);
-    }
-    if (mini->command_list->argv[2])
-    {
-        ft_putstr("exit: too many arguments\n", 2);
-        g_status = 1;
-        return (1);
-    }
-    if (!parse_exit_code(mini->command_list->argv[1], &code))
-    {
-        ft_putstr("exit: ", 2);
-        ft_putstr(mini->command_list->argv[1], 2);
-        ft_putstr(": numeric argument required\n", 2);
-        free_minishell(mini);
-        exit(2);
-    }
-    free_minishell(mini);
-    exit((int)code);
+	if (!mini->command_list->argv[1])
+	{
+		free_minishell(mini);
+		exit((unsigned char)g_status);
+	}
+	if (mini->command_list->argv[2])
+	{
+		ft_putstr("exit: too many arguments\n", 2);
+		g_status = 1;
+		return (1);
+	}
+	if (!parse_exit_code(mini->command_list->argv[1], &code))
+	{
+		ft_putstr("exit: ", 2);
+		ft_putstr(mini->command_list->argv[1], 2);
+		ft_putstr(": numeric argument required\n", 2);
+		free_minishell(mini);
+		exit(2);
+	}
+	free_minishell(mini);
+	exit((int)code);
 }
 
 void	ft_cd(t_minishell *mini, int path_allocated, int print_new)
@@ -772,26 +772,18 @@ char	**env_to_array(t_env *env_list)
 	return (env_array);
 }
 
-void check_errno(int err, t_minishell *mini)
+void	check_errno(int err, t_minishell *mini)
 {
-	const char *cmd = NULL;
+	const char	*cmd;
 
+	cmd = NULL;
 	if (mini && mini->command_list && mini->command_list->argv
 		&& mini->command_list->argv[0])
 		cmd = mini->command_list->argv[0];
-
 	if (cmd)
-	{
-		ft_putstr((char *)cmd, 2);
-		ft_putstr(": ", 2);
-	}
-
+		(ft_putstr((char *)cmd, 2), ft_putstr(": ", 2));
 	if (err == EISDIR)
-	{
-		ft_putstr("Is a directory\n", 2);
-		free_minishell(mini);
-		exit(126);
-	}
+		(ft_putstr("Is a directory\n", 2), free_minishell(mini), exit(126));
 	else if (err == EACCES)
 	{
 		if (cmd && !ft_strchr(cmd, '/'))
@@ -802,19 +794,10 @@ void check_errno(int err, t_minishell *mini)
 		exit(126);
 	}
 	else if (err == ENOENT)
-	{
-		ft_putstr("command not found\n", 2);
-		free_minishell(mini);
-		exit(127);
-	}
+		(ft_putstr("command not found\n", 2), free_minishell(mini), exit(127));
 	else
-	{
-		ft_putstr(": ", 2);
-		ft_putstr(strerror(err), 2);
-		ft_putstr("\n", 2);
-		free_minishell(mini);
-		exit(1);
-	}
+		(ft_putstr(": ", 2), ft_putstr(strerror(err), 2),
+			ft_putstr("\n", 2), free_minishell(mini), exit(1));
 }
 
 char	*create_path(char *possible_path, char *command)
@@ -841,16 +824,15 @@ void	free_and_exit(char **args, char **paths, int exit_code)
 	exit(exit_code);
 }
 
-void exec_paths(char **paths, char *cmd, t_minishell *mini, char **envir)
+void	exec_paths(char **paths, char *cmd, t_minishell *mini, char **envir)
 {
-	int i;
-	char *path;
-	struct stat st;
-	int saved_errno;
+	int			i;
+	char		*path;
+	struct stat	st;
+	int			saved_errno;
 
 	if (!paths)
 		return ;
-
 	i = 0;
 	while (paths[i])
 	{
@@ -863,7 +845,7 @@ void exec_paths(char **paths, char *cmd, t_minishell *mini, char **envir)
 			{
 				free(path);
 				i++;
-				continue;
+				continue ;
 			}
 			if (S_ISREG(st.st_mode) && access(path, X_OK) == 0)
 			{
@@ -883,10 +865,10 @@ void exec_paths(char **paths, char *cmd, t_minishell *mini, char **envir)
 	}
 }
 
-void execute_command(t_minishell *mini, char **paths, char **envir)
+void	execute_command(t_minishell *mini, char **paths, char **envir)
 {
-	struct stat st;
-	char *cmd;
+	struct stat	st;
+	char		*cmd;
 
 	if (!envir || !*envir)
 		free_struct(mini->pipex_data, "Missing environment\n", 1, 2);
@@ -1355,11 +1337,11 @@ void	free_struct(t_pipex *data, char *message, int exit_code, int std)
 
 void	ft_cmd(t_minishell *mini)
 {
-	char	**possible_paths;
-	char	*path_line;
-	char	**envir;
-	char	*cmd;
-	struct stat st;
+	char			**possible_paths;
+	char			*path_line;
+	char			**envir;
+	char			*cmd;
+	struct stat		st;
 
 	envir = env_to_array(mini->env_list);
 	if (is_builtin_str(mini->command_list->argv[0]))
@@ -1374,7 +1356,7 @@ void	ft_cmd(t_minishell *mini)
 	if (cmd && ft_strchr(cmd, '/'))
 	{
 		if (stat(cmd, &st) == 0 && S_ISDIR(st.st_mode))
-			(ft_putstr(cmd, 2), ft_putstr(": ", 2), ft_putstr("Is a directory\n", 2),
+			(ft_putstr(cmd, 2), ft_putstr(": Is a directory\n", 2),
 				free_minishell(mini), ft_freedoom(envir), exit(126));
 		if (access(cmd, F_OK) == -1)
 			(perror(cmd), free_minishell(mini), ft_freedoom(envir), exit(127));
@@ -1784,7 +1766,7 @@ void	replace_char_inplace(char *s, char find, char replace)
 	}
 }
 
-void	expand_token(t_token *token, t_minishell *mini)
+/*void	expand_token(t_token *token, t_minishell *mini)
 {
 	char	*expanded;
 
@@ -1794,6 +1776,34 @@ void	expand_token(t_token *token, t_minishell *mini)
 	free(token->value);
 	token->value = expanded;
 	remove_marker_inplace(token->value);
+	if (ft_strchr(token->value, '\x07'))
+		replace_char_inplace(token->value, '\x07', '$');
+}*/
+
+void	expand_token(t_token *token, t_minishell *mini)
+{
+	char	*expanded;
+	char	*home;
+	char	*tmp;
+
+	if (token->quote == Q_SINGLE)
+		return ;
+	expanded = expand_env_in_str(token->value, mini);
+	free(token->value);
+	token->value = expanded;
+	remove_marker_inplace(token->value);
+	if (token->quote == Q_NONE && token->value && token->value[0] == '~'
+		&& (token->value[1] == '/' || token->value[1] == '\0'))
+	{
+		home = get_env_value("HOME", mini->env_list);
+		if (home)
+		{
+			tmp = ft_strjoin(home, token->value + 1);
+			free(home);
+			if (tmp)
+				(free(token->value), token->value = tmp);
+		}
+	}
 	if (ft_strchr(token->value, '\x07'))
 		replace_char_inplace(token->value, '\x07', '$');
 }
@@ -1815,10 +1825,26 @@ void	parse_red_append(t_minishell *mini, t_token **token)
 	*token = (*token)->next;
 }
 
-void	handle_word_token(t_minishell *mini, t_token *token)
+/*void	handle_word_token(t_minishell *mini, t_token *token)
 {
 	if (token->quote != Q_SINGLE && (ft_strchr(token->value, '$')
 			|| ft_strchr(token->value, '\x07')))
+		expand_token(token, mini);
+	if (token->value[0] == '\0' && token->quote != Q_SINGLE)
+		return ;
+	if (token->quote == Q_NONE && (ft_strchr(token->value, '*')
+			|| ft_strchr(token->value, '?') || ft_strchr(token->value, '[')))
+		expand_and_add_glob(token->value, mini);
+	else
+		add_arg_to_command(mini, token->value);
+}*/
+
+void	handle_word_token(t_minishell *mini, t_token *token)
+{
+	if (token->quote != Q_SINGLE
+		&& (ft_strchr(token->value, '$')
+			|| ft_strchr(token->value, '\x07')
+			|| token->value[0] == '~'))
 		expand_token(token, mini);
 	if (token->value[0] == '\0' && token->quote != Q_SINGLE)
 		return ;
@@ -2001,18 +2027,16 @@ void	child_process(t_minishell *mini, int fd[2])
 		close(fd[1]);
 	}
 }*/
-void process_and_exec(t_minishell *mini, int i)
+void	process_and_exec(t_minishell *mini, int i)
 {
-	int fd[2];
+	int	fd[2];
 
 	if (pipe(fd) == -1)
 		free_struct(mini->pipex_data, ERR_PIPE, 1, 2);
 	signal(SIGINT, SIG_IGN);
-
 	mini->pipex_data->pid[i] = fork();
 	if (mini->pipex_data->pid[i] == -1)
 		free_struct(mini->pipex_data, ERR_FORK, 1, 2);
-
 	if (mini->pipex_data->pid[i] == 0)
 	{
 		signal(SIGINT, SIG_DFL);
@@ -2057,7 +2081,7 @@ void process_and_exec(t_minishell *mini, int i)
 	}
 }*/
 
-void execute_last_command(t_minishell *mini, int i)
+void	execute_last_command(t_minishell *mini, int i)
 {
 	if (mini->pipex_data->builtins == 1)
 	{
@@ -2067,24 +2091,21 @@ void execute_last_command(t_minishell *mini, int i)
 	}
 	else
 	{
-		signal(SIGINT, SIG_IGN);
-		mini->pipex_data->pid[i] = fork();
+		(signal(SIGINT, SIG_IGN), mini->pipex_data->pid[i] = fork());
 		if (mini->pipex_data->pid[i] == -1)
 			free_struct(mini->pipex_data, ERR_FORK, 1, 2);
-
 		if (mini->pipex_data->pid[i] == 0)
 		{
-			signal(SIGINT, SIG_DFL);
-			signal(SIGQUIT, SIG_DFL);
+			(signal(SIGINT, SIG_DFL), signal(SIGQUIT, SIG_DFL));
 			if (mini->pipex_data->prev_fd != -1)
 			{
-			if (dup2(mini->pipex_data->prev_fd, STDIN_FILENO) == -1)
-				exit_with_error("dup2 final prev_fd failed\n", 1, 2);
-			close(mini->pipex_data->prev_fd);
+				if (dup2(mini->pipex_data->prev_fd, STDIN_FILENO) == -1)
+					exit_with_error("dup2 final prev_fd failed\n", 1, 2);
+				close(mini->pipex_data->prev_fd);
 			}
 			apply_redirections(mini);
 			if (!mini->command_list->argv || !mini->command_list->argv[0])
-			exit(0);
+				exit(0);
 			ft_cmd(mini);
 		}
 	}
@@ -2120,7 +2141,6 @@ void	wait_status(t_pipex *data)
 	int		status;
 	pid_t	pid;
 	int		count;
-	int		termsig;
 
 	count = 0;
 	while (count < data->n_cmds && data->pid[count] != -1)
@@ -2136,16 +2156,14 @@ void	wait_status(t_pipex *data)
 				g_status = WEXITSTATUS(status);
 			else if (WIFSIGNALED(status))
 			{
-				termsig = WTERMSIG(status);
-				g_status = 128 + termsig;
-				if (termsig == SIGINT)
+				g_status = 128 + WTERMSIG(status);
+				if (WTERMSIG(status) == SIGINT)
 					write(STDOUT_FILENO, "\n", 1);
 			}
 		}
 		count++;
 	}
 }
-
 
 /*void	execute_pipeline(t_minishell *mini)
 {
@@ -2310,7 +2328,6 @@ void	sighandler(int signal)
 		rl_redisplay();
 	}
 }
-
 
 void	do_signal(void)
 {
@@ -2671,16 +2688,17 @@ t_token	*add_token(t_minishell *minishell, char *value)
 	return (new_node);
 }
 
-t_token *check_expansion(t_minishell *minishell, char *val)
+t_token	*check_expansion(t_minishell *minishell, char *val)
 {
-	t_token *new_token;
+	t_token	*new_token;
 
 	new_token = add_token(minishell, val);
 	if (!new_token)
 		return (NULL);
 	new_token->type = minishell->tokenizer->prev_type;
 	new_token->quote = minishell->tokenizer->quote;
-	if (ft_strchr(new_token->value, '\x01') && !ft_strchr(new_token->value, '$'))
+	if (ft_strchr(new_token->value, '\x01')
+		&& !ft_strchr(new_token->value, '$'))
 		remove_marker_inplace(new_token->value);
 	if (new_token->type == T_WORD && new_token->value[0] == '$')
 	{
@@ -2693,7 +2711,6 @@ t_token *check_expansion(t_minishell *minishell, char *val)
 	}
 	else
 		new_token->expansion_type = NO_EXPANSION;
-
 	if (new_token->quote == Q_SINGLE && ft_strchr(new_token->value, '\x07'))
 		replace_char_inplace(new_token->value, '\x07', '$');
 	return (new_token);

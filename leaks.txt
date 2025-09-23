@@ -85,3 +85,788 @@ $
 ==2288744== 
 ==2288744== For lists of detected and suppressed errors, rerun with: -s
 ==2288744== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ ./leak_tester.sh
+=== Run: simple_echo (Valgrind) ===
+Resumen Valgrind -> ./valgrind_results/simple_echo.summary.txt
+==241820==    definitely lost: 0 bytes in 0 blocks
+==241820==    indirectly lost: 0 bytes in 0 blocks
+==241820==      possibly lost: 0 bytes in 0 blocks
+==241820==    still reachable: 233,017 bytes in 241 blocks
+==241820== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241822==    definitely lost: 0 bytes in 0 blocks
+==241822==    indirectly lost: 0 bytes in 0 blocks
+==241822==      possibly lost: 0 bytes in 0 blocks
+==241822==    still reachable: 233,058 bytes in 244 blocks
+==241822== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241816==    definitely lost: 0 bytes in 0 blocks
+==241816==    indirectly lost: 0 bytes in 0 blocks
+==241816==      possibly lost: 0 bytes in 0 blocks
+==241816==    still reachable: 233,072 bytes in 247 blocks
+==241816== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+logs: ./valgrind_results/simple_echo.vg.log , stdout: ./valgrind_results/simple_echo.stdout , stderr: ./valgrind_results/simple_echo.stderr
+
+=== Run: builtins_export_unset (Valgrind) ===
+Resumen Valgrind -> ./valgrind_results/builtins_export_unset.summary.txt
+==241834==    definitely lost: 0 bytes in 0 blocks
+==241834==    indirectly lost: 0 bytes in 0 blocks
+==241834==      possibly lost: 0 bytes in 0 blocks
+==241834==    still reachable: 233,071 bytes in 247 blocks
+==241834== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241836==    definitely lost: 0 bytes in 0 blocks
+==241836==    indirectly lost: 0 bytes in 0 blocks
+==241836==      possibly lost: 0 bytes in 0 blocks
+==241836==    still reachable: 233,157 bytes in 253 blocks
+==241836== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241829==    definitely lost: 0 bytes in 0 blocks
+==241829==    indirectly lost: 0 bytes in 0 blocks
+==241829==      possibly lost: 0 bytes in 0 blocks
+==241829==    still reachable: 233,201 bytes in 256 blocks
+==241829== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+logs: ./valgrind_results/builtins_export_unset.vg.log , stdout: ./valgrind_results/builtins_export_unset.stdout , stderr: ./valgrind_results/builtins_export_unset.stderr
+
+=== Run: cd_pwd (Valgrind) ===
+Resumen Valgrind -> ./valgrind_results/cd_pwd.summary.txt
+==241848==    definitely lost: 0 bytes in 0 blocks
+==241848==    indirectly lost: 0 bytes in 0 blocks
+==241848==      possibly lost: 0 bytes in 0 blocks
+==241848==    still reachable: 232,965 bytes in 241 blocks
+==241848== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241849==    definitely lost: 0 bytes in 0 blocks
+==241849==    indirectly lost: 0 bytes in 0 blocks
+==241849==      possibly lost: 0 bytes in 0 blocks
+==241849==    still reachable: 232,958 bytes in 247 blocks
+==241849== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241850==    definitely lost: 0 bytes in 0 blocks
+==241850==    indirectly lost: 0 bytes in 0 blocks
+==241850==      possibly lost: 0 bytes in 0 blocks
+==241850==    still reachable: 233,127 bytes in 253 blocks
+==241850== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241844==    definitely lost: 0 bytes in 0 blocks
+==241844==    indirectly lost: 0 bytes in 0 blocks
+==241844==      possibly lost: 0 bytes in 0 blocks
+==241844==    still reachable: 233,171 bytes in 256 blocks
+==241844== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+logs: ./valgrind_results/cd_pwd.vg.log , stdout: ./valgrind_results/cd_pwd.stdout , stderr: ./valgrind_results/cd_pwd.stderr
+
+=== Run: pipelines_and_redirs (Valgrind) ===
+Resumen Valgrind -> ./valgrind_results/pipelines_and_redirs.summary.txt
+==241863==    definitely lost: 0 bytes in 0 blocks
+==241863==    indirectly lost: 0 bytes in 0 blocks
+==241863==      possibly lost: 0 bytes in 0 blocks
+==241863==    still reachable: 233,089 bytes in 241 blocks
+==241863== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241864==    definitely lost: 0 bytes in 0 blocks
+==241864==    indirectly lost: 0 bytes in 0 blocks
+==241864==      possibly lost: 0 bytes in 0 blocks
+==241864==    still reachable: 233,164 bytes in 244 blocks
+==241864== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241858==    definitely lost: 0 bytes in 0 blocks
+==241858==    indirectly lost: 0 bytes in 0 blocks
+==241858==      possibly lost: 0 bytes in 0 blocks
+==241858==    still reachable: 233,295 bytes in 256 blocks
+==241858== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+logs: ./valgrind_results/pipelines_and_redirs.vg.log , stdout: ./valgrind_results/pipelines_and_redirs.stdout , stderr: ./valgrind_results/pipelines_and_redirs.stderr
+
+=== Run: heredoc_simple (Valgrind) ===
+Resumen Valgrind -> ./valgrind_results/heredoc_simple.summary.txt
+==241877==    definitely lost: 0 bytes in 0 blocks
+==241877==    indirectly lost: 0 bytes in 0 blocks
+==241877==      possibly lost: 0 bytes in 0 blocks
+==241877==    still reachable: 232,994 bytes in 238 blocks
+==241877== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+logs: ./valgrind_results/heredoc_simple.vg.log , stdout: ./valgrind_results/heredoc_simple.stdout , stderr: ./valgrind_results/heredoc_simple.stderr
+
+=== Run: globbing_and_expansion (Valgrind) ===
+Resumen Valgrind -> ./valgrind_results/globbing_and_expansion.summary.txt
+==241901==    definitely lost: 0 bytes in 0 blocks
+==241901==    indirectly lost: 0 bytes in 0 blocks
+==241901==      possibly lost: 0 bytes in 0 blocks
+==241901==    still reachable: 232,851 bytes in 239 blocks
+==241901== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241902==    definitely lost: 0 bytes in 0 blocks
+==241902==    indirectly lost: 0 bytes in 0 blocks
+==241902==      possibly lost: 0 bytes in 0 blocks
+==241902==    still reachable: 232,886 bytes in 242 blocks
+==241902== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241904==    definitely lost: 0 bytes in 0 blocks
+==241904==    indirectly lost: 0 bytes in 0 blocks
+==241904==      possibly lost: 0 bytes in 0 blocks
+==241904==    still reachable: 232,926 bytes in 245 blocks
+==241904== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241897==    definitely lost: 0 bytes in 0 blocks
+==241897==    indirectly lost: 0 bytes in 0 blocks
+==241897==      possibly lost: 0 bytes in 0 blocks
+==241897==    still reachable: 233,016 bytes in 251 blocks
+==241897== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+logs: ./valgrind_results/globbing_and_expansion.vg.log , stdout: ./valgrind_results/globbing_and_expansion.stdout , stderr: ./valgrind_results/globbing_and_expansion.stderr
+
+=== Run: syntax_errors (Valgrind) ===
+Resumen Valgrind -> ./valgrind_results/syntax_errors.summary.txt
+==241915==    definitely lost: 0 bytes in 0 blocks
+==241915==    indirectly lost: 0 bytes in 0 blocks
+==241915==      possibly lost: 0 bytes in 0 blocks
+==241915==    still reachable: 239,224 bytes in 411 blocks
+==241915== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241916==    definitely lost: 2 bytes in 1 blocks
+==241916==    indirectly lost: 0 bytes in 0 blocks
+==241916==      possibly lost: 0 bytes in 0 blocks
+==241916==    still reachable: 248,199 bytes in 436 blocks
+==241916== ERROR SUMMARY: 5 errors from 5 contexts (suppressed: 0 from 0)
+==241916== ERROR SUMMARY: 5 errors from 5 contexts (suppressed: 0 from 0)
+==241917==    definitely lost: 2 bytes in 1 blocks
+==241917==    indirectly lost: 0 bytes in 0 blocks
+==241917==      possibly lost: 0 bytes in 0 blocks
+==241917==    still reachable: 233,105 bytes in 250 blocks
+==241917== ERROR SUMMARY: 4 errors from 4 contexts (suppressed: 0 from 0)
+==241917== ERROR SUMMARY: 4 errors from 4 contexts (suppressed: 0 from 0)
+==241912==    definitely lost: 2 bytes in 1 blocks
+==241912==    indirectly lost: 0 bytes in 0 blocks
+==241912==      possibly lost: 0 bytes in 0 blocks
+==241912==    still reachable: 233,131 bytes in 253 blocks
+==241912== ERROR SUMMARY: 4 errors from 4 contexts (suppressed: 0 from 0)
+==241912== ERROR SUMMARY: 4 errors from 4 contexts (suppressed: 0 from 0)
+logs: ./valgrind_results/syntax_errors.vg.log , stdout: ./valgrind_results/syntax_errors.stdout , stderr: ./valgrind_results/syntax_errors.stderr
+
+=== Run: group_subshells (Valgrind) ===
+Resumen Valgrind -> ./valgrind_results/group_subshells.summary.txt
+==241943==    definitely lost: 0 bytes in 0 blocks
+==241943==    indirectly lost: 0 bytes in 0 blocks
+==241943==      possibly lost: 0 bytes in 0 blocks
+==241943==    still reachable: 243,652 bytes in 463 blocks
+==241943== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241942==    definitely lost: 0 bytes in 0 blocks
+==241942==    indirectly lost: 0 bytes in 0 blocks
+==241942==      possibly lost: 0 bytes in 0 blocks
+==241942==    still reachable: 239,227 bytes in 406 blocks
+==241942== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241945==    definitely lost: 0 bytes in 0 blocks
+==241945==    indirectly lost: 0 bytes in 0 blocks
+==241945==      possibly lost: 0 bytes in 0 blocks
+==241945==    still reachable: 233,084 bytes in 244 blocks
+==241945== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241947==    definitely lost: 0 bytes in 0 blocks
+==241947==    indirectly lost: 0 bytes in 0 blocks
+==241947==      possibly lost: 0 bytes in 0 blocks
+==241947==    still reachable: 243,773 bytes in 469 blocks
+==241947== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241946==    definitely lost: 0 bytes in 0 blocks
+==241946==    indirectly lost: 0 bytes in 0 blocks
+==241946==      possibly lost: 0 bytes in 0 blocks
+==241946==    still reachable: 239,346 bytes in 412 blocks
+==241946== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241948==    definitely lost: 0 bytes in 0 blocks
+==241948==    indirectly lost: 0 bytes in 0 blocks
+==241948==      possibly lost: 0 bytes in 0 blocks
+==241948==    still reachable: 233,179 bytes in 250 blocks
+==241948== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241925==    definitely lost: 0 bytes in 0 blocks
+==241925==    indirectly lost: 0 bytes in 0 blocks
+==241925==      possibly lost: 0 bytes in 0 blocks
+==241925==    still reachable: 233,202 bytes in 253 blocks
+==241925== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+logs: ./valgrind_results/group_subshells.vg.log , stdout: ./valgrind_results/group_subshells.stdout , stderr: ./valgrind_results/group_subshells.stderr
+
+=== Run: long_input_multiline (Valgrind) ===
+[!] Valgrind run returned non-zero or timed out for long_input_multiline (check ./valgrind_results/long_input_multiline.vg.log)
+Resumen Valgrind -> ./valgrind_results/long_input_multiline.summary.txt
+==241959==    definitely lost: 0 bytes in 0 blocks
+==241959==    indirectly lost: 0 bytes in 0 blocks
+==241959==      possibly lost: 0 bytes in 0 blocks
+==241959==    still reachable: 232,997 bytes in 241 blocks
+==241959== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241960==    definitely lost: 0 bytes in 0 blocks
+==241960==    indirectly lost: 0 bytes in 0 blocks
+==241960==      possibly lost: 0 bytes in 0 blocks
+==241960==    still reachable: 233,045 bytes in 244 blocks
+==241960== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241961==    definitely lost: 0 bytes in 0 blocks
+==241961==    indirectly lost: 0 bytes in 0 blocks
+==241961==      possibly lost: 0 bytes in 0 blocks
+==241961==    still reachable: 233,093 bytes in 247 blocks
+==241961== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241962==    definitely lost: 0 bytes in 0 blocks
+==241962==    indirectly lost: 0 bytes in 0 blocks
+==241962==      possibly lost: 0 bytes in 0 blocks
+==241962==    still reachable: 233,141 bytes in 250 blocks
+==241962== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241963==    definitely lost: 0 bytes in 0 blocks
+==241963==    indirectly lost: 0 bytes in 0 blocks
+==241963==      possibly lost: 0 bytes in 0 blocks
+==241963==    still reachable: 233,189 bytes in 253 blocks
+==241963== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241964==    definitely lost: 0 bytes in 0 blocks
+==241964==    indirectly lost: 0 bytes in 0 blocks
+==241964==      possibly lost: 0 bytes in 0 blocks
+==241964==    still reachable: 233,237 bytes in 256 blocks
+==241964== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241966==    definitely lost: 0 bytes in 0 blocks
+==241966==    indirectly lost: 0 bytes in 0 blocks
+==241966==      possibly lost: 0 bytes in 0 blocks
+==241966==    still reachable: 233,285 bytes in 259 blocks
+==241966== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241967==    definitely lost: 0 bytes in 0 blocks
+==241967==    indirectly lost: 0 bytes in 0 blocks
+==241967==      possibly lost: 0 bytes in 0 blocks
+==241967==    still reachable: 233,333 bytes in 262 blocks
+==241967== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241968==    definitely lost: 0 bytes in 0 blocks
+==241968==    indirectly lost: 0 bytes in 0 blocks
+==241968==      possibly lost: 0 bytes in 0 blocks
+==241968==    still reachable: 233,381 bytes in 265 blocks
+==241968== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241969==    definitely lost: 0 bytes in 0 blocks
+==241969==    indirectly lost: 0 bytes in 0 blocks
+==241969==      possibly lost: 0 bytes in 0 blocks
+==241969==    still reachable: 233,433 bytes in 268 blocks
+==241969== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241970==    definitely lost: 0 bytes in 0 blocks
+==241970==    indirectly lost: 0 bytes in 0 blocks
+==241970==      possibly lost: 0 bytes in 0 blocks
+==241970==    still reachable: 233,482 bytes in 271 blocks
+==241970== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241971==    definitely lost: 0 bytes in 0 blocks
+==241971==    indirectly lost: 0 bytes in 0 blocks
+==241971==      possibly lost: 0 bytes in 0 blocks
+==241971==    still reachable: 233,531 bytes in 274 blocks
+==241971== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241972==    definitely lost: 0 bytes in 0 blocks
+==241972==    indirectly lost: 0 bytes in 0 blocks
+==241972==      possibly lost: 0 bytes in 0 blocks
+==241972==    still reachable: 233,580 bytes in 277 blocks
+==241972== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241973==    definitely lost: 0 bytes in 0 blocks
+==241973==    indirectly lost: 0 bytes in 0 blocks
+==241973==      possibly lost: 0 bytes in 0 blocks
+==241973==    still reachable: 233,629 bytes in 280 blocks
+==241973== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241974==    definitely lost: 0 bytes in 0 blocks
+==241974==    indirectly lost: 0 bytes in 0 blocks
+==241974==      possibly lost: 0 bytes in 0 blocks
+==241974==    still reachable: 233,678 bytes in 283 blocks
+==241974== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241975==    definitely lost: 0 bytes in 0 blocks
+==241975==    indirectly lost: 0 bytes in 0 blocks
+==241975==      possibly lost: 0 bytes in 0 blocks
+==241975==    still reachable: 233,727 bytes in 286 blocks
+==241975== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241979==    definitely lost: 0 bytes in 0 blocks
+==241979==    indirectly lost: 0 bytes in 0 blocks
+==241979==      possibly lost: 0 bytes in 0 blocks
+==241979==    still reachable: 233,776 bytes in 289 blocks
+==241979== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241981==    definitely lost: 0 bytes in 0 blocks
+==241981==    indirectly lost: 0 bytes in 0 blocks
+==241981==      possibly lost: 0 bytes in 0 blocks
+==241981==    still reachable: 233,825 bytes in 292 blocks
+==241981== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241982==    definitely lost: 0 bytes in 0 blocks
+==241982==    indirectly lost: 0 bytes in 0 blocks
+==241982==      possibly lost: 0 bytes in 0 blocks
+==241982==    still reachable: 233,874 bytes in 295 blocks
+==241982== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241983==    definitely lost: 0 bytes in 0 blocks
+==241983==    indirectly lost: 0 bytes in 0 blocks
+==241983==      possibly lost: 0 bytes in 0 blocks
+==241983==    still reachable: 233,923 bytes in 298 blocks
+==241983== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241984==    definitely lost: 0 bytes in 0 blocks
+==241984==    indirectly lost: 0 bytes in 0 blocks
+==241984==      possibly lost: 0 bytes in 0 blocks
+==241984==    still reachable: 233,972 bytes in 301 blocks
+==241984== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241985==    definitely lost: 0 bytes in 0 blocks
+==241985==    indirectly lost: 0 bytes in 0 blocks
+==241985==      possibly lost: 0 bytes in 0 blocks
+==241985==    still reachable: 234,021 bytes in 304 blocks
+==241985== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241986==    definitely lost: 0 bytes in 0 blocks
+==241986==    indirectly lost: 0 bytes in 0 blocks
+==241986==      possibly lost: 0 bytes in 0 blocks
+==241986==    still reachable: 234,070 bytes in 307 blocks
+==241986== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241987==    definitely lost: 0 bytes in 0 blocks
+==241987==    indirectly lost: 0 bytes in 0 blocks
+==241987==      possibly lost: 0 bytes in 0 blocks
+==241987==    still reachable: 234,119 bytes in 310 blocks
+==241987== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241988==    definitely lost: 0 bytes in 0 blocks
+==241988==    indirectly lost: 0 bytes in 0 blocks
+==241988==      possibly lost: 0 bytes in 0 blocks
+==241988==    still reachable: 234,168 bytes in 313 blocks
+==241988== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241989==    definitely lost: 0 bytes in 0 blocks
+==241989==    indirectly lost: 0 bytes in 0 blocks
+==241989==      possibly lost: 0 bytes in 0 blocks
+==241989==    still reachable: 234,217 bytes in 316 blocks
+==241989== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241990==    definitely lost: 0 bytes in 0 blocks
+==241990==    indirectly lost: 0 bytes in 0 blocks
+==241990==      possibly lost: 0 bytes in 0 blocks
+==241990==    still reachable: 234,266 bytes in 319 blocks
+==241990== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241991==    definitely lost: 0 bytes in 0 blocks
+==241991==    indirectly lost: 0 bytes in 0 blocks
+==241991==      possibly lost: 0 bytes in 0 blocks
+==241991==    still reachable: 234,315 bytes in 322 blocks
+==241991== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241992==    definitely lost: 0 bytes in 0 blocks
+==241992==    indirectly lost: 0 bytes in 0 blocks
+==241992==      possibly lost: 0 bytes in 0 blocks
+==241992==    still reachable: 234,364 bytes in 325 blocks
+==241992== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241993==    definitely lost: 0 bytes in 0 blocks
+==241993==    indirectly lost: 0 bytes in 0 blocks
+==241993==      possibly lost: 0 bytes in 0 blocks
+==241993==    still reachable: 234,413 bytes in 328 blocks
+==241993== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241994==    definitely lost: 0 bytes in 0 blocks
+==241994==    indirectly lost: 0 bytes in 0 blocks
+==241994==      possibly lost: 0 bytes in 0 blocks
+==241994==    still reachable: 234,462 bytes in 331 blocks
+==241994== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241995==    definitely lost: 0 bytes in 0 blocks
+==241995==    indirectly lost: 0 bytes in 0 blocks
+==241995==      possibly lost: 0 bytes in 0 blocks
+==241995==    still reachable: 234,511 bytes in 334 blocks
+==241995== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241996==    definitely lost: 0 bytes in 0 blocks
+==241996==    indirectly lost: 0 bytes in 0 blocks
+==241996==      possibly lost: 0 bytes in 0 blocks
+==241996==    still reachable: 234,560 bytes in 337 blocks
+==241996== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241997==    definitely lost: 0 bytes in 0 blocks
+==241997==    indirectly lost: 0 bytes in 0 blocks
+==241997==      possibly lost: 0 bytes in 0 blocks
+==241997==    still reachable: 234,609 bytes in 340 blocks
+==241997== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241998==    definitely lost: 0 bytes in 0 blocks
+==241998==    indirectly lost: 0 bytes in 0 blocks
+==241998==      possibly lost: 0 bytes in 0 blocks
+==241998==    still reachable: 234,658 bytes in 343 blocks
+==241998== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241999==    definitely lost: 0 bytes in 0 blocks
+==241999==    indirectly lost: 0 bytes in 0 blocks
+==241999==      possibly lost: 0 bytes in 0 blocks
+==241999==    still reachable: 234,707 bytes in 346 blocks
+==241999== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==242000==    definitely lost: 0 bytes in 0 blocks
+==242000==    indirectly lost: 0 bytes in 0 blocks
+==242000==      possibly lost: 0 bytes in 0 blocks
+==242000==    still reachable: 234,756 bytes in 349 blocks
+==242000== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==242001==    definitely lost: 0 bytes in 0 blocks
+==242001==    indirectly lost: 0 bytes in 0 blocks
+==242001==      possibly lost: 0 bytes in 0 blocks
+==242001==    still reachable: 234,805 bytes in 352 blocks
+==242001== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==242002==    definitely lost: 0 bytes in 0 blocks
+==242002==    indirectly lost: 0 bytes in 0 blocks
+==242002==      possibly lost: 0 bytes in 0 blocks
+==242002==    still reachable: 234,854 bytes in 355 blocks
+==242002== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==242003==    definitely lost: 0 bytes in 0 blocks
+==242003==    indirectly lost: 0 bytes in 0 blocks
+==242003==      possibly lost: 0 bytes in 0 blocks
+==242003==    still reachable: 234,903 bytes in 358 blocks
+==242003== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==242004==    definitely lost: 0 bytes in 0 blocks
+==242004==    indirectly lost: 0 bytes in 0 blocks
+==242004==      possibly lost: 0 bytes in 0 blocks
+==242004==    still reachable: 234,952 bytes in 361 blocks
+==242004== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==242005==    definitely lost: 0 bytes in 0 blocks
+==242005==    indirectly lost: 0 bytes in 0 blocks
+==242005==      possibly lost: 0 bytes in 0 blocks
+==242005==    still reachable: 235,001 bytes in 364 blocks
+==242005== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==242006==    definitely lost: 0 bytes in 0 blocks
+==242006==    indirectly lost: 0 bytes in 0 blocks
+==242006==      possibly lost: 0 bytes in 0 blocks
+==242006==    still reachable: 235,050 bytes in 367 blocks
+==242006== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==242007==    definitely lost: 0 bytes in 0 blocks
+==242007==    indirectly lost: 0 bytes in 0 blocks
+==242007==      possibly lost: 0 bytes in 0 blocks
+==242007==    still reachable: 235,099 bytes in 370 blocks
+==242007== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==242008==    definitely lost: 0 bytes in 0 blocks
+==242008==    indirectly lost: 0 bytes in 0 blocks
+==242008==      possibly lost: 0 bytes in 0 blocks
+==242008==    still reachable: 235,148 bytes in 373 blocks
+==242008== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==242009==    definitely lost: 0 bytes in 0 blocks
+==242009==    indirectly lost: 0 bytes in 0 blocks
+==242009==      possibly lost: 0 bytes in 0 blocks
+==242009==    still reachable: 235,197 bytes in 376 blocks
+==242009== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==242010==    definitely lost: 0 bytes in 0 blocks
+==242010==    indirectly lost: 0 bytes in 0 blocks
+==242010==      possibly lost: 0 bytes in 0 blocks
+==242010==    still reachable: 235,246 bytes in 379 blocks
+==242010== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==242011==    definitely lost: 0 bytes in 0 blocks
+==242011==    indirectly lost: 0 bytes in 0 blocks
+==242011==      possibly lost: 0 bytes in 0 blocks
+==242011==    still reachable: 235,295 bytes in 382 blocks
+==242011== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==242012==    definitely lost: 0 bytes in 0 blocks
+==242012==    indirectly lost: 0 bytes in 0 blocks
+==242012==      possibly lost: 0 bytes in 0 blocks
+==242012==    still reachable: 235,344 bytes in 385 blocks
+==242012== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==242013==    definitely lost: 0 bytes in 0 blocks
+==242013==    indirectly lost: 0 bytes in 0 blocks
+==242013==      possibly lost: 0 bytes in 0 blocks
+==242013==    still reachable: 235,393 bytes in 388 blocks
+==242013== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==242014==    definitely lost: 0 bytes in 0 blocks
+==242014==    indirectly lost: 0 bytes in 0 blocks
+==242014==      possibly lost: 0 bytes in 0 blocks
+==242014==    still reachable: 235,442 bytes in 391 blocks
+==242014== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==242015==    definitely lost: 0 bytes in 0 blocks
+==242015==    indirectly lost: 0 bytes in 0 blocks
+==242015==      possibly lost: 0 bytes in 0 blocks
+==242015==    still reachable: 235,491 bytes in 394 blocks
+==242015== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==242016==    definitely lost: 0 bytes in 0 blocks
+==242016==    indirectly lost: 0 bytes in 0 blocks
+==242016==      possibly lost: 0 bytes in 0 blocks
+==242016==    still reachable: 235,540 bytes in 397 blocks
+==242016== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==242018==    definitely lost: 0 bytes in 0 blocks
+==242018==    indirectly lost: 0 bytes in 0 blocks
+==242018==      possibly lost: 0 bytes in 0 blocks
+==242018==    still reachable: 235,589 bytes in 400 blocks
+==242018== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241957==    definitely lost: 0 bytes in 0 blocks
+==241957==    indirectly lost: 0 bytes in 0 blocks
+==241957==      possibly lost: 0 bytes in 0 blocks
+==241957==    still reachable: 251,018 bytes in 603 blocks
+==241957== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==242020==    definitely lost: 0 bytes in 0 blocks
+==242020==    indirectly lost: 0 bytes in 0 blocks
+==242020==      possibly lost: 0 bytes in 0 blocks
+==242020==    still reachable: 235,638 bytes in 403 blocks
+==242020== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+logs: ./valgrind_results/long_input_multiline.vg.log , stdout: ./valgrind_results/long_input_multiline.stdout , stderr: ./valgrind_results/long_input_multiline.stderr
+
+=== SUMMARY: buscar en ./valgrind_results/*.summary.txt las líneas con 'definitely lost' y 'still reachable' ===
+---- ./valgrind_results/builtins_export_unset.summary.txt ----
+==241834==    definitely lost: 0 bytes in 0 blocks
+==241834==    indirectly lost: 0 bytes in 0 blocks
+==241834==      possibly lost: 0 bytes in 0 blocks
+==241834==    still reachable: 233,071 bytes in 247 blocks
+==241834== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241836==    definitely lost: 0 bytes in 0 blocks
+==241836==    indirectly lost: 0 bytes in 0 blocks
+==241836==      possibly lost: 0 bytes in 0 blocks
+==241836==    still reachable: 233,157 bytes in 253 blocks
+==241836== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241829==    definitely lost: 0 bytes in 0 blocks
+==241829==    indirectly lost: 0 bytes in 0 blocks
+==241829==      possibly lost: 0 bytes in 0 blocks
+==241829==    still reachable: 233,201 bytes in 256 blocks
+==241829== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---- ./valgrind_results/cd_pwd.summary.txt ----
+==241848==    definitely lost: 0 bytes in 0 blocks
+==241848==    indirectly lost: 0 bytes in 0 blocks
+==241848==      possibly lost: 0 bytes in 0 blocks
+==241848==    still reachable: 232,965 bytes in 241 blocks
+==241848== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241849==    definitely lost: 0 bytes in 0 blocks
+==241849==    indirectly lost: 0 bytes in 0 blocks
+==241849==      possibly lost: 0 bytes in 0 blocks
+==241849==    still reachable: 232,958 bytes in 247 blocks
+==241849== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241850==    definitely lost: 0 bytes in 0 blocks
+==241850==    indirectly lost: 0 bytes in 0 blocks
+==241850==      possibly lost: 0 bytes in 0 blocks
+==241850==    still reachable: 233,127 bytes in 253 blocks
+==241850== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241844==    definitely lost: 0 bytes in 0 blocks
+==241844==    indirectly lost: 0 bytes in 0 blocks
+==241844==      possibly lost: 0 bytes in 0 blocks
+==241844==    still reachable: 233,171 bytes in 256 blocks
+==241844== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---- ./valgrind_results/globbing_and_expansion.summary.txt ----
+==241901==    definitely lost: 0 bytes in 0 blocks
+==241901==    indirectly lost: 0 bytes in 0 blocks
+==241901==      possibly lost: 0 bytes in 0 blocks
+==241901==    still reachable: 232,851 bytes in 239 blocks
+==241901== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241902==    definitely lost: 0 bytes in 0 blocks
+==241902==    indirectly lost: 0 bytes in 0 blocks
+==241902==      possibly lost: 0 bytes in 0 blocks
+==241902==    still reachable: 232,886 bytes in 242 blocks
+==241902== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241904==    definitely lost: 0 bytes in 0 blocks
+==241904==    indirectly lost: 0 bytes in 0 blocks
+==241904==      possibly lost: 0 bytes in 0 blocks
+==241904==    still reachable: 232,926 bytes in 245 blocks
+==241904== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241897==    definitely lost: 0 bytes in 0 blocks
+==241897==    indirectly lost: 0 bytes in 0 blocks
+==241897==      possibly lost: 0 bytes in 0 blocks
+==241897==    still reachable: 233,016 bytes in 251 blocks
+==241897== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---- ./valgrind_results/group_subshells.summary.txt ----
+==241943==    definitely lost: 0 bytes in 0 blocks
+==241943==    indirectly lost: 0 bytes in 0 blocks
+==241943==      possibly lost: 0 bytes in 0 blocks
+==241943==    still reachable: 243,652 bytes in 463 blocks
+==241943== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241942==    definitely lost: 0 bytes in 0 blocks
+==241942==    indirectly lost: 0 bytes in 0 blocks
+==241942==      possibly lost: 0 bytes in 0 blocks
+==241942==    still reachable: 239,227 bytes in 406 blocks
+==241942== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241945==    definitely lost: 0 bytes in 0 blocks
+==241945==    indirectly lost: 0 bytes in 0 blocks
+==241945==      possibly lost: 0 bytes in 0 blocks
+==241945==    still reachable: 233,084 bytes in 244 blocks
+==241945== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241947==    definitely lost: 0 bytes in 0 blocks
+==241947==    indirectly lost: 0 bytes in 0 blocks
+==241947==      possibly lost: 0 bytes in 0 blocks
+==241947==    still reachable: 243,773 bytes in 469 blocks
+==241947== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241946==    definitely lost: 0 bytes in 0 blocks
+==241946==    indirectly lost: 0 bytes in 0 blocks
+==241946==      possibly lost: 0 bytes in 0 blocks
+==241946==    still reachable: 239,346 bytes in 412 blocks
+==241946== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241948==    definitely lost: 0 bytes in 0 blocks
+==241948==    indirectly lost: 0 bytes in 0 blocks
+==241948==      possibly lost: 0 bytes in 0 blocks
+==241948==    still reachable: 233,179 bytes in 250 blocks
+==241948== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241925==    definitely lost: 0 bytes in 0 blocks
+==241925==    indirectly lost: 0 bytes in 0 blocks
+==241925==      possibly lost: 0 bytes in 0 blocks
+==241925==    still reachable: 233,202 bytes in 253 blocks
+==241925== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---- ./valgrind_results/heredoc_simple.summary.txt ----
+==241877==    definitely lost: 0 bytes in 0 blocks
+==241877==    indirectly lost: 0 bytes in 0 blocks
+==241877==      possibly lost: 0 bytes in 0 blocks
+==241877==    still reachable: 232,994 bytes in 238 blocks
+==241877== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---- ./valgrind_results/long_input_multiline.summary.txt ----
+==241959==    definitely lost: 0 bytes in 0 blocks
+==241959==    indirectly lost: 0 bytes in 0 blocks
+==241959==      possibly lost: 0 bytes in 0 blocks
+==241959==    still reachable: 232,997 bytes in 241 blocks
+==241959== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241960==    definitely lost: 0 bytes in 0 blocks
+==241960==    indirectly lost: 0 bytes in 0 blocks
+==241960==      possibly lost: 0 bytes in 0 blocks
+==241960==    still reachable: 233,045 bytes in 244 blocks
+==241960== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241961==    definitely lost: 0 bytes in 0 blocks
+==241961==    indirectly lost: 0 bytes in 0 blocks
+==241961==      possibly lost: 0 bytes in 0 blocks
+==241961==    still reachable: 233,093 bytes in 247 blocks
+==241961== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241962==    definitely lost: 0 bytes in 0 blocks
+==241962==    indirectly lost: 0 bytes in 0 blocks
+==241962==      possibly lost: 0 bytes in 0 blocks
+==241962==    still reachable: 233,141 bytes in 250 blocks
+==241962== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241963==    definitely lost: 0 bytes in 0 blocks
+==241963==    indirectly lost: 0 bytes in 0 blocks
+==241963==      possibly lost: 0 bytes in 0 blocks
+==241963==    still reachable: 233,189 bytes in 253 blocks
+==241963== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241964==    definitely lost: 0 bytes in 0 blocks
+==241964==    indirectly lost: 0 bytes in 0 blocks
+==241964==      possibly lost: 0 bytes in 0 blocks
+==241964==    still reachable: 233,237 bytes in 256 blocks
+==241964== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241966==    definitely lost: 0 bytes in 0 blocks
+==241966==    indirectly lost: 0 bytes in 0 blocks
+==241966==      possibly lost: 0 bytes in 0 blocks
+==241966==    still reachable: 233,285 bytes in 259 blocks
+==241966== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241967==    definitely lost: 0 bytes in 0 blocks
+==241967==    indirectly lost: 0 bytes in 0 blocks
+==241967==      possibly lost: 0 bytes in 0 blocks
+==241967==    still reachable: 233,333 bytes in 262 blocks
+==241967== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241968==    definitely lost: 0 bytes in 0 blocks
+==241968==    indirectly lost: 0 bytes in 0 blocks
+==241968==      possibly lost: 0 bytes in 0 blocks
+==241968==    still reachable: 233,381 bytes in 265 blocks
+==241968== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241969==    definitely lost: 0 bytes in 0 blocks
+==241969==    indirectly lost: 0 bytes in 0 blocks
+==241969==      possibly lost: 0 bytes in 0 blocks
+==241969==    still reachable: 233,433 bytes in 268 blocks
+==241969== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241970==    definitely lost: 0 bytes in 0 blocks
+==241970==    indirectly lost: 0 bytes in 0 blocks
+==241970==      possibly lost: 0 bytes in 0 blocks
+==241970==    still reachable: 233,482 bytes in 271 blocks
+==241970== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241971==    definitely lost: 0 bytes in 0 blocks
+==241971==    indirectly lost: 0 bytes in 0 blocks
+==241971==      possibly lost: 0 bytes in 0 blocks
+==241971==    still reachable: 233,531 bytes in 274 blocks
+==241971== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241972==    definitely lost: 0 bytes in 0 blocks
+==241972==    indirectly lost: 0 bytes in 0 blocks
+==241972==      possibly lost: 0 bytes in 0 blocks
+==241972==    still reachable: 233,580 bytes in 277 blocks
+==241972== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241973==    definitely lost: 0 bytes in 0 blocks
+==241973==    indirectly lost: 0 bytes in 0 blocks
+==241973==      possibly lost: 0 bytes in 0 blocks
+==241973==    still reachable: 233,629 bytes in 280 blocks
+==241973== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241974==    definitely lost: 0 bytes in 0 blocks
+==241974==    indirectly lost: 0 bytes in 0 blocks
+==241974==      possibly lost: 0 bytes in 0 blocks
+==241974==    still reachable: 233,678 bytes in 283 blocks
+==241974== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241975==    definitely lost: 0 bytes in 0 blocks
+==241975==    indirectly lost: 0 bytes in 0 blocks
+==241975==      possibly lost: 0 bytes in 0 blocks
+==241975==    still reachable: 233,727 bytes in 286 blocks
+==241975== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241979==    definitely lost: 0 bytes in 0 blocks
+==241979==    indirectly lost: 0 bytes in 0 blocks
+==241979==      possibly lost: 0 bytes in 0 blocks
+==241979==    still reachable: 233,776 bytes in 289 blocks
+==241979== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241981==    definitely lost: 0 bytes in 0 blocks
+==241981==    indirectly lost: 0 bytes in 0 blocks
+==241981==      possibly lost: 0 bytes in 0 blocks
+==241981==    still reachable: 233,825 bytes in 292 blocks
+==241981== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241982==    definitely lost: 0 bytes in 0 blocks
+==241982==    indirectly lost: 0 bytes in 0 blocks
+==241982==      possibly lost: 0 bytes in 0 blocks
+==241982==    still reachable: 233,874 bytes in 295 blocks
+==241982== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241983==    definitely lost: 0 bytes in 0 blocks
+==241983==    indirectly lost: 0 bytes in 0 blocks
+==241983==      possibly lost: 0 bytes in 0 blocks
+==241983==    still reachable: 233,923 bytes in 298 blocks
+==241983== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241984==    definitely lost: 0 bytes in 0 blocks
+==241984==    indirectly lost: 0 bytes in 0 blocks
+==241984==      possibly lost: 0 bytes in 0 blocks
+==241984==    still reachable: 233,972 bytes in 301 blocks
+==241984== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241985==    definitely lost: 0 bytes in 0 blocks
+==241985==    indirectly lost: 0 bytes in 0 blocks
+==241985==      possibly lost: 0 bytes in 0 blocks
+==241985==    still reachable: 234,021 bytes in 304 blocks
+==241985== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241986==    definitely lost: 0 bytes in 0 blocks
+==241986==    indirectly lost: 0 bytes in 0 blocks
+==241986==      possibly lost: 0 bytes in 0 blocks
+==241986==    still reachable: 234,070 bytes in 307 blocks
+==241986== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241987==    definitely lost: 0 bytes in 0 blocks
+==241987==    indirectly lost: 0 bytes in 0 blocks
+==241987==      possibly lost: 0 bytes in 0 blocks
+==241987==    still reachable: 234,119 bytes in 310 blocks
+==241987== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---- ./valgrind_results/pipelines_and_redirs.summary.txt ----
+==241863==    definitely lost: 0 bytes in 0 blocks
+==241863==    indirectly lost: 0 bytes in 0 blocks
+==241863==      possibly lost: 0 bytes in 0 blocks
+==241863==    still reachable: 233,089 bytes in 241 blocks
+==241863== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241864==    definitely lost: 0 bytes in 0 blocks
+==241864==    indirectly lost: 0 bytes in 0 blocks
+==241864==      possibly lost: 0 bytes in 0 blocks
+==241864==    still reachable: 233,164 bytes in 244 blocks
+==241864== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241858==    definitely lost: 0 bytes in 0 blocks
+==241858==    indirectly lost: 0 bytes in 0 blocks
+==241858==      possibly lost: 0 bytes in 0 blocks
+==241858==    still reachable: 233,295 bytes in 256 blocks
+==241858== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---- ./valgrind_results/simple_echo.summary.txt ----
+==241820==    definitely lost: 0 bytes in 0 blocks
+==241820==    indirectly lost: 0 bytes in 0 blocks
+==241820==      possibly lost: 0 bytes in 0 blocks
+==241820==    still reachable: 233,017 bytes in 241 blocks
+==241820== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241822==    definitely lost: 0 bytes in 0 blocks
+==241822==    indirectly lost: 0 bytes in 0 blocks
+==241822==      possibly lost: 0 bytes in 0 blocks
+==241822==    still reachable: 233,058 bytes in 244 blocks
+==241822== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241816==    definitely lost: 0 bytes in 0 blocks
+==241816==    indirectly lost: 0 bytes in 0 blocks
+==241816==      possibly lost: 0 bytes in 0 blocks
+==241816==    still reachable: 233,072 bytes in 247 blocks
+==241816== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+---- ./valgrind_results/syntax_errors.summary.txt ----
+==241915==    definitely lost: 0 bytes in 0 blocks
+==241915==    indirectly lost: 0 bytes in 0 blocks
+==241915==      possibly lost: 0 bytes in 0 blocks
+==241915==    still reachable: 239,224 bytes in 411 blocks
+==241915== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==241916==    definitely lost: 2 bytes in 1 blocks
+==241916==    indirectly lost: 0 bytes in 0 blocks
+==241916==      possibly lost: 0 bytes in 0 blocks
+==241916==    still reachable: 248,199 bytes in 436 blocks
+==241916== ERROR SUMMARY: 5 errors from 5 contexts (suppressed: 0 from 0)
+==241916== ERROR SUMMARY: 5 errors from 5 contexts (suppressed: 0 from 0)
+==241917==    definitely lost: 2 bytes in 1 blocks
+==241917==    indirectly lost: 0 bytes in 0 blocks
+==241917==      possibly lost: 0 bytes in 0 blocks
+==241917==    still reachable: 233,105 bytes in 250 blocks
+==241917== ERROR SUMMARY: 4 errors from 4 contexts (suppressed: 0 from 0)
+==241917== ERROR SUMMARY: 4 errors from 4 contexts (suppressed: 0 from 0)
+==241912==    definitely lost: 2 bytes in 1 blocks
+==241912==    indirectly lost: 0 bytes in 0 blocks
+==241912==      possibly lost: 0 bytes in 0 blocks
+==241912==    still reachable: 233,131 bytes in 253 blocks
+==241912== ERROR SUMMARY: 4 errors from 4 contexts (suppressed: 0 from 0)
+==241912== ERROR SUMMARY: 4 errors from 4 contexts (suppressed: 0 from 0)
+Hecho.
