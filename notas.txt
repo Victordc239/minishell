@@ -1,6 +1,65 @@
 
 COSAS A CAMBIAR:
 
+-ARREGLAR:
+	minishell:
+		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> ( echo x
+		(: command not found
+	bash:
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ ( echo x
+		> sd
+		> s
+		> sd
+		> f
+		> s^C
+
+- AAREGLAR:
+	minishell:
+		/home/vdiez-cu/Desktop/42_Madrid/cursus/mini Minishell> echo hi ||
+		hi
+	bash:
+		vdiez-cu@c1r4s1:~/Desktop/42_Madrid/cursus/mini$ echo hi ||
+		> ls
+		hi
+
+-ARREGLAR:
+	minishell:
+		/home/vdiez-cu/Desktop/42_Madrid/cursus/mini Minishell> echo hello >>
+		> ls
+		/home/vdiez-cu/Desktop/42_Madrid/cursus/mini Minishell> echo $?
+		0
+
+	bash:
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo hello >>
+		bash: error sintáctico cerca del elemento inesperado `newline'
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo $?
+		2
+
+-ARREGLAR:
+	minishell:
+		/home/vdiez-cu/Desktop/42_Madrid/cursus/mini Minishell> cat <<
+		> ls
+	bash:
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ cat <<
+		bash: error sintáctico cerca del elemento inesperado `newline'
+
+
+-ARREGLAR:
+	minishell:
+		/home/vdiez-cu/Desktop/42_Madrid/cursus/mini Minishell> cat <
+		> ls
+		hello
+	bash:
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ cat <
+		bash: error sintáctico cerca del elemento inesperado `newline'
+
+
+
+
+
+
+
+SOLUCIONADO:
 
 - arreglar:
 	minishell:
@@ -23,35 +82,6 @@ COSAS A CAMBIAR:
 		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo a ||| wc
 		bash: error sintáctico cerca del elemento inesperado `|'
 
--ARREGLAR:
-	minishell:
-		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> cat <
-		notas.txt
-	bash:
-		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ cat <
-		bash: error sintáctico cerca del elemento inesperado `newline'
-
-
--ARREGLAR:
-	minishell:
-		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> cat <<
-		^C
-	bash:
-		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ cat <<
-		bash: error sintáctico cerca del elemento inesperado `newline'
-
-
--ARREGLAR:
-	minishell:
-		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> ( echo x
-		(: command not found
-	bash:
-		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ ( echo x
-		> sd
-		> s
-		> sd
-		> f
-		> s^C
 
 -ARREGLAR
 	minishell:
@@ -65,22 +95,7 @@ COSAS A CAMBIAR:
 		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo $?
 		2
 
--ARREGLAR:
-	minishell:
-		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo hello >>
-		hello
-		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo $?
-		0
-	bash:
-		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo hello >>
-		bash: error sintáctico cerca del elemento inesperado `newline'
-		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo $?
-		2
 
-
-
-
-SOLUCIONADO:
 
 - cd ~
 
