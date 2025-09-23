@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/23 17:18:07 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/09/23 17:21:21 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,12 @@
 	g_status = 0;
 	new_cwd = getcwd(NULL, 0);
 	if (!new_cwd)
-		new_cwd = ft_strdup(path ? path : "");
+	{
+		if (path)
+			new_cwd = ft_strdup(path);
+		else
+			new_cwd = ft_strdup("");
+	}
 	return (new_cwd);
 }
 
