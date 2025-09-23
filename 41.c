@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/23 17:14:25 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/09/23 17:18:07 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,11 +80,11 @@ void	ft_cd(t_minishell *mini, int path_allocated, int print_new)
 	}
 	if (!update_node(mini->env_list, "PWD", new_cwd, 1))
 		add_env_node(mini, "PWD", new_cwd, 1);
-		if (print_new)
-		{
-			ft_putstr(new_cwd, 1);
-			ft_putstr("\n", 1);
-		}
+	if (print_new)
+	{
+		ft_putstr(new_cwd, 1);
+		ft_putstr("\n", 1);
+	}
 	free(new_cwd);
 	if (path_allocated)
 		free(path);
