@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 14:02:20 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/22 09:55:40 by victor           ###   ########.fr       */
+/*   Updated: 2025/09/22 15:26:06 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <readline/readline.h>
 # include <signal.h>
 # include <dirent.h>
+#include <sys/stat.h>
 # define ERR_FLASH "Error\n"
 # define ERR_ARG "Error Arg or Pipe\n"
 # define ERR_PIPE "Error Pipe\n"
@@ -202,7 +203,6 @@ int			tokenize_input(t_minishell *minishell);
  int	process_token_part(t_minishell *shell, char **token,
 				t_token_quote *first_quote, int *mixed);
 void		execute_buitin(t_minishell *minishell);
-//void		ft_cd(t_minishell *mini);
 void		ft_cd(t_minishell *mini, int path_allocated, int print_new);
 void		ft_cmd(t_minishell *mini);
 void		ft_echo_arg(char **argv);
@@ -335,8 +335,14 @@ int			expand_and_add_glob(char *pattern, t_minishell *mini);
  int	open_dir_or_error(t_glob_ctx *ctx, char *pattern, t_minishell *mini);
  int	glob_init(const char *pattern, t_minishell *mini, t_glob_ctx *ctx);
 
+  int	match_glob_star(const char *p, const char *str);
+
  void	split_path(const char *pattern, char **dir_out, char **base_out);
 
  int	ensure_capacity(char ***arr, size_t *count, size_t *cap);
+
+ char	*join_with_marker(char *s1, char *s2);
+ void	remove_marker_inplace(char *s);
+ int parse_exit_code(const char *s, unsigned char *out_code);
 
 #endif
