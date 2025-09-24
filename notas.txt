@@ -13,19 +13,11 @@ COSAS A CAMBIAR:
 		> f
 		> s^C
 
-- AAREGLAR:
-	minishell:
-		/home/vdiez-cu/Desktop/42_Madrid/cursus/mini Minishell> echo hi ||
-		hi
-	bash:
-		vdiez-cu@c1r4s1:~/Desktop/42_Madrid/cursus/mini$ echo hi ||
-		> ls
-		hi
 
 -ARREGLAR:
 	minishell:
 		/home/vdiez-cu/Desktop/42_Madrid/cursus/mini Minishell> echo hello >>
-		> ls
+		hello
 		/home/vdiez-cu/Desktop/42_Madrid/cursus/mini Minishell> echo $?
 		0
 
@@ -35,33 +27,26 @@ COSAS A CAMBIAR:
 		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo $?
 		2
 
--ARREGLAR:
+-hace un cat normal como si no estuviera <<:
 	minishell:
 		/home/vdiez-cu/Desktop/42_Madrid/cursus/mini Minishell> cat <<
-		> ls
+		ls
+		ls
 	bash:
 		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ cat <<
 		bash: error sintáctico cerca del elemento inesperado `newline'
 
-
--ARREGLAR:
+- ARREGLAR:
 	minishell:
-		/home/vdiez-cu/Desktop/42_Madrid/cursus/mini Minishell> cat <
-		> ls
-		hello
+		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo a ||| wc
+		a
+
 	bash:
-		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ cat <
-		bash: error sintáctico cerca del elemento inesperado `newline'
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo a ||| wc
+		bash: error sintáctico cerca del elemento inesperado `|'
 
 
-
-
-
-
-
-SOLUCIONADO:
-
-- arreglar:
+- ARREGLAR:
 	minishell:
 		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ ./minishell
 		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo hi |
@@ -74,16 +59,40 @@ SOLUCIONADO:
 		leaks.txt       mini.h     notas.txt          todo.c
 		leak_tester.sh  minishell  obj                valgrind_results
 
-- ARREGLAR:
+-hace un cat normal como si no estuviera <:
 	minishell:
-		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo a ||| wc
-		a
+		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> cat <
+		ls
+		ls
+
+
 	bash:
-		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo a ||| wc
-		bash: error sintáctico cerca del elemento inesperado `|'
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ cat <
+		bash: error sintáctico cerca del elemento inesperado `newline'
 
 
--ARREGLAR
+minishell:
+		/home/vdiez-cu/Desktop/42_Madrid/cursus/mini Minishell> echo hi ||
+		hi
+	bash:
+		vdiez-cu@c1r4s1:~/Desktop/42_Madrid/cursus/mini$ echo hi ||
+		> ls
+		hi
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------
+
+
+
+SOLUCIONADO:
+
+-
 	minishell:
 		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo hi > | wc
 		bash: syntax error near unexpected token `newline'
@@ -115,8 +124,7 @@ SOLUCIONADO:
 		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ ls
 		bash: ls: No such file or directory
 
-- mirar si esto es valido o no:
-
+- 
 	minishell:
 		/home/vdiez-cu/Desktop/42_Madrid/cursus/mini Minishell> export PATH
 		/home/vdiez-cu/Desktop/42_Madrid/cursus/mini Minishell> ls
@@ -127,8 +135,7 @@ SOLUCIONADO:
 		bash: ls: No such file or directory
 
 
-- mirar si esto es valido o no:
-
+-
 	minishell:
 		/home/vdiez-cu/Desktop/42_Madrid/cursus/mini Minishell> export PATH=
 		/home/vdiez-cu/Desktop/42_Madrid/cursus/mini Minishell> ls
@@ -240,8 +247,6 @@ SOLUCIONADO:
 
 - controlar el cd -
 
-- controlar bien el $PWD y el $OLDPWD
-
 - controlar el exit -: 
 	me da:
 	/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> exit -
@@ -254,4 +259,20 @@ SOLUCIONADO:
 	bash: exit: -: numeric argument required
 	victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo $?
 	2
+
+
+- ARREGLAR:
+	minishell:
+		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> unset PWD
+		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> unset OLDPWD
+		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> cd ..
+		/home/victor/Escritorio/42_Madrid/cursus Minishell> cd -
+		/home/victor/Escritorio/42_Madrid/cursus/mini
+		
+	bash:
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ unset PWD
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ unset OLDPWD
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ cd ..
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus$ cd -
+		bash: cd: OLDPWD no está establecido
 
