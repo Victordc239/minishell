@@ -6,11 +6,87 @@
 /*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/24 12:20:28 by victor           ###   ########.fr       */
+/*   Updated: 2025/09/24 19:03:13 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
+
+//////////////////////////////////añadido
+
+int ft_isspace(int c)
+{
+	if (c == ' ' || c == '\t' || c == '\n'
+		|| c == '\v' || c == '\f' || c == '\r')
+		return (1);
+	return (0);
+	}
+
+static int ends_with_unquoted_redir(const char *s)
+{
+	int i;
+	int in_sq = 0;
+	int in_dq = 0;
+
+	if (!s)
+		return (0);
+	i = 0;
+	while (s[i])
+	{
+		if (s[i] == '\'' && !in_dq)
+			in_sq = !in_sq;
+		else if (s[i] == '"' && !in_sq)
+			in_dq = !in_dq;
+		i++;
+	}
+	i--;
+	while (i >= 0 && (s[i] == '\0' || ft_isspace((unsigned char)s[i])))
+		i--;
+	if (i < 0)
+		return (0);
+	if (i - 1 >= 0 && s[i] == '>' && s[i - 1] == '>')
+		return (1);
+	if (i - 1 >= 0 && s[i] == '<' && s[i - 1] == '<')
+		return (1);
+	if (s[i] == '<' || s[i] == '>')
+		return (1);
+	return (0);
+}
+
+static int ends_with_unquoted_continuation_op(const char *s)
+{
+	int i;
+	int in_sq = 0;
+	int in_dq = 0;
+
+	if (!s)
+		return (0);
+	i = 0;
+	while (s[i])
+	{
+		if (s[i] == '\'' && !in_dq)
+			in_sq = !in_sq;
+		else if (s[i] == '"' && !in_sq)
+			in_dq = !in_dq;
+		i++;
+	}
+	i--;
+	while (i >= 0 && ft_isspace((unsigned char)s[i]))
+		i--;
+	if (i < 0)
+		return (0);
+	if (s[i] == '|' )
+		return (1);
+	if (s[i] == '&')
+	{
+		if (i - 1 >= 0 && s[i - 1] == '&')
+			return (1);
+		return (0);
+	}
+	return (0);
+}
+
+//////////////////////////////////fin añadido
 
 char	*join_with_marker(char *s1, char *s2)
 {
@@ -3135,7 +3211,7 @@ void	free_split_result(char **segments, char **ops, int count)
 	}
 }
 
-int	prepare_segments(char *input, char ***segments,
+/*int	prepare_segments(char *input, char ***segments,
 	char ***ops, int *seg_count)
 {
 	add_history(input);
@@ -3148,6 +3224,87 @@ int	prepare_segments(char *input, char ***segments,
 		ft_putstr("minishell: internal split error\n", 2);
 		return (0);
 	}
+	return (1);
+}*/
+
+int	prepare_segments(char *input, char ***segments,
+	char ***ops, int *seg_count)
+{
+	char	*cur_input;
+	char	*more;
+	char	*tmp;
+
+	add_history(input);
+	g_status = 0;
+	*seg_count = 0;
+	*ops = NULL;
+	*segments = NULL;
+	cur_input = ft_strdup(input);
+	if (!cur_input)
+		return (0);
+	if (ends_with_unquoted_redir(cur_input))
+	{
+		ft_putstr("minishell: syntax error near unexpected token `newline'\n", 2);
+		free(cur_input);
+		return (0);
+	}
+	if (ends_with_unquoted_continuation_op(cur_input))
+	{
+		while (1)
+		{
+			more = readline("> ");
+			if (!more)
+			{
+				ft_putstr("minishell: syntax error: unexpected end of file\n", 2);
+				free(cur_input);
+				return (0);
+			}
+			add_history(more);
+			tmp = ft_strjoin(cur_input, "\n");
+			free(cur_input);
+			cur_input = ft_strjoin(tmp, more);
+			free(tmp);
+			free(more);
+			if (!ends_with_unquoted_continuation_op(cur_input))
+				break;
+		}
+	}
+	if (!split_ops(cur_input, segments, ops, seg_count))
+	{
+		ft_putstr("minishell: internal split error\n", 2);
+		free(cur_input);
+		return (0);
+	}
+	while (*seg_count >= 2
+		&& (*segments)[*seg_count - 1]
+		&& (*segments)[*seg_count - 1][0] == '\0')
+	{
+		more = readline("> ");
+		if (!more)
+		{
+			ft_putstr("minishell: syntax error: unexpected end of file\n", 2);
+			free_split_result(*segments, *ops, *seg_count);
+			free(cur_input);
+			return (0);
+		}
+		add_history(more);
+		tmp = ft_strjoin(cur_input, "\n");
+		free(cur_input);
+		cur_input = ft_strjoin(tmp, more);
+		free(tmp);
+		free(more);
+		free_split_result(*segments, *ops, *seg_count);
+		*segments = NULL;
+		*ops = NULL;
+		*seg_count = 0;
+		if (!split_ops(cur_input, segments, ops, seg_count))
+		{
+			ft_putstr("minishell: internal split error\n", 2);
+			free(cur_input);
+			return (0);
+		}
+	}
+	free(cur_input);
 	return (1);
 }
 

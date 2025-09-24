@@ -16,9 +16,9 @@ COSAS A CAMBIAR:
 
 -ARREGLAR:
 	minishell:
-		/home/vdiez-cu/Desktop/42_Madrid/cursus/mini Minishell> echo hello >>
-		hello
-		/home/vdiez-cu/Desktop/42_Madrid/cursus/mini Minishell> echo $?
+		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo hello >>
+		minishell: syntax error near unexpected token `newline'
+		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo $?
 		0
 
 	bash:
@@ -27,14 +27,19 @@ COSAS A CAMBIAR:
 		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo $?
 		2
 
--hace un cat normal como si no estuviera <<:
+-:
 	minishell:
-		/home/vdiez-cu/Desktop/42_Madrid/cursus/mini Minishell> cat <<
-		ls
-		ls
+		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> cat <<
+		minishell: syntax error near unexpected token `newline'
+		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo $?
+		0
+
 	bash:
 		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ cat <<
 		bash: error sintáctico cerca del elemento inesperado `newline'
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo $?
+		2
+
 
 - ARREGLAR:
 	minishell:
@@ -45,6 +50,36 @@ COSAS A CAMBIAR:
 		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo a ||| wc
 		bash: error sintáctico cerca del elemento inesperado `|'
 
+
+-
+	minishell:
+		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> cat <
+		minishell: syntax error near unexpected token `newline'
+		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo $?
+		0
+
+	bash:
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ cat <
+		bash: error sintáctico cerca del elemento inesperado `newline'
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo $?
+		2
+
+
+
+
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------
+
+
+
+SOLUCIONADO:
 
 - ARREGLAR:
 	minishell:
@@ -59,18 +94,6 @@ COSAS A CAMBIAR:
 		leaks.txt       mini.h     notas.txt          todo.c
 		leak_tester.sh  minishell  obj                valgrind_results
 
--hace un cat normal como si no estuviera <:
-	minishell:
-		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> cat <
-		ls
-		ls
-
-
-	bash:
-		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ cat <
-		bash: error sintáctico cerca del elemento inesperado `newline'
-
-
 minishell:
 		/home/vdiez-cu/Desktop/42_Madrid/cursus/mini Minishell> echo hi ||
 		hi
@@ -80,17 +103,6 @@ minishell:
 		hi
 
 
-
----------------------------------------------------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------------------------------------------------
-
-
-
-SOLUCIONADO:
 
 -
 	minishell:
