@@ -6,7 +6,7 @@
 /*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/25 11:16:34 by victor           ###   ########.fr       */
+/*   Updated: 2025/09/25 11:43:47 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,23 @@
 
 //////////////////////////////////añadido
 
-int ft_isspace(int c)
+int	ft_isspace(int c)
 {
 	if (c == ' ' || c == '\t' || c == '\n'
 		|| c == '\v' || c == '\f' || c == '\r')
 		return (1);
 	return (0);
-	}
+}
 
-static int ends_with_unquoted_redir(const char *s)
+static int	ends_with_unquoted_redir(const char *s, int in_sq, int in_dq)
 {
-	int i;
-	int in_sq = 0;
-	int in_dq = 0;
+	int	i;
 
+	in_sq = 0;
+	in_dq = 0;
+	i = 0;
 	if (!s)
 		return (0);
-	i = 0;
 	while (s[i])
 	{
 		if (s[i] == '\'' && !in_dq)
@@ -44,24 +44,24 @@ static int ends_with_unquoted_redir(const char *s)
 		i--;
 	if (i < 0)
 		return (0);
-	if (i - 1 >= 0 && s[i] == '>' && s[i - 1] == '>')
-		return (1);
-	if (i - 1 >= 0 && s[i] == '<' && s[i - 1] == '<')
-		return (1);
-	if (s[i] == '<' || s[i] == '>')
+	if ((i - 1 >= 0 && s[i] == '>' && s[i - 1] == '>')
+		|| (i - 1 >= 0 && s[i] == '<' && s[i - 1] == '<')
+		|| (s[i] == '<') || (s[i] == '>'))
 		return (1);
 	return (0);
 }
 
-static int ends_with_unquoted_continuation_op(const char *s)
+static int	ends_with_unquoted_continuation_op(const char *s)
 {
-	int i;
-	int in_sq = 0;
-	int in_dq = 0;
+	int	i;
+	int	in_sq;
+	int	in_dq;
 
+	in_dq = 0;
+	in_sq = 0;
+	i = 0;
 	if (!s)
 		return (0);
-	i = 0;
 	while (s[i])
 	{
 		if (s[i] == '\'' && !in_dq)
@@ -75,14 +75,8 @@ static int ends_with_unquoted_continuation_op(const char *s)
 		i--;
 	if (i < 0)
 		return (0);
-	if (s[i] == '|' )
+	if ((s[i] == '|') || (s[i] == '&' && i - 1 >= 0 && s[i - 1] == '&'))
 		return (1);
-	if (s[i] == '&')
-	{
-		if (i - 1 >= 0 && s[i - 1] == '&')
-			return (1);
-		return (0);
-	}
 	return (0);
 }
 
@@ -136,9 +130,9 @@ void	remove_marker_inplace(char *s)
 
 int	parse_exit_code(const char *s, unsigned char *out_code)
 {
-	int			i;
-	int			neg;
 	unsigned int	r;
+	int				i;
+	int				neg;
 
 	if (!s)
 		return (0);
@@ -3242,10 +3236,11 @@ int	prepare_segments(char *input, char ***segments,
 	cur_input = ft_strdup(input);
 	if (!cur_input)
 		return (0);
-	if (ends_with_unquoted_redir(cur_input))
+	if (ends_with_unquoted_redir(cur_input, 0, 0))
 	{
-		ft_putstr("minishell: syntax error near unexpected token `newline'\n", 2);
-		g_status = 2; 
+		ft_putstr("minishell: ", 2);
+		ft_putstr("syntax error near unexpected token `newline'\n", 2);
+		g_status = 2;
 		free(cur_input);
 		return (0);
 	}
@@ -3256,8 +3251,9 @@ int	prepare_segments(char *input, char ***segments,
 			more = readline("> ");
 			if (!more)
 			{
-				ft_putstr("minishell: syntax error: unexpected end of file\n", 2);
-				g_status = 2; 
+				ft_putstr("minishell: ", 2);
+				ft_putstr("syntax error: unexpected end of file\n", 2);
+				g_status = 2;
 				free(cur_input);
 				return (0);
 			}
@@ -3268,13 +3264,13 @@ int	prepare_segments(char *input, char ***segments,
 			free(tmp);
 			free(more);
 			if (!ends_with_unquoted_continuation_op(cur_input))
-				break;
+				break ;
 		}
 	}
 	if (!split_ops(cur_input, segments, ops, seg_count))
 	{
 		ft_putstr("minishell: internal split error\n", 2);
-		g_status = 2; 
+		g_status = 2;
 		free(cur_input);
 		return (0);
 	}
@@ -3287,7 +3283,7 @@ int	prepare_segments(char *input, char ***segments,
 		{
 			ft_putstr("minishell: syntax error: unexpected end of file\n", 2);
 			free_split_result(*segments, *ops, *seg_count);
-			g_status = 2; 
+			g_status = 2;
 			free(cur_input);
 			return (0);
 		}
