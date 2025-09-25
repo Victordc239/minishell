@@ -6,7 +6,7 @@
 /*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/25 11:43:47 by victor           ###   ########.fr       */
+/*   Updated: 2025/09/25 15:37:56 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,16 +128,17 @@ void	remove_marker_inplace(char *s)
 	s[j] = '\0';
 }
 
-int	parse_exit_code(const char *s, unsigned char *out_code)
+int	parse_exit_code(const char *s, unsigned char *out_code, int i, int neg)
 {
 	unsigned int	r;
 	int				i;
 	int				neg;
 
-	if (!s)
-		return (0);
+
 	i = 0;
 	neg = 0;
+	if (!s)
+		return (0);
 	if (s[i] == '+' || s[i] == '-')
 	{
 		if (s[i + 1] == '\0')
@@ -363,7 +364,7 @@ int	ft_exit(t_minishell *mini)
 		g_status = 1;
 		return (1);
 	}
-	if (!parse_exit_code(mini->command_list->argv[1], &code))
+	if (!parse_exit_code(mini->command_list->argv[1], &code, 0, 0))
 	{
 		ft_putstr("exit: ", 2);
 		ft_putstr(mini->command_list->argv[1], 2);
