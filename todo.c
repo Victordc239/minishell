@@ -6,7 +6,7 @@
 /*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/25 15:37:56 by victor           ###   ########.fr       */
+/*   Updated: 2025/09/25 18:59:21 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,12 +128,12 @@ void	remove_marker_inplace(char *s)
 	s[j] = '\0';
 }
 
-int	parse_exit_code(const char *s, unsigned char *out_code, int i, int neg)
+/*
+int	parse_exit_code(const char *s, unsigned char *out_code)
 {
 	unsigned int	r;
 	int				i;
 	int				neg;
-
 
 	i = 0;
 	neg = 0;
@@ -143,6 +143,35 @@ int	parse_exit_code(const char *s, unsigned char *out_code, int i, int neg)
 	{
 		if (s[i + 1] == '\0')
 			return (0);
+		if (s[i] == '-')
+			neg = 1;
+		i++;
+	}
+	if (!s[i])
+		return (0);
+	r = 0;
+	while (s[i])
+	{
+		if (!ft_isdigit((unsigned char)s[i]))
+			return (0);
+		r = (r * 10 + (s[i] - '0')) & 0xFF;
+		i++;
+	}
+	if (neg)
+		*out_code = (unsigned char)((256 - (r & 0xFF)) & 0xFF);
+	else
+		*out_code = (unsigned char)(r & 0xFF);
+	return (1);
+}*/
+
+int	parse_exit_code(const char *s, unsigned char *out_code, int i, int neg)
+{
+	unsigned int	r;
+
+	if (!s)
+		return (0);
+	if (s[i] == '+' || s[i] == '-')
+	{
 		if (s[i] == '-')
 			neg = 1;
 		i++;
@@ -348,6 +377,33 @@ void	free_pipex_data(t_pipex *data)
 		free_command_list(data->commands);
 	free(data);
 }
+
+/*int	ft_exit(t_minishell *mini)
+{
+	unsigned char	code;
+
+	if (!mini->command_list->argv[1])
+	{
+		free_minishell(mini);
+		exit((unsigned char)g_status);
+	}
+	if (mini->command_list->argv[2])
+	{
+		ft_putstr("exit: too many arguments\n", 2);
+		g_status = 1;
+		return (1);
+	}
+	if (!parse_exit_code(mini->command_list->argv[1], &code))
+	{
+		ft_putstr("exit: ", 2);
+		ft_putstr(mini->command_list->argv[1], 2);
+		ft_putstr(": numeric argument required\n", 2);
+		free_minishell(mini);
+		exit(2);
+	}
+	free_minishell(mini);
+	exit((int)code);
+}*/
 
 int	ft_exit(t_minishell *mini)
 {
@@ -943,7 +999,7 @@ void	free_and_exit(char **args, char **paths, int exit_code)
 	exit(exit_code);
 }
 
-void	exec_paths(char **paths, char *cmd, t_minishell *mini, char **envir)
+/*void	exec_paths(char **paths, char *cmd, t_minishell *mini, char **envir)
 {
 	int			i;
 	char		*path;
@@ -981,6 +1037,44 @@ void	exec_paths(char **paths, char *cmd, t_minishell *mini, char **envir)
 		}
 		free(path);
 		i++;
+	}
+}*/
+
+void	exec_paths(char **paths, char *cmd, t_minishell *mini, char **envir)
+{
+	int			i;
+	char		*path;
+	struct stat	st;
+	int			saved_errno;
+
+	if (!paths)
+		return ;
+	i = 0;
+	while (paths[i])
+	{
+		path = create_path(paths[i], cmd);
+		if (!path)
+			free_and_exit(mini->command_list->argv, paths, 0);
+		if (stat(path, &st) == 0 && S_ISDIR(st.st_mode))
+		{
+			free(path);
+			i++;
+			continue ;
+		}
+		if (stat(path, &st) == 0 && S_ISREG(st.st_mode)
+			&& access(path, X_OK) == 0)
+		{
+			execve(path, mini->command_list->argv, envir);
+			saved_errno = errno;
+			free(path);
+			if (saved_errno == EISDIR)
+			{
+				i++;
+				continue ;
+			}
+			check_errno(saved_errno, mini);
+		}
+		(free(path), i++);
 	}
 }
 
@@ -1449,7 +1543,7 @@ void	free_struct(t_pipex *data, char *message, int exit_code, int std)
 	exit(exit_code);
 }
 
-void	ft_cmd(t_minishell *mini)
+/*void	ft_cmd(t_minishell *mini)
 {
 	char			**possible_paths;
 	char			*path_line;
@@ -1487,6 +1581,50 @@ void	ft_cmd(t_minishell *mini)
 		(execve(cmd, mini->command_list->argv, envir), perror(cmd),
 			free_minishell(mini), ft_freedoom(envir), exit(127));
 	if (!path_line)
+		(execve(cmd, mini->command_list->argv, envir), perror(cmd),
+			free_minishell(mini), ft_freedoom(envir), exit(127));
+	possible_paths = ft_split(path_line, ':');
+	if (!possible_paths)
+		(exit_with_error("Error with possible path\n", 1, 2),
+			free_minishell(mini), ft_freedoom(envir));
+	execute_command(mini, possible_paths, envir);
+}*/
+
+void	ft_cmd(t_minishell *mini)
+{
+	char			**possible_paths;
+	char			*path_line;
+	char			**envir;
+	char			*cmd;
+	struct stat		st;
+
+	envir = env_to_array(mini->env_list);
+	if (is_builtin_str(mini->command_list->argv[0]))
+	{
+		cmd = mini->command_list->argv[0];
+		if (cmd && ft_strcmp(cmd, "exit") == 0)
+			(ft_freedoom(envir), ft_exit(mini));
+		execute_buitin_args(mini->command_list->argv, &envir, mini);
+		(ft_freedoom(envir), free_minishell(mini), exit(0));
+	}
+	cmd = mini->command_list->argv[0];
+	if (cmd && ft_strchr(cmd, '/'))
+	{
+		if (stat(cmd, &st) == 0 && S_ISDIR(st.st_mode))
+			(ft_putstr(cmd, 2), ft_putstr(": Is a directory\n", 2),
+				free_minishell(mini), ft_freedoom(envir), exit(126));
+		if (access(cmd, F_OK) == -1)
+			(perror(cmd), free_minishell(mini), ft_freedoom(envir), exit(127));
+		if (access(cmd, X_OK) == -1)
+			(perror(cmd), free_minishell(mini), ft_freedoom(envir), exit(126));
+		execve(cmd, mini->command_list->argv, envir);
+		check_errno(errno, mini);
+	}
+	if (!envir || !*envir)
+		(exit_with_error("Missing environment\n", 1, 2), free_minishell(mini),
+			ft_freedoom(envir));
+	path_line = find_execpath(envir);
+	if ((path_line && path_line[0] == '\0') || !path_line)
 		(execve(cmd, mini->command_list->argv, envir), perror(cmd),
 			free_minishell(mini), ft_freedoom(envir), exit(127));
 	possible_paths = ft_split(path_line, ':');
