@@ -6,7 +6,7 @@
 /*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/24 19:03:13 by victor           ###   ########.fr       */
+/*   Updated: 2025/09/25 11:16:34 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -3245,6 +3245,7 @@ int	prepare_segments(char *input, char ***segments,
 	if (ends_with_unquoted_redir(cur_input))
 	{
 		ft_putstr("minishell: syntax error near unexpected token `newline'\n", 2);
+		g_status = 2; 
 		free(cur_input);
 		return (0);
 	}
@@ -3256,6 +3257,7 @@ int	prepare_segments(char *input, char ***segments,
 			if (!more)
 			{
 				ft_putstr("minishell: syntax error: unexpected end of file\n", 2);
+				g_status = 2; 
 				free(cur_input);
 				return (0);
 			}
@@ -3272,6 +3274,7 @@ int	prepare_segments(char *input, char ***segments,
 	if (!split_ops(cur_input, segments, ops, seg_count))
 	{
 		ft_putstr("minishell: internal split error\n", 2);
+		g_status = 2; 
 		free(cur_input);
 		return (0);
 	}
@@ -3284,6 +3287,7 @@ int	prepare_segments(char *input, char ***segments,
 		{
 			ft_putstr("minishell: syntax error: unexpected end of file\n", 2);
 			free_split_result(*segments, *ops, *seg_count);
+			g_status = 2; 
 			free(cur_input);
 			return (0);
 		}
@@ -3375,7 +3379,7 @@ void	handle_segments(t_minishell *minishell,
 	handle_segments(minishell, segments + 1, ops + 1, seg_count - 1);
 }
 
-void	process_input(char *input, t_minishell *minishell)
+/*void	process_input(char *input, t_minishell *minishell)
 {
 	char	**segments;
 	char	**ops;
@@ -3386,6 +3390,24 @@ void	process_input(char *input, t_minishell *minishell)
 	seg_count = 0;
 	if (!prepare_segments(input, &segments, &ops, &seg_count))
 		return ;
+	handle_segments(minishell, segments, ops, seg_count);
+	free_split_result(segments, ops, seg_count);
+}*/
+
+void	process_input(char *input, t_minishell *minishell)
+{
+	char	**segments;
+	char	**ops;
+	int		seg_count;
+
+	segments = NULL;
+	ops = NULL;
+	seg_count = 0;
+	if (!prepare_segments(input, &segments, &ops, &seg_count))
+	{
+		update_env_status(minishell);
+		return ;
+	}
 	handle_segments(minishell, segments, ops, seg_count);
 	free_split_result(segments, ops, seg_count);
 }

@@ -14,31 +14,8 @@ COSAS A CAMBIAR:
 		> s^C
 
 
--ARREGLAR:
-	minishell:
-		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo hello >>
-		minishell: syntax error near unexpected token `newline'
-		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo $?
-		0
 
-	bash:
-		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo hello >>
-		bash: error sintáctico cerca del elemento inesperado `newline'
-		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo $?
-		2
 
--:
-	minishell:
-		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> cat <<
-		minishell: syntax error near unexpected token `newline'
-		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo $?
-		0
-
-	bash:
-		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ cat <<
-		bash: error sintáctico cerca del elemento inesperado `newline'
-		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo $?
-		2
 
 
 - ARREGLAR:
@@ -51,18 +28,6 @@ COSAS A CAMBIAR:
 		bash: error sintáctico cerca del elemento inesperado `|'
 
 
--
-	minishell:
-		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> cat <
-		minishell: syntax error near unexpected token `newline'
-		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo $?
-		0
-
-	bash:
-		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ cat <
-		bash: error sintáctico cerca del elemento inesperado `newline'
-		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo $?
-		2
 
 
 
@@ -80,6 +45,48 @@ COSAS A CAMBIAR:
 
 
 SOLUCIONADO:
+
+
+-
+	minishell:
+		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> cat <
+		minishell: syntax error near unexpected token `newline'
+		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo $?
+		0
+
+	bash:
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ cat <
+		bash: error sintáctico cerca del elemento inesperado `newline'
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo $?
+		2
+
+
+-:
+	minishell:
+		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> cat <<
+		minishell: syntax error near unexpected token `newline'
+		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo $?
+		0
+
+	bash:
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ cat <<
+		bash: error sintáctico cerca del elemento inesperado `newline'
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo $?
+		2
+
+-ARREGLAR:
+	minishell:
+		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo hello >>
+		minishell: syntax error near unexpected token `newline'
+		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo $?
+		0
+
+	bash:
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo hello >>
+		bash: error sintáctico cerca del elemento inesperado `newline'
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo $?
+		2
+
 
 - ARREGLAR:
 	minishell:
