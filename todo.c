@@ -6,7 +6,7 @@
 /*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/26 16:04:24 by victor           ###   ########.fr       */
+/*   Updated: 2025/09/26 16:13:54 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	parse_red_inout(t_minishell *mini, t_token **token)
 	*token = next;
 }
 
-t_token_type	lex_redir(const char **s)
+/*t_token_type	lex_redir(const char **s)		NO BORRAR
 {
 	const char	*p;
 
@@ -94,7 +94,7 @@ t_token_type	lex_redir(const char **s)
 		return (T_RED_OUT);
 	}
 	return (T_EOF);
-}
+}*/
 
 static int	is_all_digits(const char *s)
 {
@@ -3224,10 +3224,7 @@ char	*extract_complex_token(t_minishell *shell)
 		return (NULL);
 	}
 	if (!process_token_part(shell, &token, &first_quote, &mixed))
-	{
-		free(token);
-		return (NULL);
-	}
+		return (free(token), NULL);
 	shell->tokenizer->prev_type = T_WORD;
 	if (!mixed && first_quote != (t_token_quote)-1)
 		shell->tokenizer->quote = first_quote;
@@ -3477,10 +3474,7 @@ int	init_tokenizer(t_minishell *minishell, char *input)
 		minishell->t_list = NULL;
 	}
 	if (minishell->tokenizer)
-	{
-		free_tokenizer(minishell->tokenizer);
-		minishell->tokenizer = NULL;
-	}
+		(free_tokenizer(minishell->tokenizer), minishell->tokenizer = NULL);
 	minishell->tokenizer = malloc(sizeof(t_tokenizer));
 	if (!minishell->tokenizer)
 		return (0);
