@@ -25,20 +25,6 @@ COSAS A CAMBIAR:
 
 
 
--ARREGLAR este caso y todas las combinaciones posibles entre <, >, << , >>::
-	minishell:
-		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> ls>1>2>3>4
-		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo $?
-		0
-
-	bash:
-		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ ls>1>2>3
-		bash: error sintáctico cerca del elemento inesperado `1'
-		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo $?
-		2
-
-
-
 
 
 ---------------------------------------------------------------------------------------------------------------------------------
@@ -51,6 +37,19 @@ COSAS A CAMBIAR:
 
 
 SOLUCIONADO:
+
+-ARREGLAR este caso y todas las combinaciones posibles entre <, >, << , >>::
+	minishell:
+		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> ls>1>2>3>4
+		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo $?
+		0
+
+	bash:
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ ls>1>2>3
+		bash: error sintáctico cerca del elemento inesperado `1'
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo $?
+		2
+
 
 -ARREGLAR:
 	minishell:

@@ -6,7 +6,7 @@
 /*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/26 15:14:12 by victor           ###   ########.fr       */
+/*   Updated: 2025/09/26 16:02:53 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@ static void	syntax_error_unexpected(t_minishell *mini, const char *tok)
 
 	if (mini && mini->curr)
 		mini->curr->redirs = NULL;
-
 	if (!tok || *tok == '\0')
 	{
-		ft_putstr("minishell: syntax error near unexpected token `newline'\n", 2);
+		ft_putstr("minishell: ", 2);
+		ft_putstr("syntax error near unexpected token `newline'\n", 2);
 	}
 	else
 	{
@@ -39,7 +39,7 @@ static void	syntax_error_unexpected(t_minishell *mini, const char *tok)
 
 void	parse_red_inout(t_minishell *mini, t_token **token)
 {
-	t_token *next;
+	t_token	*next;
 
 	if (!(*token)->next)
 	{
@@ -50,13 +50,14 @@ void	parse_red_inout(t_minishell *mini, t_token **token)
 		}
 		mini->curr->redirs = NULL;
 		exit_with_error("syntax error: no infile\n", 1, 2);
-		return;
+		return ;
 	}
 	next = (*token)->next;
-	if (next->type != T_WORD || !next->value || ft_strchr("<>|", next->value[0]))
+	if (next->type != T_WORD || !next->value
+		|| ft_strchr("<>|", next->value[0]))
 	{
 		syntax_error_unexpected(mini, next->value);
-		return;
+		return ;
 	}
 	add_redir_to_cmd(mini, T_RED_INOUT, next->value);
 	*token = next;
@@ -64,22 +65,51 @@ void	parse_red_inout(t_minishell *mini, t_token **token)
 
 t_token_type	lex_redir(const char **s)
 {
-	const char *p = *s;
+	const char	*p;
 
+	p = s;
 	if (*p == '<')
 	{
-		if (p[1] == '<') { *s = p + 2; return T_HEREDOC; }
-		if (p[1] == '>') { *s = p + 2; return T_RED_INOUT;   }
+		if (p[1] == '<')
+		{
+			*s = p + 2;
+			return (T_HEREDOC);
+		}
+		if (p[1] == '>')
+		{
+			*s = p + 2;
+			return (T_RED_INOUT);
+		}
 		*s = p + 1;
-		return T_RED_IN; // "<"
+		return (T_RED_IN);
 	}
 	else if (*p == '>')
 	{
-		if (p[1] == '>') { *s = p + 2; return T_RED_APPEND; }
+		if (p[1] == '>')
+		{
+			*s = p + 2;
+			return (T_RED_APPEND);
+		}
 		*s = p + 1;
-		return T_RED_OUT; // ">"
+		return (T_RED_OUT);
 	}
-	return T_EOF;
+	return (T_EOF);
+}
+
+static int	is_all_digits(const char *s)
+{
+	int	i;
+
+	if (!s || s[0] == '\0')
+		return (0);
+	i = 0;
+	while (s[i])
+	{
+		if (!ft_isdigit((unsigned char)s[i]))
+			return (0);
+		i++;
+	}
+	return (1);
 }
 
 int	ft_isspace(int c)
@@ -1917,7 +1947,7 @@ int	expand_and_add_glob(char *pattern, t_minishell *mini)
 }*/
 void	parse_red_in(t_minishell *mini, t_token **token)
 {
-	t_token *next;
+	t_token	*next;
 
 	if (!(*token)->next)
 	{
@@ -1928,13 +1958,14 @@ void	parse_red_in(t_minishell *mini, t_token **token)
 		}
 		mini->curr->redirs = NULL;
 		exit_with_error("syntax error: no infile\n", 1, 2);
-		return;
+		return ;
 	}
 	next = (*token)->next;
-	if (next->type != T_WORD || !next->value || ft_strchr("<>|", next->value[0]))
+	if (next->type != T_WORD || !next->value
+		|| ft_strchr("<>|", next->value[0]))
 	{
 		syntax_error_unexpected(mini, next->value);
-		return;
+		return ;
 	}
 	add_redir_to_cmd(mini, T_RED_IN, next->value);
 	*token = next;
@@ -1968,13 +1999,22 @@ void	parse_red_out(t_minishell *mini, t_token **token)
 		}
 		mini->curr->redirs = NULL;
 		exit_with_error("syntax error: no outfile\n", 1, 2);
-		return;
+		return ;
 	}
 	next = (*token)->next;
-	if (next->type != T_WORD || !next->value || ft_strchr("<>|", next->value[0]))
+	if (next->type != T_WORD || !next->value
+		|| ft_strchr("<>|", next->value[0]))
 	{
 		syntax_error_unexpected(mini, next->value);
-		return;
+		return ;
+	}
+	if (is_all_digits(next->value) && next->adjacent && next->next
+		&& (next->next->type == T_RED_IN || next->next->type == T_RED_OUT
+			|| next->next->type == T_RED_APPEND || next->next->type == T_HEREDOC
+			|| next->next->type == T_RED_INOUT))
+	{
+		syntax_error_unexpected(mini, next->value);
+		return ;
 	}
 	add_redir_to_cmd(mini, T_RED_OUT, next->value);
 	*token = next;
@@ -2052,7 +2092,7 @@ char	*handle_heredoc(t_command *cmd, char *limiter, int index)
 	(*index)++;
 	*token = (*token)->next;
 }*/
-void parse_heredoc(t_minishell *mini, t_token **token, int *index)
+void	parse_heredoc(t_minishell *mini, t_token **token, int *index)
 {
 	char	*filename;
 
@@ -2226,19 +2266,27 @@ void	parse_red_append(t_minishell *mini, t_token **token)
 		}
 		mini->curr->redirs = NULL;
 		exit_with_error("syntax error: no outfile\n", 1, 2);
-		return;
+		return ;
 	}
 	next = (*token)->next;
-	if (next->type != T_WORD || !next->value || ft_strchr("<>|", next->value[0]))
+	if (next->type != T_WORD || !next->value
+		|| ft_strchr("<>|", next->value[0]))
 	{
 		syntax_error_unexpected(mini, next->value);
-		return;
+		return ;
+	}
+	if (is_all_digits(next->value) && next->adjacent && next->next
+		&& (next->next->type == T_RED_IN || next->next->type == T_RED_OUT
+			|| next->next->type == T_RED_APPEND || next->next->type == T_HEREDOC
+			|| next->next->type == T_RED_INOUT))
+	{
+		syntax_error_unexpected(mini, next->value);
+		return ;
 	}
 	add_redir_to_cmd(mini, T_RED_APPEND, next->value);
 	mini->curr->append = 1;
 	*token = next;
 }
-
 
 void	handle_word_token(t_minishell *mini, t_token *token)
 {
@@ -2324,7 +2372,7 @@ t_command	*parse_commands(t_minishell *mini)
 	while (mini->t_list)
 	{
 		if (g_status == 2)
-			break;
+			break ;
 		if (!mini->curr)
 		{
 			mini->curr = init_new_command();
@@ -2345,7 +2393,7 @@ int	is_redir(t_redir *redir)
 {
 	return (redir->type == T_RED_IN || redir->type == T_RED_OUT
 		|| redir->type == T_HEREDOC || redir->type == T_RED_APPEND
-		|| redir->type == T_RED_INOUT); /* <-- añadido */
+		|| redir->type == T_RED_INOUT);
 }
 
 /*void	apply_one_redirection(t_minishell *mini, t_redir *redir)
@@ -2386,7 +2434,8 @@ void	apply_one_redirection(t_minishell *mini, t_redir *redir)
 		fd = open(redir->filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd == -1)
 		(perror(redir->filename), free_minishell(mini), exit(1));
-	if (redir->type == T_RED_IN || redir->type == T_HEREDOC || redir->type == T_RED_INOUT)
+	if (redir->type == T_RED_IN || redir->type == T_HEREDOC
+		|| redir->type == T_RED_INOUT)
 	{
 		if (dup2(fd, STDIN_FILENO) == -1)
 			(perror("dup2"), close(fd), free_minishell(mini), exit(1));
@@ -2423,7 +2472,8 @@ void	apply_redirections(t_minishell *mini)
 	redir = mini->command_list->redirs;
 	while (redir)
 	{
-		if (is_redir(redir) && (!redir->filename || ft_strchr("|'\"<>", redir->filename[0])))
+		if (is_redir(redir) && (!redir->filename
+				|| ft_strchr("|'\"<>", redir->filename[0])))
 		{
 			free_minishell(mini);
 			exit_with_error(SYNTAX_ERROR, 2, 2);
@@ -2782,7 +2832,7 @@ int	handle_redirection_append(char *input, t_minishell *shell)
 	return (0);
 }
 
-char	*extract_quoted_token(t_minishell *shell)
+/*char	*extract_quoted_token(t_minishell *shell)
 {
 	size_t		j;
 	char		quote_char;
@@ -2897,6 +2947,129 @@ char	*extract_quoted_token(t_minishell *shell)
 		pos++;
 	}
 	return (NULL);
+}*/
+
+char	*extract_quoted_token(t_minishell *shell)
+{
+	size_t		j;
+	char		quote_char;
+	char		*buf;
+	size_t		len;
+	size_t		pos;
+	size_t		bi;
+	size_t		bufcap;
+	char		*more;
+	char		*tmp;
+	char		*cdup;
+	char		c;
+	char		next;
+
+	quote_char = shell->tokenizer->input[shell->tokenizer->pos];
+	j = shell->tokenizer->pos + 1;
+	len = ft_strlen(shell->tokenizer->input);
+	pos = j;
+	bi = 0;
+	if (len > 16)
+		bufcap = len + 1;
+	else
+		bufcap = 64;
+	buf = malloc(bufcap);
+	if (!buf)
+	{
+		shell->tokenizer->err = 1;
+		return (NULL);
+	}
+	while (1)
+	{
+		if (pos >= ft_strlen(shell->tokenizer->input))
+		{
+			more = readline("> ");
+			if (!more)
+			{
+				free(buf);
+				shell->tokenizer->err = 1;
+				return (NULL);
+			}
+			tmp = ft_strjoin(shell->tokenizer->input, "\n");
+			if (!tmp)
+			{
+				free(more);
+				free(buf);
+				shell->tokenizer->err = 1;
+				return (NULL);
+			}
+			free(shell->tokenizer->input);
+			shell->tokenizer->input = ft_strjoin(tmp, more);
+			free(tmp);
+			if (*more)
+				add_history(more);
+			free(more);
+			continue ;
+		}
+		c = shell->tokenizer->input[pos];
+		if (c == quote_char)
+		{
+			buf[bi] = '\0';
+			shell->tokenizer->prev_type = T_WORD;
+			shell->tokenizer->pos = pos + 1;
+			if (shell->tokenizer->pos < (int)ft_strlen(shell->tokenizer->input)
+				&& ft_strchr("<>|",
+					shell->tokenizer->input[shell->tokenizer->pos]))
+				shell->tokenizer->last_adjacent = 1;
+			else
+				shell->tokenizer->last_adjacent = 0;
+			cdup = ft_strdup(buf);
+			free(buf);
+			return (cdup);
+		}
+		if (quote_char == '"' && c == '\\'
+			&& pos + 1 < ft_strlen(shell->tokenizer->input))
+		{
+			next = shell->tokenizer->input[pos + 1];
+			if (next == '"' || next == '\\' || next == '$' || next == '`')
+			{
+				if (bi + 1 >= bufcap)
+				{
+					bufcap *= 2;
+					buf = realloc(buf, bufcap);
+					if (!buf)
+					{
+						shell->tokenizer->err = 1;
+						return (NULL);
+					}
+				}
+				buf[bi++] = next;
+				pos += 2;
+				continue ;
+			}
+			if (bi + 1 >= bufcap)
+			{
+				bufcap *= 2;
+				buf = realloc(buf, bufcap);
+				if (!buf)
+				{
+					shell->tokenizer->err = 1;
+					return (NULL);
+				}
+			}
+			buf[bi++] = c;
+			pos++;
+			continue ;
+		}
+		if (bi + 1 >= bufcap)
+		{
+			bufcap *= 2;
+			buf = realloc(buf, bufcap);
+			if (!buf)
+			{
+				shell->tokenizer->err = 1;
+				return (NULL);
+			}
+		}
+		buf[bi++] = c;
+		pos++;
+	}
+	return (NULL);
 }
 
 int	is_word_char(char c)
@@ -2912,6 +3085,20 @@ int	is_word_char(char c)
 	return (1);
 }
 
+/*char	*extract_word(t_minishell *shell)
+{
+	int		start;
+	char	*word;
+
+	start = shell->tokenizer->pos;
+	while (is_word_char(shell->tokenizer->input[shell->tokenizer->pos]))
+		shell->tokenizer->pos++;
+	if (shell->tokenizer->pos == start)
+		return (NULL);
+	word = ft_substr(shell->tokenizer->input, start,
+			shell->tokenizer->pos - start);
+	return (word);
+}*/
 char	*extract_word(t_minishell *shell)
 {
 	int		start;
@@ -2924,6 +3111,12 @@ char	*extract_word(t_minishell *shell)
 		return (NULL);
 	word = ft_substr(shell->tokenizer->input, start,
 			shell->tokenizer->pos - start);
+	shell->tokenizer->last_adjacent = 0;
+	if (shell->tokenizer->pos < (int)ft_strlen(shell->tokenizer->input)
+		&& ft_strchr("<>|", shell->tokenizer->input[shell->tokenizer->pos]))
+		shell->tokenizer->last_adjacent = 1;
+	else
+		shell->tokenizer->last_adjacent = 0;
 	return (word);
 }
 
@@ -2990,6 +3183,32 @@ int	process_token_part(t_minishell *shell, char **token,
 	return (1);
 }
 
+/*char	*extract_complex_token(t_minishell *shell)
+{
+	char			*token;
+	t_token_quote	first_quote;
+	int				mixed;
+
+	mixed = 0;
+	first_quote = (t_token_quote)-1;
+	token = ft_strdup("");
+	if (!token)
+	{
+		shell->tokenizer->err = 1;
+		return (NULL);
+	}
+	if (!process_token_part(shell, &token, &first_quote, &mixed))
+	{
+		free(token);
+		return (NULL);
+	}
+	shell->tokenizer->prev_type = T_WORD;
+	if (!mixed && first_quote != (t_token_quote)-1)
+		shell->tokenizer->quote = first_quote;
+	else
+		shell->tokenizer->quote = Q_NONE;
+	return (token);
+}*/
 char	*extract_complex_token(t_minishell *shell)
 {
 	char			*token;
@@ -3014,6 +3233,11 @@ char	*extract_complex_token(t_minishell *shell)
 		shell->tokenizer->quote = first_quote;
 	else
 		shell->tokenizer->quote = Q_NONE;
+	if (shell->tokenizer->pos < (int)ft_strlen(shell->tokenizer->input)
+		&& ft_strchr("<>|", shell->tokenizer->input[shell->tokenizer->pos]))
+		shell->tokenizer->last_adjacent = 1;
+	else
+		shell->tokenizer->last_adjacent = 0;
 	return (token);
 }
 
@@ -3109,7 +3333,7 @@ char	*extract_token(t_minishell *shell)
 	return (extract_complex_token(shell));
 }
 
-t_token	*add_token(t_minishell *minishell, char *value)
+/*t_token	*add_token(t_minishell *minishell, char *value)
 {
 	t_token	*new_node;
 	t_token	*current;
@@ -3122,6 +3346,40 @@ t_token	*add_token(t_minishell *minishell, char *value)
 	new_node->quote = Q_NONE;
 	new_node->expansion_type = NO_EXPANSION;
 	new_node->next = NULL;
+	if (minishell->t_list == NULL)
+		minishell->t_list = new_node;
+	else
+	{
+		current = minishell->t_list;
+		while (current->next)
+			current = current->next;
+		current->next = new_node;
+	}
+	return (new_node);
+}*/
+t_token	*add_token(t_minishell *minishell, char *value)
+{
+	t_token	*new_node;
+	t_token	*current;
+
+	new_node = malloc(sizeof(t_token));
+	if (!new_node)
+		return (NULL);
+	new_node->value = ft_strdup(value);
+	if (minishell && minishell->tokenizer)
+		new_node->type = minishell->tokenizer->prev_type;
+	else
+		new_node->type = T_WORD;
+	new_node->quote = Q_NONE;
+	new_node->expansion_type = NO_EXPANSION;
+	new_node->next = NULL;
+	if (minishell && minishell->tokenizer)
+	{
+		new_node->adjacent = minishell->tokenizer->last_adjacent;
+		minishell->tokenizer->last_adjacent = 0;
+	}
+	else
+		new_node->adjacent = 0;
 	if (minishell->t_list == NULL)
 		minishell->t_list = new_node;
 	else
@@ -3181,6 +3439,36 @@ int	tokenize_input(t_minishell *minishell)
 	return (1);
 }
 
+/*int	init_tokenizer(t_minishell *minishell, char *input)
+{
+	if (minishell->t_list)
+	{
+		free_t_list(minishell->t_list);
+		minishell->t_list = NULL;
+	}
+	if (minishell->tokenizer)
+	{
+		free_tokenizer(minishell->tokenizer);
+		minishell->tokenizer = NULL;
+	}
+	minishell->tokenizer = malloc(sizeof(t_tokenizer));
+	if (!minishell->tokenizer)
+		return (0);
+	minishell->tokenizer->input = ft_strdup(input);
+	if (!minishell->tokenizer->input)
+	{
+		free(minishell->tokenizer);
+		minishell->tokenizer = NULL;
+		return (0);
+	}
+	minishell->tokenizer->pos = 0;
+	minishell->tokenizer->prev_type = T_WORD;
+	minishell->tokenizer->quote = Q_NONE;
+	minishell->tokenizer->err = 0;
+	minishell->tokenizer->last_adjacent = 0;
+	return (1);
+}*/
+
 int	init_tokenizer(t_minishell *minishell, char *input)
 {
 	if (minishell->t_list)
@@ -3207,6 +3495,7 @@ int	init_tokenizer(t_minishell *minishell, char *input)
 	minishell->tokenizer->prev_type = T_WORD;
 	minishell->tokenizer->quote = Q_NONE;
 	minishell->tokenizer->err = 0;
+	minishell->tokenizer->last_adjacent = 0;
 	return (1);
 }
 

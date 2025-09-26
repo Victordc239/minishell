@@ -6,7 +6,7 @@
 /*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 14:02:20 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/26 14:28:27 by victor           ###   ########.fr       */
+/*   Updated: 2025/09/26 15:21:25 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,15 @@ typedef enum e_expansion_type
 	EXIT_STATUS_EXPANSION
 }								t_expansion_type;
 
+/*typedef struct s_tokenizer
+{
+	char						*input;
+	int							pos;
+	t_token_type				prev_type;
+	t_token_quote				quote;
+	int							err;
+}								t_tokenizer;*/
+
 typedef struct s_tokenizer
 {
 	char						*input;
@@ -89,7 +98,17 @@ typedef struct s_tokenizer
 	t_token_type				prev_type;
 	t_token_quote				quote;
 	int							err;
+	int							last_adjacent;
 }								t_tokenizer;
+
+/*typedef struct s_token
+{
+	char						*value;
+	t_token_type				type;
+	t_token_quote				quote;
+	t_expansion_type			expansion_type;
+	struct s_token				*next;
+}								t_token;*/
 
 typedef struct s_token
 {
@@ -97,6 +116,7 @@ typedef struct s_token
 	t_token_type				type;
 	t_token_quote				quote;
 	t_expansion_type			expansion_type;
+	int						adjacent;
 	struct s_token				*next;
 }								t_token;
 
