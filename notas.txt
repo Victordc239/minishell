@@ -14,10 +14,6 @@ COSAS A CAMBIAR:
 		> s^C
 
 
-
-
-
-
 - ARREGLAR:
 	minishell:
 		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo a ||| wc
@@ -26,6 +22,49 @@ COSAS A CAMBIAR:
 	bash:
 		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo a ||| wc
 		bash: error sintáctico cerca del elemento inesperado `|'
+
+
+
+-ARREGLAR este caso y todas las combinaciones posibles entre <, >, << , >>::
+	minishell:
+		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> ls>1>2>3>4
+		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo $?
+		0
+
+	bash:
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ ls>1>2>3
+		bash: error sintáctico cerca del elemento inesperado `1'
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo $?
+		2
+
+-ARREGLAR este caso y todas las combinaciones posibles entre <, >, << , >>::
+	minishell:
+		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> ls > > 2 > 3
+		ls: no se puede acceder a '2': No existe el archivo o el directorio
+		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo $?
+		2
+
+	bash:
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ ls > > 2 > 3
+		bash: error sintáctico cerca del elemento inesperado `>'
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo $?
+		2
+
+-ARREGLAR este caso y todas las combinaciones posibles entre <, >, << , >>:
+	minishell:
+		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> ls <> 1
+		>: No such file or directory
+		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo $?
+		1
+
+	bash:
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ ls <> 1
+		1               leaks.txt  mini.h             minishell_tester2  todo.c
+		borrar.c        libft      minishell          notas.txt
+		es.subject.pdf  Makefile   minishell_tester1  obj
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo $?
+		0
+
 
 
 
