@@ -6,7 +6,7 @@
 /*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 14:02:20 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/24 11:58:22 by victor           ###   ########.fr       */
+/*   Updated: 2025/09/26 14:28:27 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,18 @@ typedef struct s_env
 	struct s_env				*next;
 }								t_env;
 
+/*typedef enum e_token_type
+{
+	T_WORD,
+	T_PIPE,
+	T_RED_IN,
+	T_RED_OUT,
+	T_RED_APPEND,
+	T_HEREDOC,
+	T_INFILE,
+	T_OUTFILE,
+}								t_token_type;*/
+
 typedef enum e_token_type
 {
 	T_WORD,
@@ -49,6 +61,8 @@ typedef enum e_token_type
 	T_RED_IN,
 	T_RED_OUT,
 	T_RED_APPEND,
+	T_RED_INOUT,
+	T_EOF,
 	T_HEREDOC,
 	T_INFILE,
 	T_OUTFILE,
@@ -343,6 +357,8 @@ int			expand_and_add_glob(char *pattern, t_minishell *mini);
 
  char	*join_with_marker(char *s1, char *s2);
  void	remove_marker_inplace(char *s);
- int parse_exit_code(const char *s, unsigned char *out_code);
+ //int parse_exit_code(const char *s, unsigned char *out_code);
+ int     parse_exit_code(const char *s, unsigned char *out_code, int i, int neg);
+
 
 #endif

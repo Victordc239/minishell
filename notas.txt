@@ -13,7 +13,6 @@ COSAS A CAMBIAR:
 		> f
 		> s^C
 
-
 - ARREGLAR:
 	minishell:
 		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo a ||| wc
@@ -23,6 +22,35 @@ COSAS A CAMBIAR:
 		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo a ||| wc
 		bash: error sintáctico cerca del elemento inesperado `|'
 
+
+
+
+-ARREGLAR este caso y todas las combinaciones posibles entre <, >, << , >>::
+	minishell:
+		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> ls>1>2>3>4
+		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo $?
+		0
+
+	bash:
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ ls>1>2>3
+		bash: error sintáctico cerca del elemento inesperado `1'
+		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo $?
+		2
+
+
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------
+
+
+
+SOLUCIONADO:
 
 -ARREGLAR:
 	minishell:
@@ -35,7 +63,6 @@ COSAS A CAMBIAR:
 		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ ls >> 2 > 3
 		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo $?
 		0
-
 
 
 -ARREGLAR este caso y todas las combinaciones posibles entre <, >, << , >>:
@@ -56,25 +83,6 @@ COSAS A CAMBIAR:
 
 
 
-
-
-
-
-
-
-
----------------------------------------------------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------------------------------------------------
-
-
-
-SOLUCIONADO:
-
-
 -ARREGLAR este caso y todas las combinaciones posibles entre <, >, << , >>::
 	minishell:
 		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> ls > > 2 > 3
@@ -88,17 +96,7 @@ SOLUCIONADO:
 		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo $?
 		2
 
--ARREGLAR este caso y todas las combinaciones posibles entre <, >, << , >>::
-	minishell:
-		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> ls>1>2>3>4
-		/home/victor/Escritorio/42_Madrid/cursus/mini Minishell> echo $?
-		0
 
-	bash:
-		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ ls>1>2>3
-		bash: error sintáctico cerca del elemento inesperado `1'
-		victor@victor-ubuntu:~/Escritorio/42_Madrid/cursus/mini$ echo $?
-		2
 
 
 
