@@ -6,13 +6,71 @@
 /*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/25 18:59:21 by victor           ###   ########.fr       */
+/*   Updated: 2025/09/26 13:49:35 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
 
 //////////////////////////////////añadido
+
+static int is_all_digits(const char *s)
+{
+    int i;
+
+    if (!s || s[0] == '\0')
+        return 0;
+    i = 0;
+    while (s[i])
+    {
+        if (!ft_isdigit((unsigned char)s[i]))
+            return 0;
+        i++;
+    }
+    return 1;
+}
+
+/*static void	syntax_error_unexpected(t_minishell *mini, const char *tok)
+{
+	char *m;
+	char *tmp;
+
+	if (mini && mini->pipex_data)
+	{
+		free_pipex_data(mini->pipex_data);
+		mini->pipex_data = NULL;
+	}
+	if (mini && mini->curr)
+		mini->curr->redirs = NULL;
+	if (!tok || *tok == '\0')
+		exit_with_error("minishell: syntax error near unexpected token `newline'\n", 1, 2);
+	m = ft_strjoin("minishell: syntax error near unexpected token `", tok);
+	tmp = ft_strjoin(m, "'\n");
+	free(m);
+	exit_with_error(tmp, 1, 2);
+}*/
+static void	syntax_error_unexpected(t_minishell *mini, const char *tok)
+{
+	char	*m;
+	char	*tmp;
+
+	if (mini && mini->curr)
+		mini->curr->redirs = NULL;
+
+	if (!tok || *tok == '\0')
+	{
+		ft_putstr("minishell: syntax error near unexpected token `newline'\n", 2);
+	}
+	else
+	{
+		m = ft_strjoin("minishell: syntax error near unexpected token `", tok);
+		tmp = ft_strjoin(m, "'\n");
+		free(m);
+		ft_putstr(tmp, 2);
+		free(tmp);
+	}
+	g_status = 2;
+}
 
 int	ft_isspace(int c)
 {
@@ -1832,7 +1890,7 @@ int	expand_and_add_glob(char *pattern, t_minishell *mini)
 	return (1);
 }
 
-void	parse_red_in(t_minishell *mini, t_token **token)
+/*void	parse_red_in(t_minishell *mini, t_token **token)
 {
 	if (!(*token)->next || (*token)->type != T_RED_IN)
 	{
@@ -1846,9 +1904,33 @@ void	parse_red_in(t_minishell *mini, t_token **token)
 	}
 	add_redir_to_cmd(mini, T_RED_IN, (*token)->next->value);
 	*token = (*token)->next;
+}*/
+void	parse_red_in(t_minishell *mini, t_token **token)
+{
+	t_token *next;
+
+	if (!(*token)->next)
+	{
+		if (mini->pipex_data)
+		{
+			free_pipex_data(mini->pipex_data);
+			mini->pipex_data = NULL;
+		}
+		mini->curr->redirs = NULL;
+		exit_with_error("syntax error: no infile\n", 1, 2);
+		return;
+	}
+	next = (*token)->next;
+	if (next->type != T_WORD || !next->value || ft_strchr("<>|", next->value[0]))
+	{
+		syntax_error_unexpected(mini, next->value);
+		return;
+	}
+	add_redir_to_cmd(mini, T_RED_IN, next->value);
+	*token = next;
 }
 
-void	parse_red_out(t_minishell *mini, t_token **token)
+/*void	parse_red_out(t_minishell *mini, t_token **token)
 {
 	if (!(*token)->next)
 	{
@@ -1862,6 +1944,37 @@ void	parse_red_out(t_minishell *mini, t_token **token)
 	}
 	add_redir_to_cmd(mini, T_RED_OUT, (*token)->next->value);
 	*token = (*token)->next;
+}*/
+void	parse_red_out(t_minishell *mini, t_token **token)
+{
+	t_token *next;
+
+	if (!(*token)->next)
+	{
+		if (mini->pipex_data)
+		{
+			free_pipex_data(mini->pipex_data);
+			mini->pipex_data = NULL;
+		}
+		mini->curr->redirs = NULL;
+		exit_with_error("syntax error: no outfile\n", 1, 2);
+		return;
+	}
+	next = (*token)->next;
+	if (next->type != T_WORD || !next->value || ft_strchr("<>|", next->value[0]))
+	{
+		syntax_error_unexpected(mini, next->value);
+		return;
+	}
+	if (is_all_digits(next->value) && next->next && (next->next->type == T_RED_IN
+			|| next->next->type == T_RED_OUT || next->next->type == T_RED_APPEND
+			|| next->next->type == T_HEREDOC))
+	{
+		syntax_error_unexpected(mini, next->value);
+		return;
+	}
+	add_redir_to_cmd(mini, T_RED_OUT, next->value);
+	*token = next;
 }
 
 char	*get_filename(int index)
@@ -1908,7 +2021,7 @@ char	*handle_heredoc(t_command *cmd, char *limiter, int index)
 	return (filename);
 }
 
-void	parse_heredoc(t_minishell *mini, t_token **token, int *index)
+/*void	parse_heredoc(t_minishell *mini, t_token **token, int *index)
 {
 	char	*filename;
 
@@ -1924,6 +2037,40 @@ void	parse_heredoc(t_minishell *mini, t_token **token, int *index)
 	}
 	filename = handle_heredoc(mini->curr, (*token)->next->value,
 			*index);
+	if (!filename)
+	{
+		g_status = 130;
+		mini->curr->is_heredoc = 0;
+		return ;
+	}
+	add_redir_to_cmd(mini, T_HEREDOC, filename);
+	mini->curr->is_heredoc = 1;
+	mini->pipex_data->count_heredoc++;
+	(*index)++;
+	*token = (*token)->next;
+}*/
+void parse_heredoc(t_minishell *mini, t_token **token, int *index)
+{
+	char	*filename;
+
+	if (!(*token)->next || !(*token)->next->value)
+	{
+		if (mini->pipex_data)
+		{
+			free_pipex_data(mini->pipex_data);
+			mini->pipex_data = NULL;
+		}
+		mini->curr->redirs = NULL;
+		exit_with_error("heredoc: missing limiter\n", 1, 2);
+		return ;
+	}
+	if ((*token)->next->type != T_WORD || !(*token)->next->value
+		|| ft_strchr("<>|", (*token)->next->value[0]))
+	{
+		syntax_error_unexpected(mini, (*token)->next->value);
+		return ;
+	}
+	filename = handle_heredoc(mini->curr, (*token)->next->value, *index);
 	if (!filename)
 	{
 		g_status = 130;
@@ -2046,7 +2193,7 @@ void	expand_token(t_token *token, t_minishell *mini)
 		replace_char_inplace(token->value, '\x07', '$');
 }
 
-void	parse_red_append(t_minishell *mini, t_token **token)
+/*void	parse_red_append(t_minishell *mini, t_token **token)
 {
 	if (!(*token)->next)
 	{
@@ -2061,6 +2208,39 @@ void	parse_red_append(t_minishell *mini, t_token **token)
 	add_redir_to_cmd(mini, T_RED_APPEND, (*token)->next->value);
 	mini->curr->append = 1;
 	*token = (*token)->next;
+}*/
+
+void	parse_red_append(t_minishell *mini, t_token **token)
+{
+	t_token	*next;
+
+	if (!(*token)->next)
+	{
+		if (mini->pipex_data)
+		{
+			free_pipex_data(mini->pipex_data);
+			mini->pipex_data = NULL;
+		}
+		mini->curr->redirs = NULL;
+		exit_with_error("syntax error: no outfile\n", 1, 2);
+		return ;
+	}
+	next = (*token)->next;
+	if (next->type != T_WORD || !next->value || ft_strchr("<>|", next->value[0]))
+	{
+		syntax_error_unexpected(mini, next->value);
+		return ;
+	}
+	if (is_all_digits(next->value) && next->next && (next->next->type == T_RED_IN
+			|| next->next->type == T_RED_OUT || next->next->type == T_RED_APPEND
+			|| next->next->type == T_HEREDOC))
+	{
+		syntax_error_unexpected(mini, next->value);
+		return ;
+	}
+	add_redir_to_cmd(mini, T_RED_APPEND, next->value);
+	mini->curr->append = 1;
+	*token = next;
 }
 
 void	handle_word_token(t_minishell *mini, t_token *token)
@@ -2098,7 +2278,7 @@ void	process_token(t_minishell *mini, int *index)
 		mini->curr = NULL;
 }
 
-t_command	*parse_commands(t_minishell *mini)
+/*t_command	*parse_commands(t_minishell *mini)
 {
 	int	heredoc_index;
 
@@ -2116,7 +2296,29 @@ t_command	*parse_commands(t_minishell *mini)
 		mini->t_list = mini->t_list->next;
 	}
 	return (mini->head);
+}*/
+t_command	*parse_commands(t_minishell *mini)
+{
+	int	heredoc_index;
+
+	heredoc_index = 0;
+	mini->head = NULL;
+	mini->curr = NULL;
+	while (mini->t_list)
+	{
+		if (g_status == 2)
+			break;
+		if (!mini->curr)
+		{
+			mini->curr = init_new_command();
+			add_command_to_list(mini);
+		}
+		process_token(mini, &heredoc_index);
+		mini->t_list = mini->t_list->next;
+	}
+	return (mini->head);
 }
+
 
 int	is_redir(t_redir *redir)
 {
@@ -2173,7 +2375,7 @@ void	apply_redirections(t_minishell *mini)
 	redir = mini->command_list->redirs;
 	while (redir)
 	{
-		if (is_redir(redir) && ft_strchr("|'\"", redir->filename[0]))
+		if (is_redir(redir) && (!redir->filename || ft_strchr("|'\"<>", redir->filename[0])))
 		{
 			free_minishell(mini);
 			exit_with_error(SYNTAX_ERROR, 2, 2);
@@ -2392,6 +2594,45 @@ void	delete_heredoc_files(int n)
 	}
 }
 
+/*void	ft_execute(t_minishell *mini)
+{
+	int		i;
+	t_token	*tokken;
+
+	i = 0;
+	mini->pipex_data = init_pipex();
+	if (!mini->pipex_data)
+		exit_with_error("Error init_pipex\n", 1, 2);
+	mini->pipex_data->builtins = is_builtin(mini);
+	tokken = mini->t_list;
+	mini->command_list = parse_commands(mini);
+	if (g_status == 130)
+	{
+		g_status = -g_status;
+		delete_heredoc_files(mini->pipex_data->count_heredoc);
+		if (mini->pipex_data)
+			free_pipex_data(mini->pipex_data);
+		mini->pipex_data = NULL;
+		mini->t_list = tokken;
+		return ;
+	}
+	mini->t_list = tokken;
+	mini->pipex_data->commands = mini->command_list;
+	mini->pipex_data->n_cmds = count_commands_list(mini);
+	if (mini->pipex_data->n_cmds > 1
+		&& mini->pipex_data->builtins == BUILTIN_PARENT)
+		mini->pipex_data->builtins = NO_BUITIN;
+	mini->pipex_data->pid = malloc(sizeof(pid_t) * mini->pipex_data->n_cmds);
+	if (!mini->pipex_data->pid)
+		exit_with_error("Error malloc pid failed\n", 1, 2);
+	while (i < mini->pipex_data->n_cmds)
+		mini->pipex_data->pid[i++] = -1;
+	execute_pipeline(mini);
+	delete_heredoc_files(mini->pipex_data->count_heredoc);
+	if (mini->pipex_data)
+		free_pipex_data(mini->pipex_data);
+}*/
+
 void	ft_execute(t_minishell *mini)
 {
 	int		i;
@@ -2404,6 +2645,16 @@ void	ft_execute(t_minishell *mini)
 	mini->pipex_data->builtins = is_builtin(mini);
 	tokken = mini->t_list;
 	mini->command_list = parse_commands(mini);
+	if (g_status == 2)
+	{
+		if (mini->pipex_data)
+			delete_heredoc_files(mini->pipex_data->count_heredoc);
+		if (mini->pipex_data)
+			free_pipex_data(mini->pipex_data);
+		mini->pipex_data = NULL;
+		mini->t_list = tokken;
+		return ;
+	}
 	if (g_status == 130)
 	{
 		g_status = -g_status;
