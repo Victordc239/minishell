@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 14:02:20 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/26 15:21:25 by victor           ###   ########.fr       */
+/*   Updated: 2025/09/29 16:37:47 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,18 +42,6 @@ typedef struct s_env
 	struct s_env				*next;
 }								t_env;
 
-/*typedef enum e_token_type
-{
-	T_WORD,
-	T_PIPE,
-	T_RED_IN,
-	T_RED_OUT,
-	T_RED_APPEND,
-	T_HEREDOC,
-	T_INFILE,
-	T_OUTFILE,
-}								t_token_type;*/
-
 typedef enum e_token_type
 {
 	T_WORD,
@@ -82,15 +70,6 @@ typedef enum e_expansion_type
 	EXIT_STATUS_EXPANSION
 }								t_expansion_type;
 
-/*typedef struct s_tokenizer
-{
-	char						*input;
-	int							pos;
-	t_token_type				prev_type;
-	t_token_quote				quote;
-	int							err;
-}								t_tokenizer;*/
-
 typedef struct s_tokenizer
 {
 	char						*input;
@@ -100,15 +79,6 @@ typedef struct s_tokenizer
 	int							err;
 	int							last_adjacent;
 }								t_tokenizer;
-
-/*typedef struct s_token
-{
-	char						*value;
-	t_token_type				type;
-	t_token_quote				quote;
-	t_expansion_type			expansion_type;
-	struct s_token				*next;
-}								t_token;*/
 
 typedef struct s_token
 {
@@ -205,6 +175,22 @@ typedef enum e_builtin_type
 	BUILTIN_PARENT = 1
 }								t_builtin_type;
 
+typedef struct s_extract
+{
+	size_t		j;
+	char		quote_char;
+	char		*buf;
+	size_t		len;
+	size_t		pos;
+	size_t		bi;
+	size_t		bufcap;
+	char		*more;
+	char		*tmp;
+	char		*cdup;
+	char		c;
+	char		next;
+}	t_extract;
+
 int			is_builtin(t_minishell *mini);
 int			is_builtin_str(char *str);
 int			is_numeric(char const *str);
@@ -224,17 +210,17 @@ int			check_syntax_pipes(t_token *tokenizer);
 int			fill_tokens(t_minishell *minishell, char *input);
 int			init_tokenizer(t_minishell *minishell, char *input);
 int			tokenize_input(t_minishell *minishell);
- int	env_len(char **env);
- int	handle_heredoc_and_error(char *input, t_minishell *shell);
- int	handle_redirection_append(char *input, t_minishell *shell);
- int	extract_double_metachar(t_minishell *shell);
- int	extract_single_metachar(t_minishell *shell);
- int	is_word_char(char c);
- int	split_ops(char *input, char ***segments_out,
+int	env_len(char **env);
+int	handle_heredoc_and_error(char *input, t_minishell *shell);
+int	handle_redirection_append(char *input, t_minishell *shell);
+int	extract_double_metachar(t_minishell *shell);
+int	extract_single_metachar(t_minishell *shell);
+int	is_word_char(char c);
+int	split_ops(char *input, char ***segments_out,
 				char ***ops_out, int *count_out);
- int	execute_group_in_subshell(t_minishell *parent, char *inner);
- int	is_outer_parenthesized(const char *s);
- int	process_token_part(t_minishell *shell, char **token,
+int	execute_group_in_subshell(t_minishell *parent, char *inner);
+int	is_outer_parenthesized(const char *s);
+int	process_token_part(t_minishell *shell, char **token,
 				t_token_quote *first_quote, int *mixed);
 void		execute_buitin(t_minishell *minishell);
 void		ft_cd(t_minishell *mini, int path_allocated, int print_new);
@@ -293,14 +279,14 @@ void		append_literal(char **res, char *src, int len);
 void		cleanup_tokenizer(t_minishell *minishell, int success);
 void		expand_token(t_token *token, t_minishell *mini);
 void		mini_loop(t_minishell *mini);
- void	append_exit_code(char **res, int *i, t_minishell *mini);
- void	append_variable(char **res, char *src, int *i, t_minishell *mini);
- void	process_input(char *input, t_minishell *minishell);
- void	replace_char_inplace(char *s, char find, char replace);
- void	free_split_result(char **segments, char **ops, int count);
- void	exec_paths(char **paths, char *cmd,
+void	append_exit_code(char **res, int *i, t_minishell *mini);
+void	append_variable(char **res, char *src, int *i, t_minishell *mini);
+void	process_input(char *input, t_minishell *minishell);
+void	replace_char_inplace(char *s, char find, char replace);
+void	free_split_result(char **segments, char **ops, int count);
+void	exec_paths(char **paths, char *cmd,
 				t_minishell *mini, char **envir);
- void	run_group_child(t_minishell *parent, char *inner);
+void	run_group_child(t_minishell *parent, char *inner);
 char		*get_env_value(char *name, t_env *env);
 char		*get_filename(int index);
 char		*handle_heredoc(t_command *cmd, char *limiter, int index);
@@ -332,53 +318,56 @@ t_redir		*init_redir(int type, char const *filename);
 t_pipex		*init_pipex(void);
 t_minishell	init_minishell(void);
 
- int	pattern_has_slash(const char *s);
- int	match_class(const char **pp, char c);
- int	match_glob(const char *pat, const char *s);
- int	insert_sorted(char ***arr, size_t *count, size_t *cap, char *s);
+int	pattern_has_slash(const char *s);
+int	match_class(const char **pp, char c);
+int	match_glob(const char *pat, const char *s);
+int	insert_sorted(char ***arr, size_t *count, size_t *cap, char *s);
 
- void	handle_word_token(t_minishell *mini, t_token *token);
+void	handle_word_token(t_minishell *mini, t_token *token);
 
- int	handle_operator(char *input, t_split_state *st, char *op);
+int	handle_operator(char *input, t_split_state *st, char *op);
 
- int	prepare_segments(char *input, char ***segments,
+int	prepare_segments(char *input, char ***segments,
 				char ***ops, int *seg_count);
- void	process_segment(t_minishell *minishell, char *seg);
- void	update_env_status(t_minishell *minishell);
- void	handle_segments(t_minishell *minishell, char **segments,
+void	process_segment(t_minishell *minishell, char *seg);
+void	update_env_status(t_minishell *minishell);
+void	handle_segments(t_minishell *minishell, char **segments,
 				char **ops, int seg_count);
- void	process_input(char *input, t_minishell *minishell);
- void	process_command(t_minishell *minishell, char *seg, char *inner);
+void	process_input(char *input, t_minishell *minishell);
+void	process_command(t_minishell *minishell, char *seg, char *inner);
 
- int	handle_quote_paren(char *input, t_split_state *st);
- int	try_process_operator(char *input, t_split_state *st);
- void	split_loop_and_append(char *input, t_split_state *st);
- int	split_ops(char *input, char ***segments_out,
+int	handle_quote_paren(char *input, t_split_state *st);
+int	try_process_operator(char *input, t_split_state *st);
+void	split_loop_and_append(char *input, t_split_state *st);
+int	split_ops(char *input, char ***segments_out,
 				char ***ops_out, int *count_out);
 
- const char	*init_class(const char *p, char c, int *negate, int *matched);
- const char	*process_class_content(const char *p, char c, int *matched);
+const char	*init_class(const char *p, char c, int *negate, int *matched);
+const char	*process_class_content(const char *p, char c, int *matched);
 
- int	append_ptr(char ***arr, int new_size, int copy_count, char *value);
+int	append_ptr(char ***arr, int new_size, int copy_count, char *value);
 
 int			expand_and_add_glob(char *pattern, t_minishell *mini);
- void	add_results(t_minishell *mini, t_glob_ctx *ctx, size_t idx);
- int	process_dir(t_glob_ctx *ctx, char *pattern, t_minishell *mini);
- int	process_and_insert(t_glob_ctx *ctx, const char *name);
- void	free_matches_recursive(t_glob_ctx *ctx, size_t idx);
- int	open_dir_or_error(t_glob_ctx *ctx, char *pattern, t_minishell *mini);
- int	glob_init(const char *pattern, t_minishell *mini, t_glob_ctx *ctx);
+void	add_results(t_minishell *mini, t_glob_ctx *ctx, size_t idx);
+int	process_dir(t_glob_ctx *ctx, char *pattern, t_minishell *mini);
+int	process_and_insert(t_glob_ctx *ctx, const char *name);
+void	free_matches_recursive(t_glob_ctx *ctx, size_t idx);
+int	open_dir_or_error(t_glob_ctx *ctx, char *pattern, t_minishell *mini);
+int	glob_init(const char *pattern, t_minishell *mini, t_glob_ctx *ctx);
 
-  int	match_glob_star(const char *p, const char *str);
+int	match_glob_star(const char *p, const char *str);
 
- void	split_path(const char *pattern, char **dir_out, char **base_out);
+void	split_path(const char *pattern, char **dir_out, char **base_out);
 
- int	ensure_capacity(char ***arr, size_t *count, size_t *cap);
+int	ensure_capacity(char ***arr, size_t *count, size_t *cap);
 
- char	*join_with_marker(char *s1, char *s2);
- void	remove_marker_inplace(char *s);
- //int parse_exit_code(const char *s, unsigned char *out_code);
- int     parse_exit_code(const char *s, unsigned char *out_code, int i, int neg);
-
+char	*join_with_marker(char *s1, char *s2);
+void	remove_marker_inplace(char *s);
+int	parse_exit_code(const char *s, unsigned char *out_code, int i, int neg);
+void	syntax_error_unexpected(t_minishell *mini, const char *tok);
+int	is_all_digits(const char *s);
+void	parse_red_inout(t_minishell *mini, t_token **token);
+int	ends_with_unquoted_redir(const char *s, int in_sq, int in_dq);
+int	ends_with_unquoted_continuation_op(const char *s);
 
 #endif
