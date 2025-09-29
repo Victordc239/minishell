@@ -6,13 +6,11 @@
 /*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/26 16:13:54 by victor           ###   ########.fr       */
+/*   Updated: 2025/09/29 14:23:41 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
-
-//////////////////////////////////añadido
 
 static void	syntax_error_unexpected(t_minishell *mini, const char *tok)
 {
@@ -178,8 +176,6 @@ static int	ends_with_unquoted_continuation_op(const char *s)
 	return (0);
 }
 
-//////////////////////////////////fin añadido
-
 char	*join_with_marker(char *s1, char *s2)
 {
 	size_t	l1;
@@ -225,42 +221,6 @@ void	remove_marker_inplace(char *s)
 	}
 	s[j] = '\0';
 }
-
-/*
-int	parse_exit_code(const char *s, unsigned char *out_code)
-{
-	unsigned int	r;
-	int				i;
-	int				neg;
-
-	i = 0;
-	neg = 0;
-	if (!s)
-		return (0);
-	if (s[i] == '+' || s[i] == '-')
-	{
-		if (s[i + 1] == '\0')
-			return (0);
-		if (s[i] == '-')
-			neg = 1;
-		i++;
-	}
-	if (!s[i])
-		return (0);
-	r = 0;
-	while (s[i])
-	{
-		if (!ft_isdigit((unsigned char)s[i]))
-			return (0);
-		r = (r * 10 + (s[i] - '0')) & 0xFF;
-		i++;
-	}
-	if (neg)
-		*out_code = (unsigned char)((256 - (r & 0xFF)) & 0xFF);
-	else
-		*out_code = (unsigned char)(r & 0xFF);
-	return (1);
-}*/
 
 int	parse_exit_code(const char *s, unsigned char *out_code, int i, int neg)
 {
@@ -476,33 +436,6 @@ void	free_pipex_data(t_pipex *data)
 	free(data);
 }
 
-/*int	ft_exit(t_minishell *mini)
-{
-	unsigned char	code;
-
-	if (!mini->command_list->argv[1])
-	{
-		free_minishell(mini);
-		exit((unsigned char)g_status);
-	}
-	if (mini->command_list->argv[2])
-	{
-		ft_putstr("exit: too many arguments\n", 2);
-		g_status = 1;
-		return (1);
-	}
-	if (!parse_exit_code(mini->command_list->argv[1], &code))
-	{
-		ft_putstr("exit: ", 2);
-		ft_putstr(mini->command_list->argv[1], 2);
-		ft_putstr(": numeric argument required\n", 2);
-		free_minishell(mini);
-		exit(2);
-	}
-	free_minishell(mini);
-	exit((int)code);
-}*/
-
 int	ft_exit(t_minishell *mini)
 {
 	unsigned char	code;
@@ -529,86 +462,6 @@ int	ft_exit(t_minishell *mini)
 	free_minishell(mini);
 	exit((int)code);
 }
-
-/*void	ft_cd(t_minishell *mini, int path_allocated, int print_new)
-{
-	char	*path;
-	char	*oldpwd_env;
-	char	*prev_cwd;
-	char	*new_cwd;
-
-	if (mini->command_list->argv[1] && mini->command_list->argv[2])
-	{
-		ft_putstr("cd: too many arguments\n", 2);
-		g_status = 1;
-		return ;
-	}
-	path = NULL;
-	if (!mini->command_list->argv[1])
-	{
-		path = get_env_value("HOME", mini->env_list);
-		if (!path)
-		{
-			ft_putstr("cd: HOME not set\n", 2);
-			g_status = 1;
-			return ;
-		}
-		path_allocated = 1;
-	}
-	else if (ft_strcmp(mini->command_list->argv[1], "-") == 0)
-	{
-		oldpwd_env = get_env_value("OLDPWD", mini->env_list);
-		if (!oldpwd_env)
-		{
-			ft_putstr("cd: OLDPWD not set\n", 2);
-			g_status = 1;
-			return ;
-		}
-		path = oldpwd_env;
-		path_allocated = 1;
-		print_new = 1;
-	}
-	else
-		path = mini->command_list->argv[1];
-	prev_cwd = getcwd(NULL, 0);
-	if (!prev_cwd)
-		prev_cwd = get_env_value("PWD", mini->env_list);
-	if (chdir(path) == -1)
-	{
-		perror("cd");
-		g_status = 1;
-		if (path_allocated)
-			free(path);
-		if (prev_cwd)
-			free(prev_cwd);
-		return ;
-	}
-	g_status = 0;
-	new_cwd = getcwd(NULL, 0);
-	if (!new_cwd)
-	{
-		if (path)
-			new_cwd = ft_strdup(path);
-		else
-			new_cwd = ft_strdup("");
-	}
-	if (prev_cwd)
-	{
-		if (!update_node(mini->env_list, "OLDPWD", prev_cwd, 1))
-			add_env_node(mini, "OLDPWD", prev_cwd, 1);
-		free(prev_cwd);
-	}
-	if (!update_node(mini->env_list, "PWD", new_cwd, 1))
-		add_env_node(mini, "PWD", new_cwd, 1);
-	if (print_new)
-	{
-		ft_putstr(new_cwd, 1);
-		ft_putstr("\n", 1);
-	}
-	free(new_cwd);
-	if (path_allocated)
-		free(path);
-}*/
 
 char	*get_cd_path(t_minishell *mini, int *path_allocated, int *print_new)
 {
@@ -1112,29 +965,26 @@ void	free_and_exit(char **args, char **paths, int exit_code)
 		path = create_path(paths[i], cmd);
 		if (!path)
 			free_and_exit(mini->command_list->argv, paths, 0);
-		if (stat(path, &st) == 0)
+		if (stat(path, &st) == 0 && S_ISDIR(st.st_mode))
 		{
-			if (S_ISDIR(st.st_mode))
+			free(path);
+			i++;
+			continue ;
+		}
+		if (stat(path, &st) == 0 && S_ISREG(st.st_mode)
+			&& access(path, X_OK) == 0)
+		{
+			execve(path, mini->command_list->argv, envir);
+			saved_errno = errno;
+			free(path);
+			if (saved_errno == EISDIR)
 			{
-				free(path);
 				i++;
 				continue ;
 			}
-			if (S_ISREG(st.st_mode) && access(path, X_OK) == 0)
-			{
-				execve(path, mini->command_list->argv, envir);
-				saved_errno = errno;
-				free(path);
-				if (saved_errno == EISDIR)
-				{
-					i++;
-					continue ;
-				}
-				check_errno(saved_errno, mini);
-			}
+			check_errno(saved_errno, mini);
 		}
-		free(path);
-		i++;
+		(free(path), i++);
 	}
 }*/
 
@@ -1155,8 +1005,7 @@ void	exec_paths(char **paths, char *cmd, t_minishell *mini, char **envir)
 			free_and_exit(mini->command_list->argv, paths, 0);
 		if (stat(path, &st) == 0 && S_ISDIR(st.st_mode))
 		{
-			free(path);
-			i++;
+			(free(path), i++);
 			continue ;
 		}
 		if (stat(path, &st) == 0 && S_ISREG(st.st_mode)
@@ -1675,10 +1524,7 @@ void	free_struct(t_pipex *data, char *message, int exit_code, int std)
 		(exit_with_error("Missing environment\n", 1, 2), free_minishell(mini),
 			ft_freedoom(envir));
 	path_line = find_execpath(envir);
-	if (path_line && path_line[0] == '\0')
-		(execve(cmd, mini->command_list->argv, envir), perror(cmd),
-			free_minishell(mini), ft_freedoom(envir), exit(127));
-	if (!path_line)
+	if ((path_line && path_line[0] == '\0') || !path_line)
 		(execve(cmd, mini->command_list->argv, envir), perror(cmd),
 			free_minishell(mini), ft_freedoom(envir), exit(127));
 	possible_paths = ft_split(path_line, ':');
@@ -1688,24 +1534,12 @@ void	free_struct(t_pipex *data, char *message, int exit_code, int std)
 	execute_command(mini, possible_paths, envir);
 }*/
 
-void	ft_cmd(t_minishell *mini)
+void	ft_cmd_handle_path_and_paths(t_minishell *mini, char **envir, char *cmd)
 {
-	char			**possible_paths;
-	char			*path_line;
-	char			**envir;
-	char			*cmd;
 	struct stat		st;
+	char			*path_line;
+	char			**possible_paths;
 
-	envir = env_to_array(mini->env_list);
-	if (is_builtin_str(mini->command_list->argv[0]))
-	{
-		cmd = mini->command_list->argv[0];
-		if (cmd && ft_strcmp(cmd, "exit") == 0)
-			(ft_freedoom(envir), ft_exit(mini));
-		execute_buitin_args(mini->command_list->argv, &envir, mini);
-		(ft_freedoom(envir), free_minishell(mini), exit(0));
-	}
-	cmd = mini->command_list->argv[0];
 	if (cmd && ft_strchr(cmd, '/'))
 	{
 		if (stat(cmd, &st) == 0 && S_ISDIR(st.st_mode))
@@ -1731,6 +1565,25 @@ void	ft_cmd(t_minishell *mini)
 			free_minishell(mini), ft_freedoom(envir));
 	execute_command(mini, possible_paths, envir);
 }
+
+void	ft_cmd(t_minishell *mini)
+{
+	char	**envir;
+	char	*cmd;
+
+	envir = env_to_array(mini->env_list);
+	if (is_builtin_str(mini->command_list->argv[0]))
+	{
+		cmd = mini->command_list->argv[0];
+		if (cmd && ft_strcmp(cmd, "exit") == 0)
+			(ft_freedoom(envir), ft_exit(mini));
+		execute_buitin_args(mini->command_list->argv, &envir, mini);
+		(ft_freedoom(envir), free_minishell(mini), exit(0));
+	}
+	cmd = mini->command_list->argv[0];
+	ft_cmd_handle_path_and_paths(mini, envir, cmd);
+}
+//////////////////////////////////////////////////////////////////////////
 
 t_redir	*init_redir(int type, char const *filename)
 {
@@ -1930,21 +1783,6 @@ int	expand_and_add_glob(char *pattern, t_minishell *mini)
 	return (1);
 }
 
-/*void	parse_red_in(t_minishell *mini, t_token **token)
-{
-	if (!(*token)->next || (*token)->type != T_RED_IN)
-	{
-		if (mini->pipex_data)
-		{
-			free_pipex_data(mini->pipex_data);
-			mini->pipex_data = NULL;
-		}
-		mini->curr->redirs = NULL;
-		exit_with_error("syntax error: no infile\n", 1, 2);
-	}
-	add_redir_to_cmd(mini, T_RED_IN, (*token)->next->value);
-	*token = (*token)->next;
-}*/
 void	parse_red_in(t_minishell *mini, t_token **token)
 {
 	t_token	*next;
@@ -1972,21 +1810,6 @@ void	parse_red_in(t_minishell *mini, t_token **token)
 }
 
 /*void	parse_red_out(t_minishell *mini, t_token **token)
-{
-	if (!(*token)->next)
-	{
-		if (mini->pipex_data)
-		{
-			free_pipex_data(mini->pipex_data);
-			mini->pipex_data = NULL;
-		}
-		mini->curr->redirs = NULL;
-		exit_with_error("syntax error: no outfile\n", 1, 2);
-	}
-	add_redir_to_cmd(mini, T_RED_OUT, (*token)->next->value);
-	*token = (*token)->next;
-}*/
-void	parse_red_out(t_minishell *mini, t_token **token)
 {
 	t_token	*next;
 
@@ -2018,8 +1841,47 @@ void	parse_red_out(t_minishell *mini, t_token **token)
 	}
 	add_redir_to_cmd(mini, T_RED_OUT, next->value);
 	*token = next;
+}*/
+
+static t_token	*get_next_valid_outfile(t_minishell *mini, t_token *token)
+{
+	t_token	*next;
+
+	next = token->next;
+	if (!next)
+	{
+		if (mini->pipex_data)
+		{
+			free_pipex_data(mini->pipex_data);
+			mini->pipex_data = NULL;
+		}
+		mini->curr->redirs = NULL;
+		exit_with_error("syntax error: no outfile\n", 1, 2);
+		return (NULL);
+	}
+	if (next->type != T_WORD || !next->value
+		|| ft_strchr("<>|", next->value[0]))
+		return (syntax_error_unexpected(mini, next->value), NULL);
+	if (is_all_digits(next->value) && next->adjacent && next->next
+		&& (next->next->type == T_RED_IN || next->next->type == T_RED_OUT
+			|| next->next->type == T_RED_APPEND || next->next->type == T_HEREDOC
+			|| next->next->type == T_RED_INOUT))
+		return (syntax_error_unexpected(mini, next->value), NULL);
+	return (next);
 }
 
+void	parse_red_out(t_minishell *mini, t_token **token)
+{
+	t_token	*next;
+
+	next = get_next_valid_outfile(mini, *token);
+	if (!next)
+		return ;
+	add_redir_to_cmd(mini, T_RED_OUT, next->value);
+	*token = next;
+}
+
+///////////////////////////////////////////////////////////////
 char	*get_filename(int index)
 {
 	char	*number;
@@ -2077,34 +1939,6 @@ char	*handle_heredoc(t_command *cmd, char *limiter, int index)
 		}
 		mini->curr->redirs = NULL;
 		exit_with_error("heredoc: missing limiter\n", 1, 2);
-	}
-	filename = handle_heredoc(mini->curr, (*token)->next->value,
-			*index);
-	if (!filename)
-	{
-		g_status = 130;
-		mini->curr->is_heredoc = 0;
-		return ;
-	}
-	add_redir_to_cmd(mini, T_HEREDOC, filename);
-	mini->curr->is_heredoc = 1;
-	mini->pipex_data->count_heredoc++;
-	(*index)++;
-	*token = (*token)->next;
-}*/
-void	parse_heredoc(t_minishell *mini, t_token **token, int *index)
-{
-	char	*filename;
-
-	if (!(*token)->next || !(*token)->next->value)
-	{
-		if (mini->pipex_data)
-		{
-			free_pipex_data(mini->pipex_data);
-			mini->pipex_data = NULL;
-		}
-		mini->curr->redirs = NULL;
-		exit_with_error("heredoc: missing limiter\n", 1, 2);
 		return ;
 	}
 	if ((*token)->next->type != T_WORD || !(*token)->next->value
@@ -2126,6 +1960,48 @@ void	parse_heredoc(t_minishell *mini, t_token **token, int *index)
 	(*index)++;
 	*token = (*token)->next;
 }
+*/
+
+static void	process_heredoc_2(t_minishell *mini, t_token **token, int *index)
+{
+	char	*filename;
+
+	filename = handle_heredoc(mini->curr, (*token)->next->value, *index);
+	if (!filename)
+	{
+		g_status = 130;
+		mini->curr->is_heredoc = 0;
+		return ;
+	}
+	add_redir_to_cmd(mini, T_HEREDOC, filename);
+	mini->curr->is_heredoc = 1;
+	mini->pipex_data->count_heredoc++;
+	(*index)++;
+	*token = (*token)->next;
+}
+
+void	parse_heredoc(t_minishell *mini, t_token **token, int *index)
+{
+	if (!(*token)->next || !(*token)->next->value)
+	{
+		if (mini->pipex_data)
+		{
+			free_pipex_data(mini->pipex_data);
+			mini->pipex_data = NULL;
+		}
+		mini->curr->redirs = NULL;
+		exit_with_error("heredoc: missing limiter\n", 1, 2);
+		return ;
+	}
+	if ((*token)->next->type != T_WORD || !(*token)->next->value
+		|| ft_strchr("<>|", (*token)->next->value[0]))
+	{
+		syntax_error_unexpected(mini, (*token)->next->value);
+		return ;
+	}
+	process_heredoc_2(mini, token, index);
+}
+///////////////////////////////////////////////////////////////
 
 t_command	*init_new_command(void)
 {
@@ -2238,23 +2114,6 @@ void	expand_token(t_token *token, t_minishell *mini)
 
 /*void	parse_red_append(t_minishell *mini, t_token **token)
 {
-	if (!(*token)->next)
-	{
-		if (mini->pipex_data)
-		{
-			free_pipex_data(mini->pipex_data);
-			mini->pipex_data = NULL;
-		}
-		mini->curr->redirs = NULL;
-		exit_with_error("syntax error: no outfile\n", 1, 2);
-	}
-	add_redir_to_cmd(mini, T_RED_APPEND, (*token)->next->value);
-	mini->curr->append = 1;
-	*token = (*token)->next;
-}*/
-
-void	parse_red_append(t_minishell *mini, t_token **token)
-{
 	t_token	*next;
 
 	if (!(*token)->next)
@@ -2286,7 +2145,50 @@ void	parse_red_append(t_minishell *mini, t_token **token)
 	add_redir_to_cmd(mini, T_RED_APPEND, next->value);
 	mini->curr->append = 1;
 	*token = next;
+}*/
+
+static t_token	*get_next_token_for_append(t_minishell *mini, t_token **token)
+{
+	t_token	*next;
+
+	if (!(*token)->next)
+	{
+		if (mini->pipex_data)
+		{
+			free_pipex_data(mini->pipex_data);
+			mini->pipex_data = NULL;
+		}
+		mini->curr->redirs = NULL;
+		exit_with_error("syntax error: no outfile\n", 1, 2);
+		return (NULL);
+	}
+	next = (*token)->next;
+	if (next->type != T_WORD || !next->value
+		|| ft_strchr("<>|", next->value[0]))
+		return (syntax_error_unexpected(mini, next->value), NULL);
+	if (is_all_digits(next->value) && next->adjacent && next->next
+		&& (next->next->type == T_RED_IN || next->next->type == T_RED_OUT
+			|| next->next->type == T_RED_APPEND || next->next->type == T_HEREDOC
+			|| next->next->type == T_RED_INOUT))
+	{
+		return (syntax_error_unexpected(mini, next->value), NULL);
+	}
+	return (next);
 }
+
+void	parse_red_append(t_minishell *mini, t_token **token)
+{
+	t_token	*next;
+
+	next = get_next_token_for_append(mini, token);
+	if (!next)
+		return ;
+	add_redir_to_cmd(mini, T_RED_APPEND, next->value);
+	mini->curr->append = 1;
+	*token = next;
+}
+
+////////////////////////////////////////////////////////////////
 
 void	handle_word_token(t_minishell *mini, t_token *token)
 {
@@ -2304,24 +2206,6 @@ void	handle_word_token(t_minishell *mini, t_token *token)
 		add_arg_to_command(mini, token->value);
 }
 
-/*void	process_token(t_minishell *mini, int *index)
-{
-	t_token	*token;
-
-	token = mini->t_list;
-	if (token->type == T_WORD)
-		handle_word_token(mini, token);
-	else if (token->type == T_RED_IN && token->next)
-		parse_red_in(mini, &mini->t_list);
-	else if (token->type == T_RED_OUT && token->next)
-		parse_red_out(mini, &mini->t_list);
-	else if (token->type == T_RED_APPEND && token->next)
-		parse_red_append(mini, &mini->t_list);
-	else if (token->type == T_HEREDOC && token->next)
-		parse_heredoc(mini, &mini->t_list, index);
-	else if (token->type == T_PIPE)
-		mini->curr = NULL;
-}*/
 void	process_token(t_minishell *mini, int *index)
 {
 	t_token	*token;
@@ -2343,25 +2227,6 @@ void	process_token(t_minishell *mini, int *index)
 		mini->curr = NULL;
 }
 
-/*t_command	*parse_commands(t_minishell *mini)
-{
-	int	heredoc_index;
-
-	heredoc_index = 0;
-	mini->head = NULL;
-	mini->curr = NULL;
-	while (mini->t_list)
-	{
-		if (!mini->curr)
-		{
-			mini->curr = init_new_command();
-			add_command_to_list(mini);
-		}
-		process_token(mini, &heredoc_index);
-		mini->t_list = mini->t_list->next;
-	}
-	return (mini->head);
-}*/
 t_command	*parse_commands(t_minishell *mini)
 {
 	int	heredoc_index;
@@ -2384,11 +2249,6 @@ t_command	*parse_commands(t_minishell *mini)
 	return (mini->head);
 }
 
-/*int	is_redir(t_redir *redir)
-{
-	return (redir->type == T_RED_IN || redir->type == T_RED_OUT
-		|| redir->type == T_HEREDOC || redir->type == T_RED_APPEND);
-}*/
 int	is_redir(t_redir *redir)
 {
 	return (redir->type == T_RED_IN || redir->type == T_RED_OUT
@@ -2396,30 +2256,6 @@ int	is_redir(t_redir *redir)
 		|| redir->type == T_RED_INOUT);
 }
 
-/*void	apply_one_redirection(t_minishell *mini, t_redir *redir)
-{
-	int	fd;
-
-	if (redir->type == T_RED_IN || redir->type == T_HEREDOC)
-		fd = open(redir->filename, O_RDONLY);
-	else if (redir->type == T_RED_OUT)
-		fd = open(redir->filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	else
-		fd = open(redir->filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
-	if (fd == -1)
-		(perror(redir->filename), free_minishell(mini), exit(1));
-	if (redir->type == T_RED_IN || redir->type == T_HEREDOC)
-	{
-		if (dup2(fd, STDIN_FILENO) == -1)
-			(perror("dup2"), close(fd), free_minishell(mini), exit(1));
-	}
-	else
-	{
-		if (dup2(fd, STDOUT_FILENO) == -1)
-			(perror("dup2"), close(fd), free_minishell(mini), exit(1));
-	}
-	close(fd);
-}*/
 void	apply_one_redirection(t_minishell *mini, t_redir *redir)
 {
 	int	fd;
@@ -2447,23 +2283,6 @@ void	apply_one_redirection(t_minishell *mini, t_redir *redir)
 	}
 	close(fd);
 }
-
-/*void	apply_redirections(t_minishell *mini)
-{
-	t_redir	*redir;
-
-	redir = mini->command_list->redirs;
-	while (redir)
-	{
-		if (is_redir(redir) && ft_strchr("|'\"", redir->filename[0]))
-		{
-			free_minishell(mini);
-			exit_with_error(SYNTAX_ERROR, 1, 2);
-		}
-		apply_one_redirection(mini, redir);
-		redir = redir->next;
-	}
-}*/
 
 void	apply_redirections(t_minishell *mini)
 {
@@ -2692,45 +2511,7 @@ void	delete_heredoc_files(int n)
 	}
 }
 
-/*void	ft_execute(t_minishell *mini)
-{
-	int		i;
-	t_token	*tokken;
-
-	i = 0;
-	mini->pipex_data = init_pipex();
-	if (!mini->pipex_data)
-		exit_with_error("Error init_pipex\n", 1, 2);
-	mini->pipex_data->builtins = is_builtin(mini);
-	tokken = mini->t_list;
-	mini->command_list = parse_commands(mini);
-	if (g_status == 130)
-	{
-		g_status = -g_status;
-		delete_heredoc_files(mini->pipex_data->count_heredoc);
-		if (mini->pipex_data)
-			free_pipex_data(mini->pipex_data);
-		mini->pipex_data = NULL;
-		mini->t_list = tokken;
-		return ;
-	}
-	mini->t_list = tokken;
-	mini->pipex_data->commands = mini->command_list;
-	mini->pipex_data->n_cmds = count_commands_list(mini);
-	if (mini->pipex_data->n_cmds > 1
-		&& mini->pipex_data->builtins == BUILTIN_PARENT)
-		mini->pipex_data->builtins = NO_BUITIN;
-	mini->pipex_data->pid = malloc(sizeof(pid_t) * mini->pipex_data->n_cmds);
-	if (!mini->pipex_data->pid)
-		exit_with_error("Error malloc pid failed\n", 1, 2);
-	while (i < mini->pipex_data->n_cmds)
-		mini->pipex_data->pid[i++] = -1;
-	execute_pipeline(mini);
-	delete_heredoc_files(mini->pipex_data->count_heredoc);
-	if (mini->pipex_data)
-		free_pipex_data(mini->pipex_data);
-}*/
-
+/*
 void	ft_execute(t_minishell *mini)
 {
 	int		i;
@@ -2778,7 +2559,56 @@ void	ft_execute(t_minishell *mini)
 	delete_heredoc_files(mini->pipex_data->count_heredoc);
 	if (mini->pipex_data)
 		free_pipex_data(mini->pipex_data);
+}*/
+
+static void	ft_execute_helper(t_minishell *mini)
+{
+	int	i;
+
+	i = 0;
+	if (mini->pipex_data->n_cmds > 1
+		&& mini->pipex_data->builtins == BUILTIN_PARENT)
+	{
+		mini->pipex_data->builtins = NO_BUITIN;
+	}
+	mini->pipex_data->pid = malloc(sizeof(pid_t) * mini->pipex_data->n_cmds);
+	if (!mini->pipex_data->pid)
+		exit_with_error("Error malloc pid failed\n", 1, 2);
+	while (i < mini->pipex_data->n_cmds)
+		mini->pipex_data->pid[i++] = -1;
+	execute_pipeline(mini);
+	delete_heredoc_files(mini->pipex_data->count_heredoc);
+	if (mini->pipex_data)
+		free_pipex_data(mini->pipex_data);
 }
+
+void	ft_execute(t_minishell *mini)
+{
+	t_token	*tokken;
+
+	tokken = mini->t_list;
+	mini->pipex_data = init_pipex();
+	if (!mini->pipex_data)
+		exit_with_error("Error init_pipex\n", 1, 2);
+	mini->pipex_data->builtins = is_builtin(mini);
+	mini->command_list = parse_commands(mini);
+	if (g_status == 2 || g_status == 130)
+	{
+		if (g_status == 130)
+			g_status = -g_status;
+		delete_heredoc_files(mini->pipex_data->count_heredoc);
+		if (mini->pipex_data)
+			free_pipex_data(mini->pipex_data);
+		mini->pipex_data = NULL;
+		mini->t_list = tokken;
+		return ;
+	}
+	mini->t_list = tokken;
+	mini->pipex_data->commands = mini->command_list;
+	mini->pipex_data->n_cmds = count_commands_list(mini);
+	ft_execute_helper(mini);
+}
+///////////////////////////////////////////////////////////////////
 
 void	sighandler(int signal)
 {
@@ -2831,123 +2661,6 @@ int	handle_redirection_append(char *input, t_minishell *shell)
 	}
 	return (0);
 }
-
-/*char	*extract_quoted_token(t_minishell *shell)
-{
-	size_t		j;
-	char		quote_char;
-	char		*buf;
-	size_t		len;
-	size_t		pos;
-	size_t		bi;
-	size_t		bufcap;
-	char		*more;
-	char		*tmp;
-	char		*cdup;
-	char		c;
-	char		next;
-
-	quote_char = shell->tokenizer->input[shell->tokenizer->pos];
-	j = shell->tokenizer->pos + 1;
-	len = ft_strlen(shell->tokenizer->input);
-	pos = j;
-	bi = 0;
-	if (len > 16)
-		bufcap = len + 1;
-	else
-		bufcap = 64;
-	buf = malloc(bufcap);
-	if (!buf)
-	{
-		shell->tokenizer->err = 1;
-		return (NULL);
-	}
-	while (1)
-	{
-		if (pos >= ft_strlen(shell->tokenizer->input))
-		{
-			more = readline("> ");
-			if (!more)
-			{
-				free(buf);
-				shell->tokenizer->err = 1;
-				return (NULL);
-			}
-			tmp = ft_strjoin(shell->tokenizer->input, "\n");
-			if (!tmp)
-			{
-				free(more);
-				free(buf);
-				shell->tokenizer->err = 1;
-				return (NULL);
-			}
-			free(shell->tokenizer->input);
-			shell->tokenizer->input = ft_strjoin(tmp, more);
-			free(tmp);
-			if (*more)
-				add_history(more);
-			free(more);
-			continue ;
-		}
-		c = shell->tokenizer->input[pos];
-		if (c == quote_char)
-		{
-			buf[bi] = '\0';
-			shell->tokenizer->prev_type = T_WORD;
-			shell->tokenizer->pos = pos + 1;
-			cdup = ft_strdup(buf);
-			free(buf);
-			return (cdup);
-		}
-		if (quote_char == '"' && c == '\\'
-			&& pos + 1 < ft_strlen(shell->tokenizer->input))
-		{
-			next = shell->tokenizer->input[pos + 1];
-			if (next == '"' || next == '\\' || next == '$' || next == '`')
-			{
-				if (bi + 1 >= bufcap)
-				{
-					bufcap *= 2;
-					buf = realloc(buf, bufcap);
-					if (!buf)
-					{
-						shell->tokenizer->err = 1;
-						return (NULL);
-					}
-				}
-				buf[bi++] = next;
-				pos += 2;
-				continue ;
-			}
-			if (bi + 1 >= bufcap)
-			{
-				bufcap *= 2;
-				buf = realloc(buf, bufcap);
-				if (!buf)
-				{
-					shell->tokenizer->err = 1;
-					return (NULL);
-				}
-			}
-			buf[bi++] = c;
-			pos++;
-			continue ;
-		}
-		if (bi + 1 >= bufcap)
-		{
-			bufcap *= 2;
-			buf = realloc(buf, bufcap);
-			if (!buf)
-			{
-				shell->tokenizer->err = 1;
-				return (NULL);
-			}
-		}
-		buf[bi++] = c;
-		pos++;
-	}
-	return (NULL);
-}*/
 
 char	*extract_quoted_token(t_minishell *shell)
 {
@@ -3085,20 +2798,6 @@ int	is_word_char(char c)
 	return (1);
 }
 
-/*char	*extract_word(t_minishell *shell)
-{
-	int		start;
-	char	*word;
-
-	start = shell->tokenizer->pos;
-	while (is_word_char(shell->tokenizer->input[shell->tokenizer->pos]))
-		shell->tokenizer->pos++;
-	if (shell->tokenizer->pos == start)
-		return (NULL);
-	word = ft_substr(shell->tokenizer->input, start,
-			shell->tokenizer->pos - start);
-	return (word);
-}*/
 char	*extract_word(t_minishell *shell)
 {
 	int		start;
@@ -3183,32 +2882,6 @@ int	process_token_part(t_minishell *shell, char **token,
 	return (1);
 }
 
-/*char	*extract_complex_token(t_minishell *shell)
-{
-	char			*token;
-	t_token_quote	first_quote;
-	int				mixed;
-
-	mixed = 0;
-	first_quote = (t_token_quote)-1;
-	token = ft_strdup("");
-	if (!token)
-	{
-		shell->tokenizer->err = 1;
-		return (NULL);
-	}
-	if (!process_token_part(shell, &token, &first_quote, &mixed))
-	{
-		free(token);
-		return (NULL);
-	}
-	shell->tokenizer->prev_type = T_WORD;
-	if (!mixed && first_quote != (t_token_quote)-1)
-		shell->tokenizer->quote = first_quote;
-	else
-		shell->tokenizer->quote = Q_NONE;
-	return (token);
-}*/
 char	*extract_complex_token(t_minishell *shell)
 {
 	char			*token;
@@ -3238,17 +2911,6 @@ char	*extract_complex_token(t_minishell *shell)
 	return (token);
 }
 
-/*int	extract_double_metachar(t_minishell *shell)
-{
-	char	*input;
-
-	input = shell->tokenizer->input + shell->tokenizer->pos;
-	if (input[0] == '<')
-		return (handle_heredoc_and_error(input, shell));
-	if (input[0] == '>' && input[1] == '>')
-		return (handle_redirection_append(input, shell));
-	return (0);
-}*/
 int	extract_double_metachar(t_minishell *shell)
 {
 	char	*input;
@@ -3299,21 +2961,6 @@ char	*extract_metachar(t_minishell *shell)
 	return (symbol);
 }
 
-/*char	*extract_token(t_minishell *shell)
-{
-	char	*val;
-
-	while (shell->tokenizer->input[shell->tokenizer->pos] == ' '
-		|| shell->tokenizer->input[shell->tokenizer->pos] == '\t')
-		shell->tokenizer->pos++;
-	if (shell->tokenizer->input[shell->tokenizer->pos] == '\0')
-		return (NULL);
-	val = extract_metachar(shell);
-	if (val)
-		return (val);
-	return (extract_complex_token(shell));
-}*/
-
 char	*extract_token(t_minishell *shell)
 {
 	char	*val;
@@ -3331,30 +2978,6 @@ char	*extract_token(t_minishell *shell)
 }
 
 /*t_token	*add_token(t_minishell *minishell, char *value)
-{
-	t_token	*new_node;
-	t_token	*current;
-
-	new_node = malloc(sizeof(t_token));
-	if (!new_node)
-		return (NULL);
-	new_node->value = ft_strdup(value);
-	new_node->type = minishell->tokenizer->prev_type;
-	new_node->quote = Q_NONE;
-	new_node->expansion_type = NO_EXPANSION;
-	new_node->next = NULL;
-	if (minishell->t_list == NULL)
-		minishell->t_list = new_node;
-	else
-	{
-		current = minishell->t_list;
-		while (current->next)
-			current = current->next;
-		current->next = new_node;
-	}
-	return (new_node);
-}*/
-t_token	*add_token(t_minishell *minishell, char *value)
 {
 	t_token	*new_node;
 	t_token	*current;
@@ -3387,7 +3010,53 @@ t_token	*add_token(t_minishell *minishell, char *value)
 		current->next = new_node;
 	}
 	return (new_node);
+}*/
+
+static t_token	*create_token_node(t_minishell *minishell, char *value)
+{
+	t_token	*new_node;
+
+	new_node = malloc(sizeof(t_token));
+	if (!new_node)
+		return (NULL);
+	new_node->value = ft_strdup(value);
+	if (minishell && minishell->tokenizer)
+		new_node->type = minishell->tokenizer->prev_type;
+	else
+		new_node->type = T_WORD;
+	new_node->quote = Q_NONE;
+	new_node->expansion_type = NO_EXPANSION;
+	new_node->next = NULL;
+	if (minishell && minishell->tokenizer)
+	{
+		new_node->adjacent = minishell->tokenizer->last_adjacent;
+		minishell->tokenizer->last_adjacent = 0;
+	}
+	else
+		new_node->adjacent = 0;
+	return (new_node);
 }
+
+t_token	*add_token(t_minishell *minishell, char *value)
+{
+	t_token	*new_node;
+	t_token	*current;
+
+	new_node = create_token_node(minishell, value);
+	if (!new_node)
+		return (NULL);
+	if (minishell->t_list == NULL)
+		minishell->t_list = new_node;
+	else
+	{
+		current = minishell->t_list;
+		while (current->next)
+			current = current->next;
+		current->next = new_node;
+	}
+	return (new_node);
+}
+/////////////////////////////////////////////////////////////////
 
 t_token	*check_expansion(t_minishell *minishell, char *val)
 {
@@ -3435,36 +3104,6 @@ int	tokenize_input(t_minishell *minishell)
 	}
 	return (1);
 }
-
-/*int	init_tokenizer(t_minishell *minishell, char *input)
-{
-	if (minishell->t_list)
-	{
-		free_t_list(minishell->t_list);
-		minishell->t_list = NULL;
-	}
-	if (minishell->tokenizer)
-	{
-		free_tokenizer(minishell->tokenizer);
-		minishell->tokenizer = NULL;
-	}
-	minishell->tokenizer = malloc(sizeof(t_tokenizer));
-	if (!minishell->tokenizer)
-		return (0);
-	minishell->tokenizer->input = ft_strdup(input);
-	if (!minishell->tokenizer->input)
-	{
-		free(minishell->tokenizer);
-		minishell->tokenizer = NULL;
-		return (0);
-	}
-	minishell->tokenizer->pos = 0;
-	minishell->tokenizer->prev_type = T_WORD;
-	minishell->tokenizer->quote = Q_NONE;
-	minishell->tokenizer->err = 0;
-	minishell->tokenizer->last_adjacent = 0;
-	return (1);
-}*/
 
 int	init_tokenizer(t_minishell *minishell, char *input)
 {
@@ -3573,32 +3212,6 @@ char	**copy_env(char **env)
 }
 
 volatile sig_atomic_t	g_status = 0;
-
-/*int	check_syntax_pipes(t_token *tokenizer)
-{
-	if (!tokenizer)
-		return (1);
-	if (tokenizer->type == T_PIPE)
-		return (ft_putstr("minishell: syntax error near unexpected token `|'\n",
-				2), g_status = 2, 0);
-	while (tokenizer)
-	{
-		if (tokenizer->type == T_PIPE)
-			if (!tokenizer->next || tokenizer->next->type == T_PIPE)
-				return (ft_putstr("minishell: syntax error near unexpected token `|'\n", 2), g_status = 2, 0);
-		if (tokenizer->type == T_RED_IN || tokenizer->type == T_RED_OUT
-			|| tokenizer->type == T_RED_APPEND || tokenizer->type == T_HEREDOC)
-		{
-			if (!tokenizer->next || tokenizer->next->type == T_RED_IN || tokenizer->next->type == T_RED_OUT
-				|| tokenizer->next->type == T_RED_APPEND || tokenizer->next->type == T_HEREDOC)	
-				return (ft_putstr("minishell: syntax error near unexpected token `newline'\n", 2), g_status = 2, 0);
-			if (tokenizer->next->type == T_PIPE)
-				return (ft_putstr("minishell: syntax error near unexpected token `|'\n", 2), g_status = 2, 0);
-		}
-		tokenizer = tokenizer->next;
-	}
-	return (1);
-}*/
 
 int	check_syntax_pipes(t_token *tokenizer)
 {
@@ -3946,25 +3559,128 @@ void	free_split_result(char **segments, char **ops, int count)
 /*int	prepare_segments(char *input, char ***segments,
 	char ***ops, int *seg_count)
 {
+	char	*cur_input;
+	char	*more;
+	char	*tmp;
+
 	add_history(input);
 	g_status = 0;
 	*seg_count = 0;
 	*ops = NULL;
 	*segments = NULL;
-	if (!split_ops(input, segments, ops, seg_count))
-	{
-		ft_putstr("minishell: internal split error\n", 2);
+	cur_input = ft_strdup(input);
+	if (!cur_input)
 		return (0);
+	if (ends_with_unquoted_redir(cur_input, 0, 0))
+		return (ft_putstr("minishell: syntax error near unexpected token `newline'\n", 2), 
+			g_status = 2, free(cur_input), 0);
+	if (ends_with_unquoted_continuation_op(cur_input))
+	{
+		while (1)
+		{
+			more = readline("> ");
+			if (!more)
+				return (ft_putstr("minishell: syntax error: unexpected end of file\n", 2),
+				g_status = 2, free(cur_input), 0);
+			add_history(more);
+			tmp = ft_strjoin(cur_input, "\n");
+			free(cur_input);
+			cur_input = ft_strjoin(tmp, more);
+			(free(tmp), free(more));
+			if (!ends_with_unquoted_continuation_op(cur_input))
+				break ;
+		}
 	}
-	return (1);
+	if (!split_ops(cur_input, segments, ops, seg_count))
+		return (ft_putstr("minishell: internal split error\n", 2), g_status = 2,
+			free(cur_input), 0);
+	while (*seg_count >= 2
+		&& (*segments)[*seg_count - 1]
+		&& (*segments)[*seg_count - 1][0] == '\0')
+	{
+		more = readline("> ");
+		if (!more)
+			return (ft_putstr("minishell: syntax error: unexpected end of file\n", 2),
+				free_split_result(*segments, *ops, *seg_count), g_status = 2,
+				free(cur_input), 0);
+		add_history(more);
+		tmp = ft_strjoin(cur_input, "\n");
+		free(cur_input);
+		cur_input = ft_strjoin(tmp, more);
+		(free(tmp), free(more), free_split_result(*segments, *ops, *seg_count));
+		*segments = NULL;
+		*ops = NULL;
+		*seg_count = 0;
+		if (!split_ops(cur_input, segments, ops, seg_count))
+			return (ft_putstr("minishell: internal split error\n", 2),
+				free(cur_input), 0);
+	}
+	return (free(cur_input), 1);
 }*/
 
-int	prepare_segments(char *input, char ***segments,
-	char ***ops, int *seg_count)
+static int	append_more_line(char **cur_input)
 {
-	char	*cur_input;
 	char	*more;
 	char	*tmp;
+
+	more = readline("> ");
+	if (!more)
+	{
+		ft_putstr("minishell: syntax error: unexpected end of file\n", 2);
+		g_status = 2;
+		return (0);
+	}
+	add_history(more);
+	tmp = ft_strjoin(*cur_input, "\n");
+	free(*cur_input);
+	*cur_input = ft_strjoin(tmp, more);
+	free(tmp);
+	free(more);
+	return (1);
+}
+
+static int	handle_continuation(char **cur_input)
+{
+	if (!ends_with_unquoted_continuation_op(*cur_input))
+		return (1);
+	while (ends_with_unquoted_continuation_op(*cur_input))
+	{
+		if (!append_more_line(cur_input))
+			return (0);
+	}
+	return (1);
+}
+
+static int	handle_empty_last_segment(char **cur_input, char ***segments,
+									char ***ops, int *seg_count)
+{
+	while (*seg_count >= 2
+		&& (*segments)[*seg_count - 1]
+		&& (*segments)[*seg_count - 1][0] == '\0')
+	{
+		if (!append_more_line(cur_input))
+		{
+			free_split_result(*segments, *ops, *seg_count);
+			free(*cur_input);
+			return (0);
+		}
+		free_split_result(*segments, *ops, *seg_count);
+		*segments = NULL;
+		*ops = NULL;
+		*seg_count = 0;
+		if (!split_ops(*cur_input, segments, ops, seg_count))
+		{
+			ft_putstr("minishell: internal split error\n", 2);
+			free(*cur_input);
+			return (0);
+		}
+	}
+	return (1);
+}
+
+int	prepare_segments(char *input, char ***segments, char ***ops, int *seg_count)
+{
+	char	*cur_input;
 
 	add_history(input);
 	g_status = 0;
@@ -3979,72 +3695,18 @@ int	prepare_segments(char *input, char ***segments,
 		ft_putstr("minishell: ", 2);
 		ft_putstr("syntax error near unexpected token `newline'\n", 2);
 		g_status = 2;
-		free(cur_input);
-		return (0);
+		return (free(cur_input), 0);
 	}
-	if (ends_with_unquoted_continuation_op(cur_input))
-	{
-		while (1)
-		{
-			more = readline("> ");
-			if (!more)
-			{
-				ft_putstr("minishell: ", 2);
-				ft_putstr("syntax error: unexpected end of file\n", 2);
-				g_status = 2;
-				free(cur_input);
-				return (0);
-			}
-			add_history(more);
-			tmp = ft_strjoin(cur_input, "\n");
-			free(cur_input);
-			cur_input = ft_strjoin(tmp, more);
-			free(tmp);
-			free(more);
-			if (!ends_with_unquoted_continuation_op(cur_input))
-				break ;
-		}
-	}
+	if (!handle_continuation(&cur_input))
+		return (free(cur_input), 0);
 	if (!split_ops(cur_input, segments, ops, seg_count))
-	{
-		ft_putstr("minishell: internal split error\n", 2);
-		g_status = 2;
-		free(cur_input);
+		return (ft_putstr("minishell: internal split error\n", 2),
+			g_status = 2, free(cur_input), 0);
+	if (!handle_empty_last_segment(&cur_input, segments, ops, seg_count))
 		return (0);
-	}
-	while (*seg_count >= 2
-		&& (*segments)[*seg_count - 1]
-		&& (*segments)[*seg_count - 1][0] == '\0')
-	{
-		more = readline("> ");
-		if (!more)
-		{
-			ft_putstr("minishell: syntax error: unexpected end of file\n", 2);
-			free_split_result(*segments, *ops, *seg_count);
-			g_status = 2;
-			free(cur_input);
-			return (0);
-		}
-		add_history(more);
-		tmp = ft_strjoin(cur_input, "\n");
-		free(cur_input);
-		cur_input = ft_strjoin(tmp, more);
-		free(tmp);
-		free(more);
-		free_split_result(*segments, *ops, *seg_count);
-		*segments = NULL;
-		*ops = NULL;
-		*seg_count = 0;
-		if (!split_ops(cur_input, segments, ops, seg_count))
-		{
-			ft_putstr("minishell: internal split error\n", 2);
-			free(cur_input);
-			return (0);
-		}
-	}
-	free(cur_input);
-	return (1);
+	return (free(cur_input), 1);
 }
+///////////////////////////////////////////////////////////////////////////
 
 void	process_segment(t_minishell *minishell, char *seg)
 {
@@ -4113,21 +3775,6 @@ void	handle_segments(t_minishell *minishell,
 	handle_segments(minishell, segments + 1, ops + 1, seg_count - 1);
 }
 
-/*void	process_input(char *input, t_minishell *minishell)
-{
-	char	**segments;
-	char	**ops;
-	int		seg_count;
-
-	segments = NULL;
-	ops = NULL;
-	seg_count = 0;
-	if (!prepare_segments(input, &segments, &ops, &seg_count))
-		return ;
-	handle_segments(minishell, segments, ops, seg_count);
-	free_split_result(segments, ops, seg_count);
-}*/
-
 void	process_input(char *input, t_minishell *minishell)
 {
 	char	**segments;
@@ -4191,7 +3838,7 @@ char	*get_prompt(void)
 	return (pront);
 }
 
-void	mini_loop(t_minishell *mini)
+/*void	mini_loop(t_minishell *mini)
 {
 	int		saved_stdin;
 	char	*prompt;
@@ -4228,7 +3875,53 @@ void	mini_loop(t_minishell *mini)
 		(process_input(input, mini), free(input),
 			dup2(saved_stdin, STDIN_FILENO), close(saved_stdin));
 	}
+}*/
+static int	handle_input_cycle(char *input, t_minishell *mini, int saved_stdin)
+{
+	char	*status_str;
+
+	if (!input)
+	{
+		free_env_list(mini->env_list);
+		free_tokenizer(mini->tokenizer);
+		free_t_list(mini->t_list);
+		return (close(saved_stdin), 0);
+	}
+	if (g_status == 128 + SIGINT)
+	{
+		status_str = ft_itoa(g_status);
+		if (status_str)
+		{
+			if (!update_node(mini->env_list, "?", status_str, 0))
+				add_env_node(mini, "?", status_str, 0);
+			free(status_str);
+		}
+	}
+	if (*input == '\0')
+		return (free(input), dup2(saved_stdin, STDIN_FILENO),
+			close(saved_stdin), 1);
+	(process_input(input, mini), free(input));
+	(dup2(saved_stdin, STDIN_FILENO), close(saved_stdin));
+	return (1);
 }
+
+void	mini_loop(t_minishell *mini)
+{
+	int		saved_stdin;
+	char	*prompt;
+	char	*input;
+
+	while (1)
+	{
+		saved_stdin = dup(STDIN_FILENO);
+		prompt = get_prompt();
+		input = readline(prompt);
+		free(prompt);
+		if (!handle_input_cycle(input, mini, saved_stdin))
+			break ;
+	}
+}
+////////////////////////////////////////////////////////////////
 
 int	main(int argc, char **argv, char **env)
 {
