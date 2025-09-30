@@ -6,13 +6,13 @@
 /*   By: vdiez-cu <vdiez-cu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/29 17:44:14 by vdiez-cu         ###   ########.fr       */
+/*   Updated: 2025/09/30 17:00:24 by vdiez-cu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
 
-static void	syntax_error_unexpected(t_minishell *mini, const char *tok)
+void	syntax_error_unexpected(t_minishell *mini, const char *tok)
 {
 	char	*m;
 	char	*tmp;
@@ -94,7 +94,7 @@ void	parse_red_inout(t_minishell *mini, t_token **token)
 	return (T_EOF);
 }*/
 
-static int	is_all_digits(const char *s)
+int	is_all_digits(const char *s)
 {
 	int	i;
 
@@ -118,7 +118,7 @@ int	ft_isspace(int c)
 	return (0);
 }
 
-static int	ends_with_unquoted_redir(const char *s, int in_sq, int in_dq)
+int	ends_with_unquoted_redir(const char *s, int in_sq, int in_dq)
 {
 	int	i;
 
@@ -147,7 +147,7 @@ static int	ends_with_unquoted_redir(const char *s, int in_sq, int in_dq)
 	return (0);
 }
 
-static int	ends_with_unquoted_continuation_op(const char *s)
+int	ends_with_unquoted_continuation_op(const char *s)
 {
 	int	i;
 	int	in_sq;
@@ -463,7 +463,7 @@ int	ft_exit(t_minishell *mini)
 	exit((int)code);
 }
 
-char	*get_cd_path(t_minishell *mini, int *path_allocated, int *print_new)
+char	*get_cd_path(t_minishell *mini, int *free_path, int *print_new)
 {
 	char	*path;
 
@@ -474,20 +474,20 @@ char	*get_cd_path(t_minishell *mini, int *path_allocated, int *print_new)
 		path = get_env_value("HOME", mini->env_list);
 		if (!path)
 			return (ft_putstr("cd: HOME not set\n", 2), g_status = 1, NULL);
-		return (*path_allocated = 1, path);
+		return (*free_path = 1, path);
 	}
 	if (ft_strcmp(mini->command_list->argv[1], "-") == 0)
 	{
 		path = get_env_value("OLDPWD", mini->env_list);
 		if (!path)
 			return (ft_putstr("cd: OLDPWD not set\n", 2), g_status = 1, NULL);
-		return (*path_allocated = 1, *print_new = 1, path);
+		return (*free_path = 1, *print_new = 1, path);
 	}
 	return (mini->command_list->argv[1]);
 }
 
-char	*perform_cd(t_minishell *mini, char *path,
-				int path_allocated, char **prev_cwd)
+char	*builting_cd(t_minishell *mini, char *path,
+				int free_path, char **prev_cwd)
 {
 	char	*new_cwd;
 
@@ -498,7 +498,7 @@ char	*perform_cd(t_minishell *mini, char *path,
 	{
 		perror("cd");
 		g_status = 1;
-		if (path_allocated)
+		if (free_path)
 			free(path);
 		if (*prev_cwd)
 			free(*prev_cwd);
@@ -516,16 +516,16 @@ char	*perform_cd(t_minishell *mini, char *path,
 	return (new_cwd);
 }
 
-void	ft_cd(t_minishell *mini, int path_allocated, int print_new)
+void	ft_cd(t_minishell *mini, int free_path, int print_new)
 {
 	char	*path;
 	char	*prev_cwd;
 	char	*new_cwd;
 
-	path = get_cd_path(mini, &path_allocated, &print_new);
+	path = get_cd_path(mini, &free_path, &print_new);
 	if (!path)
 		return ;
-	new_cwd = perform_cd(mini, path, path_allocated, &prev_cwd);
+	new_cwd = builting_cd(mini, path, free_path, &prev_cwd);
 	if (!new_cwd)
 		return ;
 	if (prev_cwd)
@@ -539,7 +539,7 @@ void	ft_cd(t_minishell *mini, int path_allocated, int print_new)
 	if (print_new)
 		(ft_putstr(new_cwd, 1), ft_putstr("\n", 1));
 	free(new_cwd);
-	if (path_allocated)
+	if (free_path)
 		free(path);
 }
 
@@ -950,7 +950,7 @@ void	free_and_exit(char **args, char **paths, int exit_code)
 	exit(exit_code);
 }
 
-void	exec_paths(char **paths, char *cmd, t_minishell *mini, char **envir)
+/*void	exec_paths(char **paths, char *cmd, t_minishell *mini, char **envir)
 {
 	int			i;
 	char		*path;
@@ -985,7 +985,49 @@ void	exec_paths(char **paths, char *cmd, t_minishell *mini, char **envir)
 		}
 		(free(path), i++);
 	}
+}*/
+int	try_exec_one_path(char *dir, char *cmd, t_minishell *mini, char **envir)
+{
+	char		*path;
+	struct stat	st;
+	int			saved_errno;
+
+	path = create_path(dir, cmd);
+	if (!path)
+		return (-1);
+	if (stat(path, &st) == 0 && S_ISDIR(st.st_mode))
+		return (free(path), 0);
+	if (stat(path, &st) == 0 && S_ISREG(st.st_mode)
+		&& access(path, X_OK) == 0)
+	{
+		execve(path, mini->command_list->argv, envir);
+		saved_errno = errno;
+		free(path);
+		if (saved_errno == EISDIR)
+			return (0);
+		check_errno(saved_errno, mini);
+		return (0);
+	}
+	return (free(path), 0);
 }
+
+void	exec_paths(char **paths, char *cmd, t_minishell *mini, char **envir)
+{
+	int	i;
+	int	ret;
+
+	if (!paths)
+		return ;
+	i = 0;
+	while (paths[i])
+	{
+		ret = try_exec_one_path(paths[i], cmd, mini, envir);
+		if (ret == -1)
+			free_and_exit(mini->command_list->argv, paths, 0);
+		i++;
+	}
+}
+//////////////////////////////////////////////////////////////
 
 void	execute_command(t_minishell *mini, char **paths, char **envir)
 {
@@ -1452,7 +1494,7 @@ void	free_struct(t_pipex *data, char *message, int exit_code, int std)
 	exit(exit_code);
 }
 
-void	ft_cmd_handle_path_and_paths(t_minishell *mini, char **envir, char *cmd)
+/*void	ft_cmd_handle_path_and_paths(t_minishell *mini, char **envir, char *cmd)
 {
 	struct stat		st;
 	char			*path_line;
@@ -1482,7 +1524,48 @@ void	ft_cmd_handle_path_and_paths(t_minishell *mini, char **envir, char *cmd)
 		(exit_with_error("Error with possible path\n", 1, 2),
 			free_minishell(mini), ft_freedoom(envir));
 	execute_command(mini, possible_paths, envir);
+}*/
+
+void	ft_cmd_handle_paths_and_execute(t_minishell *mini, char **envir,
+		char *cmd)
+{
+	char	*path_line;
+	char	**possible_paths;
+
+	if (!envir || !*envir)
+		(exit_with_error("Missing environment\n", 1, 2),
+			free_minishell(mini), ft_freedoom(envir));
+	path_line = find_execpath(envir);
+	if ((path_line && path_line[0] == '\0') || !path_line)
+		(execve(cmd, mini->command_list->argv, envir), perror(cmd),
+			free_minishell(mini), ft_freedoom(envir), exit(127));
+	possible_paths = ft_split(path_line, ':');
+	if (!possible_paths)
+		(exit_with_error("Error with possible path\n", 1, 2),
+			free_minishell(mini), ft_freedoom(envir));
+	execute_command(mini, possible_paths, envir);
 }
+
+void	ft_cmd_handle_path_and_paths(t_minishell *mini, char **envir, char *cmd)
+{
+	struct stat	st;
+
+	if (cmd && ft_strchr(cmd, '/'))
+	{
+		if (stat(cmd, &st) == 0 && S_ISDIR(st.st_mode))
+			(ft_putstr(cmd, 2), ft_putstr(": Is a directory\n", 2),
+				free_minishell(mini), ft_freedoom(envir), exit(126));
+		if (access(cmd, F_OK) == -1)
+			(perror(cmd), free_minishell(mini), ft_freedoom(envir), exit(127));
+		if (access(cmd, X_OK) == -1)
+			(perror(cmd), free_minishell(mini), ft_freedoom(envir), exit(126));
+		execve(cmd, mini->command_list->argv, envir);
+		check_errno(errno, mini);
+	}
+	ft_cmd_handle_paths_and_execute(mini, envir, cmd);
+}
+
+////////////////////////////////////////////////////
 
 void	ft_cmd(t_minishell *mini)
 {
@@ -2179,7 +2262,7 @@ void	process_and_exec(t_minishell *mini, int i)
 	}
 }
 
-void	execute_last_command(t_minishell *mini, int i)
+/*void	execute_last_command(t_minishell *mini, int i)
 {
 	if (mini->pipex_data->builtins == 1)
 	{
@@ -2206,6 +2289,26 @@ void	execute_last_command(t_minishell *mini, int i)
 				exit(0);
 			ft_cmd(mini);
 		}
+	}
+}*/
+
+void	execute_last_command(t_minishell *mini, int i)
+{
+	(signal(SIGINT, SIG_IGN), mini->pipex_data->pid[i] = fork());
+	if (mini->pipex_data->pid[i] == -1)
+		free_struct(mini->pipex_data, ERR_FORK, 1, 2);
+	if (mini->pipex_data->pid[i] == 0)
+	{
+		(signal(SIGINT, SIG_DFL), signal(SIGQUIT, SIG_DFL));
+		if (mini->pipex_data->prev_fd != -1)
+		{
+			if (dup2(mini->pipex_data->prev_fd, STDIN_FILENO) == -1)
+				exit_with_error("dup2 final prev_fd failed\n", 1, 2);
+		}
+		apply_redirections(mini);
+		if (!mini->command_list->argv || !mini->command_list->argv[0])
+			exit(0);
+		ft_cmd(mini);
 	}
 }
 
@@ -2238,7 +2341,7 @@ void	wait_status(t_pipex *data)
 	}
 }
 
-void	execute_pipeline(t_minishell *mini)
+/*void	execute_pipeline(t_minishell *mini)
 {
 	int	i;
 
@@ -2250,6 +2353,27 @@ void	execute_pipeline(t_minishell *mini)
 		i++;
 	}
 	execute_last_command(mini, i);
+	if (mini->pipex_data->prev_fd != -1)
+		close(mini->pipex_data->prev_fd);
+	wait_status(mini->pipex_data);
+	signal(SIGINT, sighandler);
+}*/
+
+void	execute_pipeline(t_minishell *mini)
+{
+	int	i;
+
+	i = 0;
+	while (mini->command_list && i < mini->pipex_data->n_cmds - 1)
+	{
+		process_and_exec(mini, i);
+		mini->command_list = mini->command_list->next;
+		i++;
+	}
+	if (mini->pipex_data->builtins == 1)
+		(apply_redirections(mini), execute_buitin(mini));
+	else
+		execute_last_command(mini, i);
 	if (mini->pipex_data->prev_fd != -1)
 		close(mini->pipex_data->prev_fd);
 	wait_status(mini->pipex_data);
@@ -2424,140 +2548,16 @@ int	handle_redirection_append(char *input, t_minishell *shell)
 
 /*char	*extract_quoted_token(t_minishell *shell)
 {
-	size_t		j;
+	size_t	j;
 	char		quote_char;
 	char		*buf;
-	size_t		len;
-	size_t		pos;
-	size_t		bi;
-	size_t		bufcap;
-	char		*more;
-	char		*tmp;
+	size_t	len;
+	size_t	pos;
+	size_t	bi;
+	size_t	bufcap;
 	char		*cdup;
 	char		c;
 	char		next;
-
-	quote_char = shell->tokenizer->input[shell->tokenizer->pos];
-	j = shell->tokenizer->pos + 1;
-	len = ft_strlen(shell->tokenizer->input);
-	pos = j;
-	bi = 0;
-	if (len > 16)
-		bufcap = len + 1;
-	else
-		bufcap = 64;
-	buf = malloc(bufcap);
-	if (!buf)
-	{
-		shell->tokenizer->err = 1;
-		return (NULL);
-	}
-	while (1)
-	{
-		if (pos >= ft_strlen(shell->tokenizer->input))
-		{
-			more = readline("> ");
-			if (!more)
-			{
-				free(buf);
-				shell->tokenizer->err = 1;
-				return (NULL);
-			}
-			tmp = ft_strjoin(shell->tokenizer->input, "\n");
-			if (!tmp)
-			{
-				free(more);
-				free(buf);
-				shell->tokenizer->err = 1;
-				return (NULL);
-			}
-			free(shell->tokenizer->input);
-			shell->tokenizer->input = ft_strjoin(tmp, more);
-			free(tmp);
-			if (*more)
-				add_history(more);
-			free(more);
-			continue ;
-		}
-		c = shell->tokenizer->input[pos];
-		if (c == quote_char)
-		{
-			buf[bi] = '\0';
-			shell->tokenizer->prev_type = T_WORD;
-			shell->tokenizer->pos = pos + 1;
-			if (shell->tokenizer->pos < (int)ft_strlen(shell->tokenizer->input)
-				&& ft_strchr("<>|",
-					shell->tokenizer->input[shell->tokenizer->pos]))
-				shell->tokenizer->last_adjacent = 1;
-			else
-				shell->tokenizer->last_adjacent = 0;
-			cdup = ft_strdup(buf);
-			free(buf);
-			return (cdup);
-		}
-		if (quote_char == '"' && c == '\\'
-			&& pos + 1 < ft_strlen(shell->tokenizer->input))
-		{
-			next = shell->tokenizer->input[pos + 1];
-			if (next == '"' || next == '\\' || next == '$' || next == '`')
-			{
-				if (bi + 1 >= bufcap)
-				{
-					bufcap *= 2;
-					buf = realloc(buf, bufcap);
-					if (!buf)
-					{
-						shell->tokenizer->err = 1;
-						return (NULL);
-					}
-				}
-				buf[bi++] = next;
-				pos += 2;
-				continue ;
-			}
-			if (bi + 1 >= bufcap)
-			{
-				bufcap *= 2;
-				buf = realloc(buf, bufcap);
-				if (!buf)
-				{
-					shell->tokenizer->err = 1;
-					return (NULL);
-				}
-			}
-			buf[bi++] = c;
-			pos++;
-			continue ;
-		}
-		if (bi + 1 >= bufcap)
-		{
-			bufcap *= 2;
-			buf = realloc(buf, bufcap);
-			if (!buf)
-			{
-				shell->tokenizer->err = 1;
-				return (NULL);
-			}
-		}
-		buf[bi++] = c;
-		pos++;
-	}
-	return (NULL);
-}*/
-
-char *extract_quoted_token(t_minishell *shell)
-{
-	size_t j;
-	char quote_char;
-	char *buf;
-	size_t len;
-	size_t pos;
-	size_t bi;
-	size_t bufcap;
-	char *cdup;
-	char c;
-	char next;
-
 
 	quote_char = shell->tokenizer->input[shell->tokenizer->pos];
 	j = shell->tokenizer->pos + 1;
@@ -2647,7 +2647,110 @@ char *extract_quoted_token(t_minishell *shell)
 		pos++;
 	}
 	return (NULL);
+}*/
+
+int	init_extract(t_minishell *shell, t_extract *e)
+{
+	e->quote_char = shell->tokenizer->input[shell->tokenizer->pos];
+	e->j = shell->tokenizer->pos + 1;
+	e->len = ft_strlen(shell->tokenizer->input);
+	e->pos = e->j;
+	e->bi = 0;
+	if (e->len > 16)
+		e->bufcap = e->len + 1;
+	else
+		e->bufcap = 64;
+	e->buf = malloc(e->bufcap);
+	if (!e->buf)
+	{
+		shell->tokenizer->err = 1;
+		return (0);
+	}
+	return (1);
 }
+
+int	ensure_capacity_2(t_extract *e, t_minishell *shell)
+{
+	size_t		newcap;
+	char		*newbuf;
+
+	if (e->bi + 1 < e->bufcap)
+		return (1);
+	newcap = e->bufcap * 2;
+	newbuf = malloc(newcap);
+	if (!newbuf)
+	{
+		shell->tokenizer->err = 1;
+		return (0);
+	}
+	ft_memcpy(newbuf, e->buf, e->bi);
+	free(e->buf);
+	e->buf = newbuf;
+	e->bufcap = newcap;
+	return (1);
+}
+
+int	handle_escape_double(t_extract *e, t_minishell *shell)
+{
+	e->next = shell->tokenizer->input[e->pos + 1];
+	if (e->next == '"' || e->next == '\\' || e->next == '$' || e->next == '`')
+	{
+		if (!ensure_capacity_2(e, shell))
+			return (0);
+		e->buf[e->bi++] = e->next;
+		e->pos += 2;
+		return (1);
+	}
+	if (!ensure_capacity_2(e, shell))
+		return (0);
+	e->buf[e->bi++] = '\\';
+	e->pos++;
+	return (1);
+}
+
+char	*finish_and_return(t_extract *e, t_minishell *shell)
+{
+	e->buf[e->bi] = '\0';
+	shell->tokenizer->prev_type = T_WORD;
+	shell->tokenizer->pos = (int)(e->pos + 1);
+	if (shell->tokenizer->pos < (int)ft_strlen(shell->tokenizer->input)
+		&& ft_strchr("<>", shell->tokenizer->input[shell->tokenizer->pos]))
+		shell->tokenizer->last_adjacent = 1;
+	else
+		shell->tokenizer->last_adjacent = 0;
+	e->cdup = ft_strdup(e->buf);
+	free(e->buf);
+	return (e->cdup);
+}
+
+char	*extract_quoted_token(t_minishell *shell)
+{
+	t_extract	e;
+
+	if (!init_extract(shell, &e))
+		return (NULL);
+	while (1)
+	{
+		if (e.pos >= e.len)
+			return (free(e.buf), ft_putstr("Quote expansion error\n", 2),
+				g_status = 2, shell->tokenizer->err = 1, NULL);
+		e.c = shell->tokenizer->input[e.pos];
+		if (e.c == e.quote_char)
+			return (finish_and_return(&e, shell));
+		if (e.quote_char == '"' && e.c == '\\' && e.pos + 1 < e.len)
+		{
+			if (!handle_escape_double(&e, shell))
+				return (NULL);
+			continue ;
+		}
+		if (!ensure_capacity_2(&e, shell))
+			return (NULL);
+		e.buf[e.bi++] = e.c;
+		e.pos++;
+	}
+	return (NULL);
+}
+//////////////////////////////////////////////////////////////
 
 int	is_word_char(char c)
 {
@@ -3560,36 +3663,7 @@ void	process_input(char *input, t_minishell *minishell)
 	free_split_result(segments, ops, seg_count);
 }
 
-/*void	process_command(t_minishell *minishell, char *seg, char *inner)
-{
-	if (!fill_tokens(minishell, seg))
-	{
-		ft_putstr("syntax error: unclosed quote\n", 2);
-		g_status = 2;
-		update_env_status(minishell);
-		free_t_list(minishell->t_list);
-		minishell->t_list = NULL;
-		if (inner)
-			free(inner);
-		return ;
-	}
-	if (!check_syntax_pipes(minishell->t_list))
-	{
-		update_env_status(minishell);
-		free_t_list(minishell->t_list);
-		minishell->t_list = NULL;
-		if (inner)
-			free(inner);
-		return ;
-	}
-	ft_execute(minishell);
-	free_t_list(minishell->t_list);
-	minishell->t_list = NULL;
-	if (inner)
-		free(inner);
-}*/
-
-void process_command(t_minishell *minishell, char *seg, char *inner)
+void	process_command(t_minishell *minishell, char *seg, char *inner)
 {
 	if (!fill_tokens(minishell, seg))
 	{
