@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 14:02:20 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/29 17:49:50 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/09/30 14:48:03 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,7 +221,7 @@ int			execute_group_in_subshell(t_minishell *parent, char *inner);
 int			is_outer_parenthesized(const char *s);
 int			process_token_part(t_minishell *shell, char **token, t_token_quote *first_quote, int *mixed);
 void		execute_buitin(t_minishell *minishell);
-void		ft_cd(t_minishell *mini, int path_allocated, int print_new);
+void		ft_cd(t_minishell *mini, int free_path, int print_new);
 void		ft_cmd(t_minishell *mini);
 void		ft_echo_arg(char **argv);
 void		ft_env(char **argv, char **env);
