@@ -6,7 +6,7 @@
 #    By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/07 14:20:26 by sofernan          #+#    #+#              #
-#    Updated: 2025/07/07 14:20:27 by sofernan         ###   ########.fr        #
+#    Updated: 2025/09/30 19:20:05 by sofernan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ LIBFT_LIB = $(LIBFT_DIR)libft.a
 LDFLAGS = -lreadline
 
 OBJ_DIR = obj
-SRCS = todo.c
+SRCS = 1.c 2.c 3.c 4.c 5.c 6.c 7.c 8.c 9.c 10.c 11.c 12.c 13.c 14.c 15.c 16.c 17.c 18.c 19.c 20.c 21.c 22.c 23.c 24.c 25.c 26.c 27.c 28.c 29.c 30.c extract_quoted_token.c ft_export.c add_env_node.c append_var.c extract_metachar.c free_minishell.c here_doc.c process_export_argument.c
 
 OBJS = $(SRCS:.c=.o)
 OBJ_FILES = $(addprefix $(OBJ_DIR)/, $(OBJS))
