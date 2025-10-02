@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   todo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vdiez-cu <vdiez-cu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/30 17:00:24 by vdiez-cu         ###   ########.fr       */
+/*   Updated: 2025/10/02 11:53:58 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,39 +60,6 @@ void	parse_red_inout(t_minishell *mini, t_token **token)
 	add_redir_to_cmd(mini, T_RED_INOUT, next->value);
 	*token = next;
 }
-
-/*t_token_type	lex_redir(const char **s)		NO BORRAR
-{
-	const char	*p;
-
-	p = *s;
-	if (*p == '<')
-	{
-		if (p[1] == '<')
-		{
-			*s = p + 2;
-			return (T_HEREDOC);
-		}
-		if (p[1] == '>')
-		{
-			*s = p + 2;
-			return (T_RED_INOUT);
-		}
-		*s = p + 1;
-		return (T_RED_IN);
-	}
-	else if (*p == '>')
-	{
-		if (p[1] == '>')
-		{
-			*s = p + 2;
-			return (T_RED_APPEND);
-		}
-		*s = p + 1;
-		return (T_RED_OUT);
-	}
-	return (T_EOF);
-}*/
 
 int	is_all_digits(const char *s)
 {
@@ -785,7 +752,7 @@ int	is_limiter(char *line, char *limiter)
 	return (0);
 }
 
-int	process_heredoc(int fd, char *limiter)
+/*int	process_heredoc(int fd, char *limiter)
 {
 	char	*line;
 
@@ -812,9 +779,52 @@ int	process_heredoc(int fd, char *limiter)
 		free(line);
 	}
 	return (0);
+}*/
+int	process_heredoc(int fd, const char *limiter, t_minishell *mini,
+				t_token_quote quote)
+{
+	char	*line;
+	char	*expanded;
+	size_t	len;
+
+	(void) mini;
+	while (1)
+	{
+		if (g_status == 130)
+			return (130);
+		write(1, "> ", 2);
+		line = get_next_line(0);
+		if (g_status == 130)
+			return (free(line), 130);
+		if (!line)
+		{
+			ft_putstr("heredoc delimited by EOF\n", 2);
+			break ;
+		}
+		len = ft_strlen(line);
+		if (len > 0 && line[len - 1] == '\n')
+			line[len - 1] = '\0';
+		if (ft_strcmp(line, limiter) == 0)
+		{
+			free(line);
+			break ;
+		}
+		if (quote == Q_NONE)
+		{
+			expanded = expand_env_in_str(line, mini);
+			if (!expanded)
+				expanded = ft_strdup("");
+			write(fd, expanded, ft_strlen(expanded));
+			(write(fd, "\n", 1), free(expanded));
+		}
+		else
+			(write(fd, line, ft_strlen(line)), write(fd, "\n", 1));
+		free(line);
+	}
+	return (0);
 }
 
-int	here_doc(char *limiter, char const *filename)
+/*int	here_doc(char *limiter, char const *filename)
 {
 	int	fd;
 	int	save_in;
@@ -831,6 +841,32 @@ int	here_doc(char *limiter, char const *filename)
 	if (!limiter || !*limiter)
 		exit_with_error(SYNTAX_ERROR, 1, 2);
 	result = process_heredoc(fd, limiter);
+	close(fd);
+	if (dup2(save_in, STDIN_FILENO) == -1)
+		ft_putstr("error stdin heredoc\n", 2);
+	close(save_in);
+	signal(SIGINT, sighandler);
+	return (result);
+}*/
+int	here_doc(const char *limiter, const char *filename,
+			t_minishell *mini, t_token_quote quote)
+{
+	int	fd;
+	int	save_in;
+	int	result;
+
+	save_in = dup(STDIN_FILENO);
+	signal(SIGINT, heredoc_signal);
+	fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	if (fd == -1)
+	{
+		dup2(save_in, STDIN_FILENO);
+		close(save_in);
+		return (-1);
+	}
+	if (!limiter || !*limiter)
+		exit_with_error(SYNTAX_ERROR, 1, 2);
+	result = process_heredoc(fd, limiter, mini, quote);
 	close(fd);
 	if (dup2(save_in, STDIN_FILENO) == -1)
 		ft_putstr("error stdin heredoc\n", 2);
@@ -950,42 +986,6 @@ void	free_and_exit(char **args, char **paths, int exit_code)
 	exit(exit_code);
 }
 
-/*void	exec_paths(char **paths, char *cmd, t_minishell *mini, char **envir)
-{
-	int			i;
-	char		*path;
-	struct stat	st;
-	int			saved_errno;
-
-	if (!paths)
-		return ;
-	i = 0;
-	while (paths[i])
-	{
-		path = create_path(paths[i], cmd);
-		if (!path)
-			free_and_exit(mini->command_list->argv, paths, 0);
-		if (stat(path, &st) == 0 && S_ISDIR(st.st_mode))
-		{
-			(free(path), i++);
-			continue ;
-		}
-		if (stat(path, &st) == 0 && S_ISREG(st.st_mode)
-			&& access(path, X_OK) == 0)
-		{
-			execve(path, mini->command_list->argv, envir);
-			saved_errno = errno;
-			free(path);
-			if (saved_errno == EISDIR)
-			{
-				i++;
-				continue ;
-			}
-			check_errno(saved_errno, mini);
-		}
-		(free(path), i++);
-	}
-}*/
 int	try_exec_one_path(char *dir, char *cmd, t_minishell *mini, char **envir)
 {
 	char		*path;
@@ -1027,7 +1027,6 @@ void	exec_paths(char **paths, char *cmd, t_minishell *mini, char **envir)
 		i++;
 	}
 }
-//////////////////////////////////////////////////////////////
 
 void	execute_command(t_minishell *mini, char **paths, char **envir)
 {
@@ -1494,38 +1493,6 @@ void	free_struct(t_pipex *data, char *message, int exit_code, int std)
 	exit(exit_code);
 }
 
-/*void	ft_cmd_handle_path_and_paths(t_minishell *mini, char **envir, char *cmd)
-{
-	struct stat		st;
-	char			*path_line;
-	char			**possible_paths;
-
-	if (cmd && ft_strchr(cmd, '/'))
-	{
-		if (stat(cmd, &st) == 0 && S_ISDIR(st.st_mode))
-			(ft_putstr(cmd, 2), ft_putstr(": Is a directory\n", 2),
-				free_minishell(mini), ft_freedoom(envir), exit(126));
-		if (access(cmd, F_OK) == -1)
-			(perror(cmd), free_minishell(mini), ft_freedoom(envir), exit(127));
-		if (access(cmd, X_OK) == -1)
-			(perror(cmd), free_minishell(mini), ft_freedoom(envir), exit(126));
-		execve(cmd, mini->command_list->argv, envir);
-		check_errno(errno, mini);
-	}
-	if (!envir || !*envir)
-		(exit_with_error("Missing environment\n", 1, 2), free_minishell(mini),
-			ft_freedoom(envir));
-	path_line = find_execpath(envir);
-	if ((path_line && path_line[0] == '\0') || !path_line)
-		(execve(cmd, mini->command_list->argv, envir), perror(cmd),
-			free_minishell(mini), ft_freedoom(envir), exit(127));
-	possible_paths = ft_split(path_line, ':');
-	if (!possible_paths)
-		(exit_with_error("Error with possible path\n", 1, 2),
-			free_minishell(mini), ft_freedoom(envir));
-	execute_command(mini, possible_paths, envir);
-}*/
-
 void	ft_cmd_handle_paths_and_execute(t_minishell *mini, char **envir,
 		char *cmd)
 {
@@ -1565,8 +1532,6 @@ void	ft_cmd_handle_path_and_paths(t_minishell *mini, char **envir, char *cmd)
 	ft_cmd_handle_paths_and_execute(mini, envir, cmd);
 }
 
-////////////////////////////////////////////////////
-
 void	ft_cmd(t_minishell *mini)
 {
 	char	**envir;
@@ -1584,7 +1549,6 @@ void	ft_cmd(t_minishell *mini)
 	cmd = mini->command_list->argv[0];
 	ft_cmd_handle_path_and_paths(mini, envir, cmd);
 }
-//////////////////////////////////////////////////////////////////////////
 
 t_redir	*init_redir(int type, char const *filename)
 {
@@ -1848,7 +1812,6 @@ void	parse_red_out(t_minishell *mini, t_token **token)
 	*token = next;
 }
 
-///////////////////////////////////////////////////////////////
 char	*get_filename(int index)
 {
 	char	*number;
@@ -1867,7 +1830,7 @@ char	*get_filename(int index)
 	return (filename);
 }
 
-char	*handle_heredoc(t_command *cmd, char *limiter, int index)
+/*char	*handle_heredoc(t_command *cmd, char *limiter, int index)
 {
 	char	*filename;
 	int		ret;
@@ -1891,13 +1854,57 @@ char	*handle_heredoc(t_command *cmd, char *limiter, int index)
 	cmd->is_heredoc = 1;
 	cmd->heredoc_file = filename;
 	return (filename);
+}*/
+char	*handle_heredoc(t_minishell *mini, t_command *cmd,
+		t_token *tok, int index)
+{
+	char	*filename;
+	int		ret;
+
+	filename = get_filename(index);
+	if (!filename)
+		exit_with_error("malloc filename failed\n", 1, 2);
+	ret = here_doc(tok->value, filename, mini, tok->quote);
+	if (ret == -1)
+	{
+		free(filename);
+		ft_putstr("Error reading heredoc\n", 2);
+		exit(1);
+	}
+	if (ret == 130)
+	{
+		free(filename);
+		g_status = 130;
+		return (NULL);
+	}
+	cmd->is_heredoc = 1;
+	cmd->heredoc_file = filename;
+	return (filename);
 }
 
-static void	process_heredoc_2(t_minishell *mini, t_token **token, int *index)
+/*void	process_heredoc_2(t_minishell *mini, t_token **token, int *index)
 {
 	char	*filename;
 
 	filename = handle_heredoc(mini->curr, (*token)->next->value, *index);
+	if (!filename)
+	{
+		g_status = 130;
+		mini->curr->is_heredoc = 0;
+		return ;
+	}
+	add_redir_to_cmd(mini, T_HEREDOC, filename);
+	mini->curr->is_heredoc = 1;
+	mini->pipex_data->count_heredoc++;
+	(*index)++;
+	*token = (*token)->next;
+}*/
+
+void	process_heredoc_2(t_minishell *mini, t_token **token, int *index)
+{
+	char	*filename;
+
+	filename = handle_heredoc(mini, mini->curr, (*token)->next, *index);
 	if (!filename)
 	{
 		g_status = 130;
@@ -1932,7 +1939,6 @@ void	parse_heredoc(t_minishell *mini, t_token **token, int *index)
 	}
 	process_heredoc_2(mini, token, index);
 }
-///////////////////////////////////////////////////////////////
 
 t_command	*init_new_command(void)
 {
@@ -2262,36 +2268,6 @@ void	process_and_exec(t_minishell *mini, int i)
 	}
 }
 
-/*void	execute_last_command(t_minishell *mini, int i)
-{
-	if (mini->pipex_data->builtins == 1)
-	{
-		(apply_redirections(mini), execute_buitin(mini));
-		if (mini->pipex_data->prev_fd != -1)
-			close(mini->pipex_data->prev_fd);
-	}
-	else
-	{
-		(signal(SIGINT, SIG_IGN), mini->pipex_data->pid[i] = fork());
-		if (mini->pipex_data->pid[i] == -1)
-			free_struct(mini->pipex_data, ERR_FORK, 1, 2);
-		if (mini->pipex_data->pid[i] == 0)
-		{
-			(signal(SIGINT, SIG_DFL), signal(SIGQUIT, SIG_DFL));
-			if (mini->pipex_data->prev_fd != -1)
-			{
-				if (dup2(mini->pipex_data->prev_fd, STDIN_FILENO) == -1)
-					exit_with_error("dup2 final prev_fd failed\n", 1, 2);
-				close(mini->pipex_data->prev_fd);
-			}
-			apply_redirections(mini);
-			if (!mini->command_list->argv || !mini->command_list->argv[0])
-				exit(0);
-			ft_cmd(mini);
-		}
-	}
-}*/
-
 void	execute_last_command(t_minishell *mini, int i)
 {
 	(signal(SIGINT, SIG_IGN), mini->pipex_data->pid[i] = fork());
@@ -2340,24 +2316,6 @@ void	wait_status(t_pipex *data)
 		count++;
 	}
 }
-
-/*void	execute_pipeline(t_minishell *mini)
-{
-	int	i;
-
-	i = 0;
-	while (mini->command_list && i < mini->pipex_data->n_cmds - 1)
-	{
-		process_and_exec(mini, i);
-		mini->command_list = mini->command_list->next;
-		i++;
-	}
-	execute_last_command(mini, i);
-	if (mini->pipex_data->prev_fd != -1)
-		close(mini->pipex_data->prev_fd);
-	wait_status(mini->pipex_data);
-	signal(SIGINT, sighandler);
-}*/
 
 void	execute_pipeline(t_minishell *mini)
 {
@@ -2546,109 +2504,6 @@ int	handle_redirection_append(char *input, t_minishell *shell)
 	return (0);
 }
 
-/*char	*extract_quoted_token(t_minishell *shell)
-{
-	size_t	j;
-	char		quote_char;
-	char		*buf;
-	size_t	len;
-	size_t	pos;
-	size_t	bi;
-	size_t	bufcap;
-	char		*cdup;
-	char		c;
-	char		next;
-
-	quote_char = shell->tokenizer->input[shell->tokenizer->pos];
-	j = shell->tokenizer->pos + 1;
-	len = ft_strlen(shell->tokenizer->input);
-	pos = j;
-	bi = 0;
-	if (len > 16)
-		bufcap = len + 1;
-	else
-		bufcap = 64;
-	buf = malloc(bufcap);
-	if (!buf)
-	{
-		shell->tokenizer->err = 1;
-		return (NULL);
-	}
-	while (1)
-	{
-		if (pos >= ft_strlen(shell->tokenizer->input))
-		{
-			free(buf);
-			ft_putstr("Quote expansion error\n", 2);
-			g_status = 2;
-			shell->tokenizer->err = 1;
-			return (NULL);
-			}
-		c = shell->tokenizer->input[pos];
-		if (c == quote_char)
-		{
-			buf[bi] = '\0';
-			shell->tokenizer->prev_type = T_WORD;
-			shell->tokenizer->pos = pos + 1;
-			if (shell->tokenizer->pos < (int)ft_strlen(shell->tokenizer->input)
-				&& ft_strchr("<>|", shell->tokenizer->input[shell->tokenizer->pos]))
-				shell->tokenizer->last_adjacent = 1;
-			else
-				shell->tokenizer->last_adjacent = 0;
-			cdup = ft_strdup(buf);
-			free(buf);
-			return (cdup);
-		}
-		if (quote_char == '"' && c == '\\'
-			&& pos + 1 < ft_strlen(shell->tokenizer->input))
-		{
-			next = shell->tokenizer->input[pos + 1];
-			if (next == '"' || next == '\\' || next == '$' || next == '`')
-			{
-				if (bi + 1 >= bufcap)
-				{
-					bufcap *= 2;
-					buf = realloc(buf, bufcap);
-					if (!buf)
-					{
-						shell->tokenizer->err = 1;
-						return (NULL);
-					}
-				}
-				buf[bi++] = next;
-				pos += 2;
-				continue ;
-			}
-			if (bi + 1 >= bufcap)
-			{
-				bufcap *= 2;
-				buf = realloc(buf, bufcap);
-				if (!buf)
-				{
-					shell->tokenizer->err = 1;
-					return (NULL);
-				}
-			}
-			buf[bi++] = c;
-			pos++;
-			continue ;
-		}
-		if (bi + 1 >= bufcap)
-		{
-			bufcap *= 2;
-			buf = realloc(buf, bufcap);
-			if (!buf)
-			{
-				shell->tokenizer->err = 1;
-				return (NULL);
-			}
-		}
-		buf[bi++] = c;
-		pos++;
-	}
-	return (NULL);
-}*/
-
 int	init_extract(t_minishell *shell, t_extract *e)
 {
 	e->quote_char = shell->tokenizer->input[shell->tokenizer->pos];
@@ -2750,7 +2605,6 @@ char	*extract_quoted_token(t_minishell *shell)
 	}
 	return (NULL);
 }
-//////////////////////////////////////////////////////////////
 
 int	is_word_char(char c)
 {
@@ -2988,7 +2842,6 @@ t_token	*add_token(t_minishell *minishell, char *value)
 	}
 	return (new_node);
 }
-/////////////////////////////////////////////////////////////////
 
 t_token	*check_expansion(t_minishell *minishell, char *val)
 {
@@ -3576,7 +3429,6 @@ int	prepare_segments(char *input, char ***segments, char ***ops, int *seg_count)
 		return (0);
 	return (free(cur_input), 1);
 }
-///////////////////////////////////////////////////////////////////////////
 
 void	process_segment(t_minishell *minishell, char *seg)
 {
@@ -3751,7 +3603,6 @@ void	mini_loop(t_minishell *mini)
 			break ;
 	}
 }
-////////////////////////////////////////////////////////////////
 
 int	main(int argc, char **argv, char **env)
 {
