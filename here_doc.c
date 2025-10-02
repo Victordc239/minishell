@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 14:40:52 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/23 13:54:39 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/02 17:28:08 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,41 +22,47 @@ void	heredoc_signal(int sing)
 	close(0);
 }
 
-int	is_limiter(char *line, char *limiter)
+int	write_heredoc_line(int fd, char *line, t_minishell *mini,
+					t_token_quote quote)
 {
-	if (!limiter)
-		return (0);
-	if (ft_strncmp(line, limiter, ft_strlen(limiter)) == 0
-		&& line[ft_strlen(limiter)] == '\n')
-		return (1);
+	char	*expanded;
+
+	if (quote == Q_NONE)
+	{
+		expanded = expand_env_in_str(line, mini);
+		if (!expanded)
+			expanded = ft_strdup("");
+		write(fd, expanded, ft_strlen(expanded));
+		(write(fd, "\n", 1), free(expanded));
+	}
+	else
+		(write(fd, line, ft_strlen(line)), write(fd, "\n", 1));
 	return (0);
 }
 
-int	process_heredoc(int fd, char *limiter)
+int	process_heredoc(int fd, const char *limiter, t_minishell *mini, t_token_quote quote)
 {
 	char	*line;
+	size_t	len;
 
 	while (1)
 	{
 		if (g_status == 130)
 			return (130);
-		write(1, "> ", 2);
-		line = get_next_line(0);
+		(write(1, "> ", 2), line = get_next_line(0));
 		if (g_status == 130)
+			return (free(line), 130);
+		if (!line)
 		{
-			free(line);
-			return (130);
+			ft_putstr("heredoc delimited by EOF\n", 2);
+			return (0);
 		}
-		if (!line || ft_strcmp(line, limiter) == 0 || is_limiter(line, limiter))
-		{
-			if (!line)
-				ft_putstr("heredoc delimited by EOF\n", 2);
-			free(line);
-			break ;
-		}
-		write(fd, line, ft_strlen(line));
-		write(fd, "\n", 1);
-		free(line);
+		len = ft_strlen(line);
+		if (len > 0 && line[len - 1] == '\n')
+			line[len - 1] = '\0';
+		if (ft_strcmp(line, limiter) == 0)
+			return (free(line), 0);
+		(write_heredoc_line(fd, line, mini, quote), free(line));
 	}
 	return (0);
 }
@@ -73,7 +79,7 @@ void	sighandler(int signal)
 	}
 }
 
-int	here_doc(char *limiter, char const *filename)
+int	here_doc(const char *limiter, const char *filename, t_minishell *mini, t_token_quote quote)
 {
 	int	fd;
 	int	save_in;
@@ -84,12 +90,13 @@ int	here_doc(char *limiter, char const *filename)
 	fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (fd == -1)
 	{
+		dup2(save_in, STDIN_FILENO);
 		close(save_in);
 		return (-1);
 	}
 	if (!limiter || !*limiter)
 		exit_with_error(SYNTAX_ERROR, 1, 2);
-	result = process_heredoc(fd, limiter);
+	result = process_heredoc(fd, limiter, mini, quote);
 	close(fd);
 	if (dup2(save_in, STDIN_FILENO) == -1)
 		ft_putstr("error stdin heredoc\n", 2);
