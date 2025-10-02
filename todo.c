@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   todo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
+/*   By: vdiez-cu <vdiez-cu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/02 11:53:58 by victor           ###   ########.fr       */
+/*   Updated: 2025/10/02 17:04:57 by vdiez-cu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -752,35 +752,7 @@ int	is_limiter(char *line, char *limiter)
 	return (0);
 }
 
-/*int	process_heredoc(int fd, char *limiter)
-{
-	char	*line;
-
-	while (1)
-	{
-		if (g_status == 130)
-			return (130);
-		write(1, "> ", 2);
-		line = get_next_line(0);
-		if (g_status == 130)
-		{
-			free(line);
-			return (130);
-		}
-		if (!line || ft_strcmp(line, limiter) == 0 || is_limiter(line, limiter))
-		{
-			if (!line)
-				ft_putstr("heredoc delimited by EOF\n", 2);
-			free(line);
-			break ;
-		}
-		write(fd, line, ft_strlen(line));
-		write(fd, "\n", 1);
-		free(line);
-	}
-	return (0);
-}*/
-int	process_heredoc(int fd, const char *limiter, t_minishell *mini,
+/*int	process_heredoc(int fd, const char *limiter, t_minishell *mini,
 				t_token_quote quote)
 {
 	char	*line;
@@ -822,32 +794,55 @@ int	process_heredoc(int fd, const char *limiter, t_minishell *mini,
 		free(line);
 	}
 	return (0);
+}*/
+
+int	write_heredoc_line(int fd, char *line, t_minishell *mini,
+					t_token_quote quote)
+{
+	char	*expanded;
+
+	if (quote == Q_NONE)
+	{
+		expanded = expand_env_in_str(line, mini);
+		if (!expanded)
+			expanded = ft_strdup("");
+		write(fd, expanded, ft_strlen(expanded));
+		(write(fd, "\n", 1), free(expanded));
+	}
+	else
+		(write(fd, line, ft_strlen(line)), write(fd, "\n", 1));
+	return (0);
 }
 
-/*int	here_doc(char *limiter, char const *filename)
+int	process_heredoc(int fd, const char *limiter, t_minishell *mini,
+				t_token_quote quote)
 {
-	int	fd;
-	int	save_in;
-	int	result;
+	char	*line;
+	size_t	len;
 
-	save_in = dup(STDIN_FILENO);
-	signal(SIGINT, heredoc_signal);
-	fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-	if (fd == -1)
+	while (1)
 	{
-		close(save_in);
-		return (-1);
+		if (g_status == 130)
+			return (130);
+		(write(1, "> ", 2), line = get_next_line(0));
+		if (g_status == 130)
+			return (free(line), 130);
+		if (!line)
+		{
+			ft_putstr("heredoc delimited by EOF\n", 2);
+			return (0);
+		}
+		len = ft_strlen(line);
+		if (len > 0 && line[len - 1] == '\n')
+			line[len - 1] = '\0';
+		if (ft_strcmp(line, limiter) == 0)
+			return (free(line), 0);
+		(write_heredoc_line(fd, line, mini, quote), free(line));
 	}
-	if (!limiter || !*limiter)
-		exit_with_error(SYNTAX_ERROR, 1, 2);
-	result = process_heredoc(fd, limiter);
-	close(fd);
-	if (dup2(save_in, STDIN_FILENO) == -1)
-		ft_putstr("error stdin heredoc\n", 2);
-	close(save_in);
-	signal(SIGINT, sighandler);
-	return (result);
-}*/
+	return (0);
+}
+////////////////////////
+
 int	here_doc(const char *limiter, const char *filename,
 			t_minishell *mini, t_token_quote quote)
 {
@@ -1830,31 +1825,6 @@ char	*get_filename(int index)
 	return (filename);
 }
 
-/*char	*handle_heredoc(t_command *cmd, char *limiter, int index)
-{
-	char	*filename;
-	int		ret;
-
-	filename = get_filename(index);
-	if (!filename)
-		exit_with_error("malloc filename failed\n", 1, 2);
-	ret = here_doc(limiter, filename);
-	if (ret == -1)
-	{
-		free(filename);
-		ft_putstr("Error reading heredoc\n", 2);
-		exit(1);
-	}
-	if (ret == 130)
-	{
-		free(filename);
-		g_status = 130;
-		return (NULL);
-	}
-	cmd->is_heredoc = 1;
-	cmd->heredoc_file = filename;
-	return (filename);
-}*/
 char	*handle_heredoc(t_minishell *mini, t_command *cmd,
 		t_token *tok, int index)
 {
@@ -1881,24 +1851,6 @@ char	*handle_heredoc(t_minishell *mini, t_command *cmd,
 	cmd->heredoc_file = filename;
 	return (filename);
 }
-
-/*void	process_heredoc_2(t_minishell *mini, t_token **token, int *index)
-{
-	char	*filename;
-
-	filename = handle_heredoc(mini->curr, (*token)->next->value, *index);
-	if (!filename)
-	{
-		g_status = 130;
-		mini->curr->is_heredoc = 0;
-		return ;
-	}
-	add_redir_to_cmd(mini, T_HEREDOC, filename);
-	mini->curr->is_heredoc = 1;
-	mini->pipex_data->count_heredoc++;
-	(*index)++;
-	*token = (*token)->next;
-}*/
 
 void	process_heredoc_2(t_minishell *mini, t_token **token, int *index)
 {
