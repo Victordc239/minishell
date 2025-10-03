@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: victor <victor@student.42.fr>              +#+  +:+       +#+         #
+#    By: vdiez-cu <vdiez-cu@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/10/03 11:35:45 by victor            #+#    #+#              #
-#    Updated: 2025/10/03 12:37:04 by victor           ###   ########.fr        #
+#    Created: 2025/10/03 13:55:24 by vdiez-cu          #+#    #+#              #
+#    Updated: 2025/10/03 14:01:27 by vdiez-cu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,7 @@ OBJ_FILES = $(addprefix $(OBJ_DIR)/,$(OBJS))
 
 CC = cc
 RM = rm -f
-CFLAGS = -g -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror
 
 NAME = libft.a
 
@@ -65,12 +65,11 @@ $(OBJ_DIR)/%.o: %.c
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	@echo "\033[1;33mCleaning all .o files...\033[0m"
-	@$(RM) $(OBJ_FILES) > /dev/null 2>&1
+	@$(RM) $(OBJ_FILES)
 	@rm -rf $(OBJ_DIR)
 
 fclean: clean
-	@$(RM) $(NAME) > /dev/null 2>&1
+	@$(RM) $(NAME)
 
 re: fclean all
 
