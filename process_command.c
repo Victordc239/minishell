@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   23.c                                               :+:      :+:    :+:   */
+/*   process_command.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:35:56 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/02 16:29:13 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/03 15:26:24 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ int	fill_tokens(t_minishell *minishell, char *input)
 	if (!init_tokenizer(minishell, input))
 		return (0);
 	success = tokenize_input(minishell);
-
 	if (minishell->tokenizer)
 	{
 		if (minishell->tokenizer->err)

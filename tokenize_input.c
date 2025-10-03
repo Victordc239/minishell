@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:30:35 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/02 17:05:04 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/03 15:38:26 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,8 @@ t_token	*check_expansion(t_minishell *minishell, char *val)
 		return (NULL);
 	new_token->type = minishell->tokenizer->prev_type;
 	new_token->quote = minishell->tokenizer->quote;
-	if (ft_strchr(new_token->value, '\x01') && !ft_strchr(new_token->value, '$'))
+	if (ft_strchr(new_token->value, '\x01')
+		&& !ft_strchr(new_token->value, '$'))
 		remove_marker_inplace(new_token->value);
 	if (new_token->type == T_WORD && new_token->value[0] == '$')
 	{

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   2.c                                                :+:      :+:    :+:   */
+/*   execute_group_in_subshell.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 17:38:09 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/02 17:38:24 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/03 15:29:37 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ t_minishell	init_minishell(void)
 	ft_bzero(&minishell, sizeof(t_minishell));
 	minishell.env_list = NULL;
 	minishell.t_list = NULL;
-	minishell.command_list = NULL;
+	minishell.cmd_list = NULL;
 	minishell.pipex_data = NULL;
 	minishell.head = NULL;
 	minishell.tmp = NULL;

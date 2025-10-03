@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 14:41:08 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/22 15:12:34 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/03 15:29:37 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,14 +100,14 @@ void	ft_export(t_minishell *mini)
 
 	i = 1;
 	error = 0;
-	if (!mini->command_list->argv[1])
+	if (!mini->cmd_list->argv[1])
 	{
 		print_sorted_env(mini);
 		return ;
 	}
-	while (mini->command_list->argv[i])
+	while (mini->cmd_list->argv[i])
 	{
-		error = process_export_argument(mini->command_list->argv[i], mini);
+		error = process_export_argument(mini->cmd_list->argv[i], mini);
 		i++;
 	}
 	g_status = error;

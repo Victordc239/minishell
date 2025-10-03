@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   17.c                                               :+:      :+:    :+:   */
+/*   execute_pipeline.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:07:18 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/02 15:51:36 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/03 15:29:37 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	apply_redirections(t_minishell *mini)
 {
 	t_redir	*redir;
 
-	redir = mini->command_list->redirs;
+	redir = mini->cmd_list->redirs;
 	while (redir)
 	{
 		if ((redir->type == T_RED_IN || redir->type == T_RED_OUT
@@ -74,7 +74,7 @@ void	execute_last_command(t_minishell *mini, int i)
 				exit_with_error("dup2 final prev_fd failed\n", 1, 2);
 		}
 		apply_redirections(mini);
-		if (!mini->command_list->argv || !mini->command_list->argv[0])
+		if (!mini->cmd_list->argv || !mini->cmd_list->argv[0])
 			exit(0);
 		ft_cmd(mini);
 	}
@@ -114,10 +114,10 @@ void	execute_pipeline(t_minishell *mini)
 	int	i;
 
 	i = 0;
-	while (mini->command_list && i < mini->pipex_data->n_cmds - 1)
+	while (mini->cmd_list && i < mini->pipex_data->n_cmds - 1)
 	{
 		process_and_exec(mini, i);
-		mini->command_list = mini->command_list->next;
+		mini->cmd_list = mini->cmd_list->next;
 		i++;
 	}
 	if (mini->pipex_data->builtins == 1)

@@ -6,11 +6,29 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 17:14:17 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/02 13:52:23 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/03 13:43:44 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
+
+char	*get_filename(int index)
+{
+	char	*number;
+	char	*filename;
+	char	*temp;
+
+	number = ft_itoa(index);
+	if (!number)
+		return (NULL);
+	temp = ft_strjoin("minishell_", number);
+	free(number);
+	if (!temp)
+		return (NULL);
+	filename = ft_strjoin(temp, ".temp");
+	free(temp);
+	return (filename);
+}
 
 char	*handle_heredoc(t_minishell *mini, t_command *cmd, t_token *tok, int index)
 {

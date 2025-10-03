@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   3.c                                                :+:      :+:    :+:   */
+/*   execute_buitin.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 14:36:45 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/02 17:24:21 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/03 15:29:37 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,21 +45,21 @@ int	ft_exit(t_minishell *mini)
 {
 	unsigned char	code;
 
-	if (!mini->command_list->argv[1])
+	if (!mini->cmd_list->argv[1])
 	{
 		free_minishell(mini);
 		exit((unsigned char)g_status);
 	}
-	if (mini->command_list->argv[2])
+	if (mini->cmd_list->argv[2])
 	{
 		ft_putstr("exit: too many arguments\n", 2);
 		g_status = 1;
 		return (1);
 	}
-	if (!parse_exit_code(mini->command_list->argv[1], &code, 0, 0))
+	if (!parse_exit_code(mini->cmd_list->argv[1], &code, 0, 0))
 	{
 		ft_putstr("exit: ", 2);
-		ft_putstr(mini->command_list->argv[1], 2);
+		ft_putstr(mini->cmd_list->argv[1], 2);
 		ft_putstr(": numeric argument required\n", 2);
 		free_minishell(mini);
 		exit(2);
@@ -98,33 +98,33 @@ void	ft_unset(t_minishell *mini)
 	int		i;
 
 	i = 1;
-	while (mini->command_list->argv[i])
+	while (mini->cmd_list->argv[i])
 	{
-		remove_env_var(mini->command_list->argv[i], mini);
+		remove_env_var(mini->cmd_list->argv[i], mini);
 		i++;
 	}
 }
 
 /*void	execute_buitin(t_minishell *minishell)
 {
-	if (!ft_strcmp(minishell->command_list->argv[0], "exit"))
+	if (!ft_strcmp(minishell->cmd_list->argv[0], "exit"))
 		ft_exit(minishell);
-	else if (!ft_strcmp(minishell->command_list->argv[0], "cd"))
+	else if (!ft_strcmp(minishell->cmd_list->argv[0], "cd"))
 		ft_cd(minishell);
-	else if (!ft_strcmp(minishell->command_list->argv[0], "unset"))
+	else if (!ft_strcmp(minishell->cmd_list->argv[0], "unset"))
 		ft_unset(minishell);
-	else if (!ft_strcmp(minishell->command_list->argv[0], "export"))
+	else if (!ft_strcmp(minishell->cmd_list->argv[0], "export"))
 		ft_export(minishell);
 }*/
 
 void	execute_buitin(t_minishell *minishell)
 {
-	if (!ft_strcmp(minishell->command_list->argv[0], "exit"))
+	if (!ft_strcmp(minishell->cmd_list->argv[0], "exit"))
 		ft_exit(minishell);
-	else if (!ft_strcmp(minishell->command_list->argv[0], "cd"))
+	else if (!ft_strcmp(minishell->cmd_list->argv[0], "cd"))
 		ft_cd(minishell, 0, 0);
-	else if (!ft_strcmp(minishell->command_list->argv[0], "unset"))
+	else if (!ft_strcmp(minishell->cmd_list->argv[0], "unset"))
 		ft_unset(minishell);
-	else if (!ft_strcmp(minishell->command_list->argv[0], "export"))
+	else if (!ft_strcmp(minishell->cmd_list->argv[0], "export"))
 		ft_export(minishell);
 }

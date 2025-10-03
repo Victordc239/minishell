@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   6.c                                                :+:      :+:    :+:   */
+/*   ft_cmd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 14:33:09 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/01 19:24:04 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/03 15:29:37 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static void	ft_cmd_rest(t_minishell *mini, char **envir, char *cmd)
 	path_line = find_execpath(envir);
 	if ((path_line && path_line[0] == '\0') || !path_line)
 	{
-		execve(cmd, mini->command_list->argv, envir);
+		execve(cmd, mini->cmd_list->argv, envir);
 		perror(cmd);
 		free_minishell(mini);
 		ft_freedoom(envir);
@@ -66,12 +66,12 @@ void	ft_cmd(t_minishell *mini)
 	struct stat	st;
 
 	envir = env_to_array(mini->env_list);
-	cmd = mini->command_list->argv[0];
+	cmd = mini->cmd_list->argv[0];
 	if (is_builtin_str(cmd))
 	{
 		if (cmd && ft_strcmp(cmd, "exit") == 0)
 			(ft_freedoom(envir), ft_exit(mini));
-		(execute_buitin_args(mini->command_list->argv, &envir, mini),
+		(execute_buitin_args(mini->cmd_list->argv, &envir, mini),
 			ft_freedoom(envir), free_minishell(mini), exit(0));
 	}
 	if (cmd && ft_strchr(cmd, '/'))
@@ -83,7 +83,7 @@ void	ft_cmd(t_minishell *mini)
 			(perror(cmd), free_minishell(mini), ft_freedoom(envir), exit(127));
 		if (access(cmd, X_OK) == -1)
 			(perror(cmd), free_minishell(mini), ft_freedoom(envir), exit(126));
-		(execve(cmd, mini->command_list->argv, envir), check_errno(errno, mini));
+		(execve(cmd, mini->cmd_list->argv, envir), check_errno(errno, mini));
 	}
 	ft_cmd_rest(mini, envir, cmd);
 }

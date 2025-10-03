@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   2.c                                                :+:      :+:    :+:   */
+/*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 17:23:37 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/02 17:23:55 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/03 15:41:10 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,26 +16,27 @@ char	*get_cd_path(t_minishell *mini, int *free_path, int *print_new)
 {
 	char	*path;
 
-	if (mini->command_list->argv[1] && mini->command_list->argv[2])
+	if (mini->cmd_list->argv[1] && mini->cmd_list->argv[2])
 		return (ft_putstr("cd: too many arguments\n", 2), g_status = 1, NULL);
-	if (!mini->command_list->argv[1])
+	if (!mini->cmd_list->argv[1])
 	{
 		path = get_env_value("HOME", mini->env_list);
 		if (!path)
 			return (ft_putstr("cd: HOME not set\n", 2), g_status = 1, NULL);
 		return (*free_path = 1, path);
 	}
-	if (ft_strcmp(mini->command_list->argv[1], "-") == 0)
+	if (ft_strcmp(mini->cmd_list->argv[1], "-") == 0)
 	{
 		path = get_env_value("OLDPWD", mini->env_list);
 		if (!path)
 			return (ft_putstr("cd: OLDPWD not set\n", 2), g_status = 1, NULL);
 		return (*free_path = 1, *print_new = 1, path);
 	}
-	return (mini->command_list->argv[1]);
+	return (mini->cmd_list->argv[1]);
 }
 
-char	*builtin_cd(t_minishell *mini, char *path, int free_path, char **prev_cwd)
+char	*builtin_cd(t_minishell *mini, char *path,
+					int free_path, char **prev_cwd)
 {
 	char	*new_cwd;
 

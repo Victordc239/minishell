@@ -3,41 +3,39 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: vdiez-cu <vdiez-cu@student.42.fr>          +#+  +:+       +#+         #
+#    By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/07 14:20:26 by sofernan          #+#    #+#              #
-#    Updated: 2025/10/03 14:07:14 by vdiez-cu         ###   ########.fr        #
+#    Updated: 2025/10/03 15:22:01 by sofernan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
-MAKEFLAGS += --no-print-directory				# elimina estos mensajes: make[1]: Entering directory '/home/vdiez-cu/Desktop/42_Madrid/cursus/mini/libft'
+MAKEFLAGS += --no-print-directory
 
 LIBFT = libft
 LIBFT_DIR = libft/
 LIBFT_LIB = $(LIBFT_DIR)libft.a
-LDFLAGS = -lreadline						# enlaza con la libreria readline
+LDFLAGS = -lreadline
 
 OBJ_DIR = obj
-SRCS = todo.c
+SRCS = process_input.c handle_continuation.c prepare_segments.c execute_buitin.c handle_word_token.c glob_init.c split_loop_and_append.c execute_group_in_subshell.c process_segment.c ft_cd.c execute_command.c ft_cmd.c expand_and_add_glob.c process_and_exec.c execute_pipeline.c get_next_token_part.c tokenize_input.c process_command.c extract_token.c main.c parse_commands.c parse_redir1.c parse_redir2.c parse_heredoc.c ft_execute.c execute_buitin_args.c process_dir.c match_glob.c env_to_array.c free_and_exit.c extract_quoted_token.c ft_export.c add_env_node.c append_var.c extract_metachar.c free_minishell.c here_doc.c process_export_argument.c
 
 OBJS = $(SRCS:.c=.o)
-OBJ_FILES = $(addprefix $(OBJ_DIR)/, $(OBJS))		# antepone obj/ a cada .o, p.e. obj/todo.o
+OBJ_FILES = $(addprefix $(OBJ_DIR)/, $(OBJS))
 
 NAME = minishell
 INCLUDES = -I.
 
-TOTAL_FILES := $(words $(SRCS))				# podemos quitarlo porque es para que salga el porcentaje segun ejecutamos
-COUNT = 0								# podemos quitarlo porque es para que salga el porcentaje segun ejecutamos
+TOTAL_FILES := $(words $(SRCS))
+COUNT = 0
 
 all: $(LIBFT_LIB) $(NAME)
 
 $(LIBFT_LIB):
 	@echo "\033[1;33mCompiling libft...\033[0m"
 	@$(MAKE) -C $(LIBFT_DIR)
-
-# lo de arriba el echo es para que salga en color amarillo: Compiling libft...
 
 $(NAME): $(OBJ_FILES) $(LIBFT_LIB)
 	@$(CC) $(CFLAGS) $(OBJ_FILES) -o $(NAME) $(LIBFT_LIB) $(LDFLAGS)

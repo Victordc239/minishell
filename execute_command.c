@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   5.c                                                :+:      :+:    :+:   */
+/*   execute_command.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 14:41:03 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/01 19:25:07 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/03 15:29:37 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,9 @@ void	check_errno(int err, t_minishell *mini)
 	const char	*cmd;
 
 	cmd = NULL;
-	if (mini && mini->command_list && mini->command_list->argv
-		&& mini->command_list->argv[0])
-		cmd = mini->command_list->argv[0];
+	if (mini && mini->cmd_list && mini->cmd_list->argv
+		&& mini->cmd_list->argv[0])
+		cmd = mini->cmd_list->argv[0];
 	if (cmd)
 		(ft_putstr((char *)cmd, 2), ft_putstr(": ", 2));
 	if (err == EISDIR)
@@ -71,7 +71,7 @@ int	try_exec_one_path(char *dir, char *cmd, t_minishell *mini, char **envir)
 	if (stat(path, &st) == 0 && S_ISREG(st.st_mode)
 		&& access(path, X_OK) == 0)
 	{
-		execve(path, mini->command_list->argv, envir);
+		execve(path, mini->cmd_list->argv, envir);
 		saved_errno = errno;
 		free(path);
 		if (saved_errno == EISDIR)
@@ -95,7 +95,7 @@ void	exec_paths(char **paths, char *cmd, t_minishell *mini, char **envir)
 		ret = try_exec_one_path(paths[i], cmd, mini, envir);
 		if (ret == -1)
 		{
-			ft_freedoom(mini->command_list->argv);
+			ft_freedoom(mini->cmd_list->argv);
 			ft_freedoom(paths);
 			exit(0);
 		}
@@ -110,7 +110,7 @@ void	execute_command(t_minishell *mini, char **paths, char **envir)
 
 	if (!envir || !*envir)
 		free_struct(mini->pipex_data, "Missing environment\n", 1, 2);
-	cmd = mini->command_list->argv[0];
+	cmd = mini->cmd_list->argv[0];
 	if (ft_strchr(cmd, '/'))
 	{
 		if (stat(cmd, &st) == 0 && S_ISDIR(st.st_mode))
@@ -121,7 +121,7 @@ void	execute_command(t_minishell *mini, char **paths, char **envir)
 			free_minishell(mini);
 			exit(126);
 		}
-		execve(cmd, mini->command_list->argv, envir);
+		execve(cmd, mini->cmd_list->argv, envir);
 		check_errno(errno, mini);
 	}
 	exec_paths(paths, cmd, mini, envir);
