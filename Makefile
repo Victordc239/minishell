@@ -3,15 +3,17 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: victor <victor@student.42.fr>              +#+  +:+       +#+         #
+#    By: vdiez-cu <vdiez-cu@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/07 14:20:26 by sofernan          #+#    #+#              #
-#    Updated: 2025/10/03 12:58:05 by victor           ###   ########.fr        #
+#    Updated: 2025/10/03 14:07:14 by vdiez-cu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = cc
-CFLAGS = -g3 -Wall -Wextra -Werror				# podemos quitar el -g3 porque es para debuguear
+CFLAGS = -Wall -Wextra -Werror
+MAKEFLAGS += --no-print-directory				# elimina estos mensajes: make[1]: Entering directory '/home/vdiez-cu/Desktop/42_Madrid/cursus/mini/libft'
+
 LIBFT = libft
 LIBFT_DIR = libft/
 LIBFT_LIB = $(LIBFT_DIR)libft.a
@@ -22,28 +24,23 @@ SRCS = todo.c
 
 OBJS = $(SRCS:.c=.o)
 OBJ_FILES = $(addprefix $(OBJ_DIR)/, $(OBJS))		# antepone obj/ a cada .o, p.e. obj/todo.o
-TEMP_DIR = .temp							# carpeta temporal que podemos borrar porque no sirve y no usamos
 
 NAME = minishell
-INCLUDES = -I. -I includes					# podemos dejarlo asi INCLUDES = -I. porque el -I includes es para una carpeta includes que nosotros no tenemos
+INCLUDES = -I.
 
-TOTAL_FILES := $(words $(SRCS))				# podemos quitarlo porque es para que salga el porcenataje seguen ejecutamos
-COUNT = 0								# podemos quitarlo porque es para que salga el porcenataje seguen ejecutamos
+TOTAL_FILES := $(words $(SRCS))				# podemos quitarlo porque es para que salga el porcentaje segun ejecutamos
+COUNT = 0								# podemos quitarlo porque es para que salga el porcentaje segun ejecutamos
 
-all: $(LIBFT_LIB) $(NAME) $(TEMP_DIR)
+all: $(LIBFT_LIB) $(NAME)
 
 $(LIBFT_LIB):
 	@echo "\033[1;33mCompiling libft...\033[0m"
-	@$(MAKE) -C $(LIBFT_DIR) --no-print-directory
+	@$(MAKE) -C $(LIBFT_DIR)
 
-#lo de arriba el echo es para que salga en color amarillo: Compiling libft...
-# y lo de --no-print-directory es para qeu no salga un mensaje de que entra en la carpeta de libft: make[1]: se entra en el directorio '/home/victor/Escritorio/42_Madrid/cursus/mini/libft'
+# lo de arriba el echo es para que salga en color amarillo: Compiling libft...
 
 $(NAME): $(OBJ_FILES) $(LIBFT_LIB)
-	@ $(CC) $(CFLAGS) $(OBJ_FILES) -o $(NAME) $(LIBFT_LIB) $(LDFLAGS)
-
-$(TEMP_DIR):
-	@mkdir -p $(TEMP_DIR)
+	@$(CC) $(CFLAGS) $(OBJ_FILES) -o $(NAME) $(LIBFT_LIB) $(LDFLAGS)
 
 $(OBJ_DIR)/%.o: %.c
 	@mkdir -p $(dir $@)
@@ -55,14 +52,12 @@ $(OBJ_DIR)/%.o: %.c
 
 clean:
 	@echo "\033[1;33mCleaning all .o files...\033[0m"
-	@rm -rf $(OBJ_DIR) > /dev/null 2>&1
-	@make clean -C $(LIBFT_DIR) > /dev/null 2>&1
+	@rm -rf $(OBJ_DIR)
+	@$(MAKE) -C $(LIBFT_DIR) clean
 
 fclean: clean
-	@rm -rf $(NAME) $(TEMP_DIR) > /dev/null 2>&1
-	@make fclean -C $(LIBFT_DIR) > /dev/null 2>&1
-
-# en fclean en la linea @rm -rf $(NAME) $(TEMP_DIR) > /dev/null 2>&1 podemos dejarlo: @rm -rf $(NAME) > /dev/null 2>&1 porque no usamos esa carpeta para nada
+	@rm -rf $(NAME)
+	@$(MAKE) -C $(LIBFT_DIR) fclean
 
 re: fclean all
 
