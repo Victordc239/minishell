@@ -6,7 +6,7 @@
 #    By: victor <victor@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/07 14:20:26 by sofernan          #+#    #+#              #
-#    Updated: 2025/10/03 12:35:53 by victor           ###   ########.fr        #
+#    Updated: 2025/10/03 12:58:05 by victor           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ SRCS = todo.c
 
 OBJS = $(SRCS:.c=.o)
 OBJ_FILES = $(addprefix $(OBJ_DIR)/, $(OBJS))		# antepone obj/ a cada .o, p.e. obj/todo.o
-TEMP_DIR = .temp							# carpeta temporal
+TEMP_DIR = .temp							# carpeta temporal que podemos borrar porque no sirve y no usamos
 
 NAME = minishell
 INCLUDES = -I. -I includes					# podemos dejarlo asi INCLUDES = -I. porque el -I includes es para una carpeta includes que nosotros no tenemos
@@ -35,6 +35,9 @@ all: $(LIBFT_LIB) $(NAME) $(TEMP_DIR)
 $(LIBFT_LIB):
 	@echo "\033[1;33mCompiling libft...\033[0m"
 	@$(MAKE) -C $(LIBFT_DIR) --no-print-directory
+
+#lo de arriba el echo es para que salga en color amarillo: Compiling libft...
+# y lo de --no-print-directory es para qeu no salga un mensaje de que entra en la carpeta de libft: make[1]: se entra en el directorio '/home/victor/Escritorio/42_Madrid/cursus/mini/libft'
 
 $(NAME): $(OBJ_FILES) $(LIBFT_LIB)
 	@ $(CC) $(CFLAGS) $(OBJ_FILES) -o $(NAME) $(LIBFT_LIB) $(LDFLAGS)
@@ -58,6 +61,8 @@ clean:
 fclean: clean
 	@rm -rf $(NAME) $(TEMP_DIR) > /dev/null 2>&1
 	@make fclean -C $(LIBFT_DIR) > /dev/null 2>&1
+
+# en fclean en la linea @rm -rf $(NAME) $(TEMP_DIR) > /dev/null 2>&1 podemos dejarlo: @rm -rf $(NAME) > /dev/null 2>&1 porque no usamos esa carpeta para nada
 
 re: fclean all
 
