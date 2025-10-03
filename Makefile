@@ -5,131 +5,95 @@
 #                                                     +:+ +:+         +:+      #
 #    By: victor <victor@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/10/03 11:35:45 by victor            #+#    #+#              #
-#    Updated: 2025/10/03 11:39:08 by victor           ###   ########.fr        #
+#    Created: 2025/07/07 14:20:26 by sofernan          #+#    #+#              #
+#    Updated: 2025/10/03 11:35:28 by victor           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-#SRCS = \
-ft_atoi.c \
-ft_bzero.c \
-ft_calloc.c \
-ft_isalnum.c \
-ft_isalpha.c \
-ft_isdigit.c \
-ft_itoa.c \
-ft_memcpy.c \
-ft_memset.c \
-ft_putchar.c \
-ft_putstr.c \
-ft_split.c \
-ft_strchr.c \
-ft_strdup.c \
-ft_strjoin.c \
-ft_strjoin_gnl.c \
-ft_strlen.c \
-ft_strncmp.c \
-ft_strcmp.c \
-ft_substr.c \
-get_next_line.c \
-ft_strcpy.c \
-ft_strcat.c \
-
-#OBJ_DIR = libft_obj
-#OBJS = $(SRCS:.c=.o)
-#OBJ_FILES = $(addprefix $(OBJ_DIR)/,$(OBJS))
-
 #CC = cc
-#RM = rm -f
-#CFLAGS = -g -Wall -Wextra -Werror
+#CFLAGS = -g3 -Wall -Wextra -Werror				# podemos quitar el -g3 porque es para debuguear
+#LIBFT = libft
+#LIBFT_DIR = libft/
+#LIBFT_LIB = $(LIBFT_DIR)libft.a
+#LDFLAGS = -lreadline						# enlaza con la libreria readline
 
-#NAME = libft.a
+#OBJ_DIR = obj
+#SRCS = todo.c
 
-#TOTAL_FILES := $(words $(SRCS))
-#COUNT = 0
+#OBJS = $(SRCS:.c=.o)
+#OBJ_FILES = $(addprefix $(OBJ_DIR)/, $(OBJS))		# antepone obj/ a cada .o, p.e. obj/todo.o
+#TEMP_DIR = .temp							# carpeta temporal
 
-#all: $(OBJ_DIR) $(NAME)
+#NAME = minishell
+#INCLUDES = -I. -I includes					# podemos dejarlo asi INCLUDES = -I. porque el -I includes es para una carpeta includes que nosotros no tenemos
 
-#$(OBJ_DIR):
-#	@mkdir -p $(OBJ_DIR)
+#TOTAL_FILES := $(words $(SRCS))				# podemos quitarlo porque es para que salga el porcenataje seguen ejecutamos
+#COUNT = 0								# podemos quitarlo porque es para que salga el porcenataje seguen ejecutamos
 
-#$(NAME): $(OBJ_FILES)
-#	@ar rcs $(NAME) $(OBJ_FILES)
-#	@echo "\033[1;33mLeaving Libft...\033[0m"
+#all: $(LIBFT_LIB) $(NAME) $(TEMP_DIR)
+
+#$(LIBFT_LIB):
+#	@echo "\033[1;33mCompiling libft...\033[0m"
+#	@$(MAKE) -C $(LIBFT_DIR) --no-print-directory
+
+#$(NAME): $(OBJ_FILES) $(LIBFT_LIB)
+#	@ $(CC) $(CFLAGS) $(OBJ_FILES) -o $(NAME) $(LIBFT_LIB) $(LDFLAGS)
+
+#$(TEMP_DIR):
+#	@mkdir -p $(TEMP_DIR)
 
 #$(OBJ_DIR)/%.o: %.c
 #	@mkdir -p $(dir $@)
+#	@if [ "$(COUNT)" -eq "0" ]; then echo "\033[1;33mCompiling Mini...\033[0m"; fi
 #	$(eval COUNT=$(shell echo $$(( $(COUNT) + 1 ))))
 #	$(eval PERCENT=$(shell echo $$(( $(COUNT) * 100 / $(TOTAL_FILES) ))))
 #	@echo "\033[1;32m[ $(PERCENT)%] Building C object $@\033[0m"
-#	@$(CC) $(CFLAGS) -c $< -o $@
+#	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 #clean:
 #	@echo "\033[1;33mCleaning all .o files...\033[0m"
-#	@$(RM) $(OBJ_FILES) > /dev/null 2>&1
-#	@rm -rf $(OBJ_DIR)
+#	@rm -rf $(OBJ_DIR) > /dev/null 2>&1
+#	@make clean -C $(LIBFT_DIR) > /dev/null 2>&1
 
 #fclean: clean
-#	@$(RM) $(NAME) > /dev/null 2>&1
+#	@rm -rf $(NAME) $(TEMP_DIR) > /dev/null 2>&1
+#	@make fclean -C $(LIBFT_DIR) > /dev/null 2>&1
 
 #re: fclean all
 
 #.PHONY: all clean fclean re
 
-SRCS = \
-ft_atoi.c \
-ft_bzero.c \
-ft_calloc.c \
-ft_isalnum.c \
-ft_isalpha.c \
-ft_isdigit.c \
-ft_itoa.c \
-ft_memcpy.c \
-ft_memset.c \
-ft_putchar.c \
-ft_putstr.c \
-ft_split.c \
-ft_strchr.c \
-ft_strdup.c \
-ft_strjoin.c \
-ft_strjoin_gnl.c \
-ft_strlen.c \
-ft_strncmp.c \
-ft_strcmp.c \
-ft_substr.c \
-get_next_line.c \
-ft_strcpy.c \
-ft_strcat.c
-
-OBJ_DIR = libft_obj
-OBJS = $(SRCS:.c=.o)
-OBJ_FILES = $(SRCS:%.c=$(OBJ_DIR)/%.o)
-
 CC = cc
-RM = rm -f
 CFLAGS = -Wall -Wextra -Werror
 
-NAME = libft.a
+LIBFT_DIR = libft
+LIBFT_LIB = $(LIBFT_DIR)/libft.a
+LDFLAGS = -lreadline
 
-all: $(OBJ_DIR) $(NAME)
+SRCS = todo.c
+OBJS = $(SRCS:.c=.o)
 
-$(OBJ_DIR):
-	mkdir -p $(OBJ_DIR)
+NAME = minishell
+INCLUDES = -I.
 
-$(NAME): $(OBJ_FILES)
-	ar rcs $(NAME) $(OBJ_FILES)
-	echo "libft: archive created -> $(NAME)"
+all: $(LIBFT_LIB) $(NAME)
 
-$(OBJ_DIR)/%.o: %.c
-	mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c $< -o $@
+$(LIBFT_LIB):
+	$(MAKE) -C $(LIBFT_DIR)
+
+$(NAME): $(OBJS) $(LIBFT_LIB)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBFT_LIB) $(LDFLAGS) -o $(NAME)
+
+%.o: %.c
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
-	$(RM) $(OBJ_FILES)
-	rm -rf $(OBJ_DIR)
+	rm -f $(OBJS)
+	$(MAKE) -C $(LIBFT_DIR) clean
 
 fclean: clean
-	$(RM) $(NAME)
+	rm -f $(NAME)
+	$(MAKE) -C $(LIBFT_DIR) fclean
 
 re: fclean all
 
