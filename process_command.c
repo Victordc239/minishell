@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:35:56 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/03 15:26:24 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/06 14:00:44 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,26 +64,6 @@ int	fill_tokens(t_minishell *minishell, char *input)
 	return (success);
 }
 
-void	update_env_status(t_minishell *minishell)
-{
-	char	*status_str;
-	int		status;
-
-	if (g_status < 0)
-	{
-		status = -g_status;
-		g_status = SIGINT;
-	}
-	else
-		status = (int)g_status;
-	status_str = ft_itoa(status);
-	if (status_str)
-	{
-		add_env_node(minishell, "?", status_str, 0);
-		free(status_str);
-	}
-}
-
 int	check_syntax_pipes(t_token *tokenizer)
 {
 	if (!tokenizer)
@@ -111,6 +91,33 @@ int	check_syntax_pipes(t_token *tokenizer)
 		return (0);
 	}
 	return (1);
+}
+
+void	ft_execute(t_minishell *mini)
+{
+	t_token	*tokken;
+
+	tokken = mini->t_list;
+	mini->pipex_data = init_pipex();
+	if (!mini->pipex_data)
+		exit_with_error("Error init_pipex\n", 1, 2);
+	mini->pipex_data->builtins = is_builtin(mini);
+	mini->cmd_list = parse_commands(mini);
+	if (g_status == 2 || g_status == 130)
+	{
+		if (g_status == 130)
+			g_status = -g_status;
+		delete_heredoc_files(mini->pipex_data->count_heredoc);
+		if (mini->pipex_data)
+			free_pipex_data(mini->pipex_data);
+		mini->pipex_data = NULL;
+		mini->t_list = tokken;
+		return ;
+	}
+	mini->t_list = tokken;
+	mini->pipex_data->commands = mini->cmd_list;
+	mini->pipex_data->n_cmds = count_commands_list(mini);
+	ft_execute_helper(mini);
 }
 
 void	process_command(t_minishell *minishell, char *seg, char *inner)

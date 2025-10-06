@@ -6,11 +6,31 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:44:02 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/03 15:42:46 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/06 13:59:25 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
+
+void	update_env_status(t_minishell *minishell)
+{
+	char	*status_str;
+	int		status;
+
+	if (g_status < 0)
+	{
+		status = -g_status;
+		g_status = SIGINT;
+	}
+	else
+		status = (int)g_status;
+	status_str = ft_itoa(status);
+	if (status_str)
+	{
+		add_env_node(minishell, "?", status_str, 0);
+		free(status_str);
+	}
+}
 
 void	handle_segments(t_minishell *minishell, char **segments, char **ops, int seg_count)
 {
