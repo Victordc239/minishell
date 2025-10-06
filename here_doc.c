@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 14:40:52 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/02 17:28:08 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/06 19:13:59 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	heredoc_signal(int sing)
 }
 
 int	write_heredoc_line(int fd, char *line, t_minishell *mini,
-					t_token_quote quote)
+						t_token_quote quote)
 {
 	char	*expanded;
 
@@ -40,7 +40,8 @@ int	write_heredoc_line(int fd, char *line, t_minishell *mini,
 	return (0);
 }
 
-int	process_heredoc(int fd, const char *limiter, t_minishell *mini, t_token_quote quote)
+int	process_heredoc(int fd, const char *limiter, t_minishell *mini,
+						t_token_quote quote)
 {
 	char	*line;
 	size_t	len;
@@ -79,7 +80,8 @@ void	sighandler(int signal)
 	}
 }
 
-int	here_doc(const char *limiter, const char *filename, t_minishell *mini, t_token_quote quote)
+int	here_doc(const char *limiter, const char *filename,
+				t_minishell *mini, t_token_quote quote)
 {
 	int	fd;
 	int	save_in;

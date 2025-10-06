@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 14:42:01 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/02 13:57:32 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/06 19:01:15 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,12 @@ void	syntax_error_unexpected(t_minishell *mini, const char *tok)
 		mini->curr->redirs = NULL;
 	if (!tok || *tok == '\0')
 	{
-		ft_putstr("minishell: ", 2);
+		ft_putstr("mini: ", 2);
 		ft_putstr("syntax error near unexpected token `newline'\n", 2);
 	}
 	else
 	{
-		m = ft_strjoin("minishell: syntax error near unexpected token `", tok);
+		m = ft_strjoin("mini: syntax error near unexpected token `", tok);
 		tmp = ft_strjoin(m, "'\n");
 		free(m);
 		ft_putstr(tmp, 2);
@@ -122,13 +122,3 @@ void	parse_red_inout(t_minishell *mini, t_token **token)
 	add_redir_to_cmd(mini, T_RED_INOUT, next->value);
 	*token = next;
 }
-
-/*process_token
-
-		handle_word_token
-		parse_red_in
-		parse_red_inout
-		parse_red_out
-		parse_red_append
-		parse_heredoc
-*/

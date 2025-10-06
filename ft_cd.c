@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 17:23:37 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/03 15:41:10 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/06 19:15:38 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ char	*get_cd_path(t_minishell *mini, int *free_path, int *print_new)
 }
 
 char	*builtin_cd(t_minishell *mini, char *path,
-					int free_path, char **prev_cwd)
+						int free_path, char **prev_cwd)
 {
 	char	*new_cwd;
 

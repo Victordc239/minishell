@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 17:14:17 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/03 13:43:44 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/06 19:05:04 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ char	*get_filename(int index)
 	return (filename);
 }
 
-char	*handle_heredoc(t_minishell *mini, t_command *cmd, t_token *tok, int index)
+char	*handle_heredoc(t_minishell *mini, t_command *cmd,
+						t_token *tok, int index)
 {
 	char	*filename;
 	int		ret;
@@ -60,7 +61,8 @@ void	process_heredoc_2(t_minishell *mini, t_token **token, int *index)
 {
 	char	*filename;
 
-	filename = handle_heredoc(mini, mini->curr, (*token)->next, *index);
+	filename = handle_heredoc(mini, mini->curr,
+			(*token)->next, *index);
 	if (!filename)
 	{
 		g_status = 130;

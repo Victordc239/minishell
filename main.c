@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   30.c                                               :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/01 16:33:06 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/06 18:48:56 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,20 +99,20 @@ volatile sig_atomic_t	g_status = 0;
 int	main(int argc, char **argv, char **env)
 {
 	char		**my_env;
-	t_minishell	minishell;
+	t_minishell	mini;
 	char		*status_str;
 
 	(void)argv;
 	if (argc != 1)
 		exit_with_error("Too many arguments\n", 1, 1);
-	minishell = init_minishell();
+	mini = init_minishell();
 	my_env = copy_env(env);
-	minishell.env_list = create_env_list(my_env, &minishell);
+	mini.env_list = create_env_list(my_env, &mini);
 	status_str = ft_itoa(g_status);
-	add_env_node(&minishell, "?", status_str, 0);
+	add_env_node(&mini, "?", status_str, 0);
 	ft_freedoom(my_env);
 	free(status_str);
 	do_signal();
-	mini_loop(&minishell);
+	mini_loop(&mini);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 13:58:50 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/06 14:00:54 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/06 18:48:56 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,15 +34,15 @@ int	is_builtin(t_minishell *mini)
 
 	token = mini->t_list;
 	if (!token || !token->value)
-		return (NO_BUITIN);
+		return (-1);
 	if (!ft_strcmp(token->value, "echo") || !ft_strcmp(token->value, "pwd")
 		|| !ft_strcmp(token->value, "env"))
-		return (BUILTIN_CHILD);
+		return (0);
 	else if (!ft_strcmp(token->value, "cd") || !ft_strcmp(token->value, "exit")
 		|| !ft_strcmp(token->value, "export") || !ft_strcmp(token->value,
 			"unset"))
-		return (BUILTIN_PARENT);
-	return (NO_BUITIN);
+		return (1);
+	return (-1);
 }
 
 int	count_commands_list(t_minishell *mini)
@@ -84,11 +84,12 @@ void	ft_execute_helper(t_minishell *mini)
 
 	i = 0;
 	if (mini->pipex_data->n_cmds > 1
-		&& mini->pipex_data->builtins == BUILTIN_PARENT)
+		&& mini->pipex_data->builtins == 1)
 	{
-		mini->pipex_data->builtins = NO_BUITIN;
+		mini->pipex_data->builtins = -1;
 	}
-	mini->pipex_data->pid = malloc(sizeof(pid_t) * mini->pipex_data->n_cmds);
+	mini->pipex_data->pid = malloc(sizeof(pid_t)
+			* mini->pipex_data->n_cmds);
 	if (!mini->pipex_data->pid)
 		exit_with_error("Error malloc pid failed\n", 1, 2);
 	while (i < mini->pipex_data->n_cmds)

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   20.c                                               :+:      :+:    :+:   */
+/*   get_next_token_part.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:24:25 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/30 19:18:26 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/06 19:34:59 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,52 +25,52 @@ int	is_word_char(char c)
 	return (1);
 }
 
-char	*extract_word(t_minishell *shell)
+char	*extract_word(t_minishell *mini)
 {
 	int		start;
 	char	*word;
 
-	start = shell->tokenizer->pos;
-	while (is_word_char(shell->tokenizer->input[shell->tokenizer->pos]))
-		shell->tokenizer->pos++;
-	if (shell->tokenizer->pos == start)
+	start = mini->tokenizer->pos;
+	while (is_word_char(mini->tokenizer->input[mini->tokenizer->pos]))
+		mini->tokenizer->pos++;
+	if (mini->tokenizer->pos == start)
 		return (NULL);
-	word = ft_substr(shell->tokenizer->input, start,
-			shell->tokenizer->pos - start);
-	shell->tokenizer->last_adjacent = 0;
-	if (shell->tokenizer->pos < (int)ft_strlen(shell->tokenizer->input)
-		&& ft_strchr("<>|", shell->tokenizer->input[shell->tokenizer->pos]))
-		shell->tokenizer->last_adjacent = 1;
+	word = ft_substr(mini->tokenizer->input, start,
+			mini->tokenizer->pos - start);
+	mini->tokenizer->last_adjacent = 0;
+	if (mini->tokenizer->pos < (int)ft_strlen(mini->tokenizer->input)
+		&& ft_strchr("<>|", mini->tokenizer->input[mini->tokenizer->pos]))
+		mini->tokenizer->last_adjacent = 1;
 	else
-		shell->tokenizer->last_adjacent = 0;
+		mini->tokenizer->last_adjacent = 0;
 	return (word);
 }
 
-char	*get_next_token_part(t_minishell *shell)
+char	*get_next_token_part(t_minishell *mini)
 {
 	char	*temp;
 
-	if (shell->tokenizer->input[shell->tokenizer->pos] == '$'
-		&& shell->tokenizer->input[shell->tokenizer->pos + 1] == '"')
+	if (mini->tokenizer->input[mini->tokenizer->pos] == '$'
+		&& mini->tokenizer->input[mini->tokenizer->pos + 1] == '"')
 	{
-		shell->tokenizer->pos++;
-		shell->tokenizer->quote = Q_DOUBLE;
-		return (extract_quoted_token(shell));
+		mini->tokenizer->pos++;
+		mini->tokenizer->quote = Q_DOUBLE;
+		return (extract_quoted_token(mini));
 	}
-	if (shell->tokenizer->input[shell->tokenizer->pos] == '\'')
+	if (mini->tokenizer->input[mini->tokenizer->pos] == '\'')
 	{
-		shell->tokenizer->quote = Q_SINGLE;
-		temp = extract_quoted_token(shell);
+		mini->tokenizer->quote = Q_SINGLE;
+		temp = extract_quoted_token(mini);
 	}
-	else if (shell->tokenizer->input[shell->tokenizer->pos] == '"')
+	else if (mini->tokenizer->input[mini->tokenizer->pos] == '"')
 	{
-		shell->tokenizer->quote = Q_DOUBLE;
-		temp = extract_quoted_token(shell);
+		mini->tokenizer->quote = Q_DOUBLE;
+		temp = extract_quoted_token(mini);
 	}
 	else
 	{
-		temp = extract_word(shell);
-		shell->tokenizer->quote = Q_NONE;
+		temp = extract_word(mini);
+		mini->tokenizer->quote = Q_NONE;
 	}
 	return (temp);
 }

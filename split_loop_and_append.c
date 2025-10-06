@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   25.c                                               :+:      :+:    :+:   */
+/*   split_loop_and_append.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:43:56 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/02 17:17:17 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/06 16:33:23 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,13 +64,13 @@ int	append_ptr(char ***arr, int new_size, int copy_count, char *value)
 
 int	handle_operator(char *input, t_split_state *st, char *op)
 {
-	char	*seg;
+	char	*segment;
 	char	*trimmed;
 	char	*to_add;
 
-	seg = ft_substr(input, st->start, st->pos - st->start);
-	trimmed = trim_whitespace(seg);
-	free(seg);
+	segment = ft_substr(input, st->start, st->pos - st->start);
+	trimmed = trim_whitespace(segment);
+	free(segment);
 	if (trimmed)
 		to_add = trimmed;
 	else
@@ -105,7 +105,7 @@ int	try_process_operator(char *input, t_split_state *st)
 
 void	split_loop_and_append(char *input, t_split_state *st)
 {
-	char	*seg;
+	char	*segment;
 	char	*trimmed;
 
 	while (st->pos < st->len)
@@ -116,9 +116,9 @@ void	split_loop_and_append(char *input, t_split_state *st)
 			continue ;
 		st->pos++;
 	}
-	seg = ft_substr(input, st->start, st->len - st->start);
-	trimmed = trim_whitespace(seg);
-	free(seg);
+	segment = ft_substr(input, st->start, st->len - st->start);
+	trimmed = trim_whitespace(segment);
+	free(segment);
 	if (trimmed == NULL)
 		trimmed = ft_strdup("");
 	if (!append_ptr(&st->segments, st->seg_count + 1,

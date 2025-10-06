@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   27.c                                               :+:      :+:    :+:   */
+/*   process_segment.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:44:09 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/02 17:38:16 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/06 18:48:56 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,24 +86,24 @@ char	*strip_outer_parentheses(char *s, int *removed)
 	return (cur);
 }
 
-void	process_segment(t_minishell *minishell, char *seg)
+void	process_segment(t_minishell *mini, char *segment)
 {
 	char	*inner;
 	int		is_group;
 
 	is_group = 0;
-	if (!seg || *seg == '\0')
+	if (!segment || *segment == '\0')
 		return ;
-	inner = strip_outer_parentheses(seg, &is_group);
+	inner = strip_outer_parentheses(segment, &is_group);
 	if (is_group)
 	{
 		if (inner)
-			execute_group_in_subshell(minishell, inner);
+			execute_subshell(mini, inner);
 		else
-			execute_group_in_subshell(minishell, "");
+			execute_subshell(mini, "");
 		if (inner)
 			free(inner);
 	}
 	else
-		process_command(minishell, seg, inner);
+		process_command(mini, segment, inner);
 }

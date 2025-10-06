@@ -6,60 +6,60 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:35:56 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/06 14:00:44 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/06 18:48:56 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
 
-int	init_tokenizer(t_minishell *minishell, char *input)
+int	init_tokenizer(t_minishell *mini, char *input)
 {
-	if (minishell->t_list)
+	if (mini->t_list)
 	{
-		free_t_list(minishell->t_list);
-		minishell->t_list = NULL;
+		free_t_list(mini->t_list);
+		mini->t_list = NULL;
 	}
-	if (minishell->tokenizer)
-		(free_tokenizer(minishell->tokenizer), minishell->tokenizer = NULL);
-	minishell->tokenizer = malloc(sizeof(t_tokenizer));
-	if (!minishell->tokenizer)
+	if (mini->tokenizer)
+		(free_tokenizer(mini->tokenizer), mini->tokenizer = NULL);
+	mini->tokenizer = malloc(sizeof(t_tokenizer));
+	if (!mini->tokenizer)
 		return (0);
-	minishell->tokenizer->input = ft_strdup(input);
-	if (!minishell->tokenizer->input)
+	mini->tokenizer->input = ft_strdup(input);
+	if (!mini->tokenizer->input)
 	{
-		free(minishell->tokenizer);
-		minishell->tokenizer = NULL;
+		free(mini->tokenizer);
+		mini->tokenizer = NULL;
 		return (0);
 	}
-	minishell->tokenizer->pos = 0;
-	minishell->tokenizer->prev_type = T_WORD;
-	minishell->tokenizer->quote = Q_NONE;
-	minishell->tokenizer->err = 0;
-	minishell->tokenizer->last_adjacent = 0;
+	mini->tokenizer->pos = 0;
+	mini->tokenizer->prev_type = T_WORD;
+	mini->tokenizer->quote = Q_NONE;
+	mini->tokenizer->err = 0;
+	mini->tokenizer->last_adjacent = 0;
 	return (1);
 }
 
-int	fill_tokens(t_minishell *minishell, char *input)
+int	fill_tokens(t_minishell *mini, char *input)
 {
 	int	success;
 
 	success = 1;
-	if (!init_tokenizer(minishell, input))
+	if (!init_tokenizer(mini, input))
 		return (0);
-	success = tokenize_input(minishell);
-	if (minishell->tokenizer)
+	success = tokenize_input(mini);
+	if (mini->tokenizer)
 	{
-		if (minishell->tokenizer->err)
+		if (mini->tokenizer->err)
 			success = 0;
-		if (minishell->tokenizer->input)
-			free(minishell->tokenizer->input);
-		free(minishell->tokenizer);
-		minishell->tokenizer = NULL;
+		if (mini->tokenizer->input)
+			free(mini->tokenizer->input);
+		free(mini->tokenizer);
+		mini->tokenizer = NULL;
 	}
 	if (!success)
 	{
-		free_t_list(minishell->t_list);
-		minishell->t_list = NULL;
+		free_t_list(mini->t_list);
+		mini->t_list = NULL;
 	}
 	return (success);
 }
@@ -70,7 +70,7 @@ int	check_syntax_pipes(t_token *tokenizer)
 		return (1);
 	if (tokenizer->type == T_PIPE)
 	{
-		ft_putstr("minishell: syntax error near unexpected token `|'\n", 2);
+		ft_putstr("mini: syntax error near unexpected token `|'\n", 2);
 		g_status = 2;
 		return (0);
 	}
@@ -78,7 +78,7 @@ int	check_syntax_pipes(t_token *tokenizer)
 	{
 		if (tokenizer->type == T_PIPE && tokenizer->next->type == T_PIPE)
 		{
-			ft_putstr("minishell: syntax error near unexpected token `|'\n", 2);
+			ft_putstr("mini: syntax error near unexpected token `|'\n", 2);
 			g_status = 2;
 			return (0);
 		}
@@ -86,7 +86,7 @@ int	check_syntax_pipes(t_token *tokenizer)
 	}
 	if (tokenizer->type == T_PIPE)
 	{
-		ft_putstr("minishell: syntax error near unexpected token `|'\n", 2);
+		ft_putstr("mini: syntax error near unexpected token `|'\n", 2);
 		g_status = 2;
 		return (0);
 	}
@@ -120,29 +120,29 @@ void	ft_execute(t_minishell *mini)
 	ft_execute_helper(mini);
 }
 
-void	process_command(t_minishell *minishell, char *seg, char *inner)
+void	process_command(t_minishell *mini, char *segment, char *inner)
 {
-	if (!fill_tokens(minishell, seg))
+	if (!fill_tokens(mini, segment))
 	{
-		update_env_status(minishell);
-		free_t_list(minishell->t_list);
-		minishell->t_list = NULL;
+		update_env_status(mini);
+		free_t_list(mini->t_list);
+		mini->t_list = NULL;
 		if (inner)
 			free(inner);
 		return ;
 	}
-	if (!check_syntax_pipes(minishell->t_list))
+	if (!check_syntax_pipes(mini->t_list))
 	{
-		update_env_status(minishell);
-		free_t_list(minishell->t_list);
-		minishell->t_list = NULL;
+		update_env_status(mini);
+		free_t_list(mini->t_list);
+		mini->t_list = NULL;
 		if (inner)
 			free(inner);
 		return ;
 	}
-	ft_execute(minishell);
-	free_t_list(minishell->t_list);
-	minishell->t_list = NULL;
+	ft_execute(mini);
+	free_t_list(mini->t_list);
+	mini->t_list = NULL;
 	if (inner)
 		free(inner);
 }

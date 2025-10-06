@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 14:43:09 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/22 15:12:58 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/06 18:53:57 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ t_env	*create_new_node(char *name, char *value, int exported)
 	return (new);
 }
 
-void	append_node_to_list(t_minishell *mini, t_env *new)
+void	add_node_to_list(t_minishell *mini, t_env *new)
 {
 	t_env	*tmp;
 
@@ -93,5 +93,5 @@ void	add_env_node(t_minishell *mini, char *name, char *value, int exported)
 	new = create_new_node(name, value, exported);
 	if (!new)
 		return ;
-	append_node_to_list(mini, new);
+	add_node_to_list(mini, new);
 }

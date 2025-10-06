@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 14:41:20 by sofernan          #+#    #+#             */
-/*   Updated: 2025/09/22 15:17:43 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/06 19:34:59 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,25 +67,25 @@ void	ft_freedoom(char **str)
 	free(str);
 }
 
-void	free_minishell(t_minishell *shell)
+void	free_minishell(t_minishell *mini)
 {
-	if (!shell)
+	if (!mini)
 		return ;
-	if (shell->env_list)
-		(free_env_list(shell->env_list), shell->env_list = NULL);
-	if (shell->t_list)
-		(free_t_list(shell->t_list), shell->t_list = NULL);
-	if (shell->pipex_data)
-		(free_pipex_data(shell->pipex_data), shell->pipex_data = NULL);
-	if (shell->tokenizer)
-		(free_tokenizer(shell->tokenizer), shell->tokenizer = NULL);
-	ft_freedoom(shell->envir_execve);
-	ft_freedoom(shell->paths_execve);
-	shell->curr_token = NULL;
-	shell->new_token = NULL;
-	shell->new_node = NULL;
-	shell->current = NULL;
-	shell->head = NULL;
-	shell->tmp = NULL;
-	shell->curr = NULL;
+	if (mini->env_list)
+		(free_env_list(mini->env_list), mini->env_list = NULL);
+	if (mini->t_list)
+		(free_t_list(mini->t_list), mini->t_list = NULL);
+	if (mini->pipex_data)
+		(free_pipex_data(mini->pipex_data), mini->pipex_data = NULL);
+	if (mini->tokenizer)
+		(free_tokenizer(mini->tokenizer), mini->tokenizer = NULL);
+	ft_freedoom(mini->envir_execve);
+	ft_freedoom(mini->paths_execve);
+	mini->curr_token = NULL;
+	mini->new_token = NULL;
+	mini->new_node = NULL;
+	mini->current = NULL;
+	mini->head = NULL;
+	mini->tmp = NULL;
+	mini->curr = NULL;
 }

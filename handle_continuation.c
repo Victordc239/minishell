@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   3.c                                                :+:      :+:    :+:   */
+/*   handle_continuation.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 17:44:09 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/03 15:13:51 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/06 18:48:56 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	append_more_line(char **cur_input)
 	more = readline("> ");
 	if (!more)
 	{
-		ft_putstr("minishell: syntax error: unexpected end of file\n", 2);
+		ft_putstr("mini: syntax error: unexpected end of file\n", 2);
 		g_status = 2;
 		return (0);
 	}

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   2.c                                                :+:      :+:    :+:   */
+/*   prepare_segments.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 17:42:00 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/03 15:05:47 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/06 19:12:20 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ int	ends_with_unquoted_redir(const char *s, int in_sq, int in_dq)
 	return (0);
 }
 
-int	split_ops(char *input, char ***segments_out, char ***ops_out, int *count_out)
+int	split_ops(char *input, char ***segments_out,
+				char ***ops_out, int *count_out)
 {
 	t_split_state	st;
 
@@ -62,7 +63,8 @@ int	split_ops(char *input, char ***segments_out, char ***ops_out, int *count_out
 	return (1);
 }
 
-int	handle_empty_last_segment(char **cur_input, char ***segments, char ***ops, int *seg_count)
+int	complete_last_seg(char **cur_input, char ***segments,
+						char ***ops, int *seg_count)
 {
 	while (*seg_count >= 2
 		&& (*segments)[*seg_count - 1]
@@ -80,7 +82,7 @@ int	handle_empty_last_segment(char **cur_input, char ***segments, char ***ops, i
 		*seg_count = 0;
 		if (!split_ops(*cur_input, segments, ops, seg_count))
 		{
-			ft_putstr("minishell: internal split error\n", 2);
+			ft_putstr("mini: internal split error\n", 2);
 			free(*cur_input);
 			return (0);
 		}
@@ -102,7 +104,7 @@ int	prepare_segments(char *input, char ***segments, char ***ops, int *seg_count)
 		return (0);
 	if (ends_with_unquoted_redir(cur_input, 0, 0))
 	{
-		ft_putstr("minishell: ", 2);
+		ft_putstr("mini: ", 2);
 		ft_putstr("syntax error near unexpected token `newline'\n", 2);
 		g_status = 2;
 		return (free(cur_input), 0);
@@ -110,9 +112,9 @@ int	prepare_segments(char *input, char ***segments, char ***ops, int *seg_count)
 	if (!handle_continuation(&cur_input))
 		return (free(cur_input), 0);
 	if (!split_ops(cur_input, segments, ops, seg_count))
-		return (ft_putstr("minishell: internal split error\n", 2),
+		return (ft_putstr("mini: internal split error\n", 2),
 			g_status = 2, free(cur_input), 0);
-	if (!handle_empty_last_segment(&cur_input, segments, ops, seg_count))
+	if (!complete_last_seg(&cur_input, segments, ops, seg_count))
 		return (0);
 	return (free(cur_input), 1);
 }

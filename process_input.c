@@ -6,13 +6,13 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:44:02 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/06 13:59:25 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/06 19:14:48 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
 
-void	update_env_status(t_minishell *minishell)
+void	update_env_status(t_minishell *mini)
 {
 	char	*status_str;
 	int		status;
@@ -27,17 +27,18 @@ void	update_env_status(t_minishell *minishell)
 	status_str = ft_itoa(status);
 	if (status_str)
 	{
-		add_env_node(minishell, "?", status_str, 0);
+		add_env_node(mini, "?", status_str, 0);
 		free(status_str);
 	}
 }
 
-void	handle_segments(t_minishell *minishell, char **segments, char **ops, int seg_count)
+void	exec_segments(t_minishell *mini, char **segments,
+						char **ops, int seg_count)
 {
 	if (seg_count <= 0)
 		return ;
-	process_segment(minishell, *segments);
-	update_env_status(minishell);
+	process_segment(mini, *segments);
+	update_env_status(mini);
 	if (seg_count > 1 && ops && *ops)
 	{
 		if (!ft_strcmp(*ops, "&&") && g_status != 0)
@@ -53,7 +54,7 @@ void	handle_segments(t_minishell *minishell, char **segments, char **ops, int se
 			seg_count--;
 		}
 	}
-	handle_segments(minishell, segments + 1, ops + 1, seg_count - 1);
+	exec_segments(mini, segments + 1, ops + 1, seg_count - 1);
 }
 
 void	free_split_result(char **segments, char **ops, int count)
@@ -82,7 +83,7 @@ void	free_split_result(char **segments, char **ops, int count)
 	}
 }
 
-void	process_input(char *input, t_minishell *minishell)
+void	process_input(char *input, t_minishell *mini)
 {
 	char	**segments;
 	char	**ops;
@@ -93,9 +94,9 @@ void	process_input(char *input, t_minishell *minishell)
 	seg_count = 0;
 	if (!prepare_segments(input, &segments, &ops, &seg_count))
 	{
-		update_env_status(minishell);
+		update_env_status(mini);
 		return ;
 	}
-	handle_segments(minishell, segments, ops, seg_count);
+	exec_segments(mini, segments, ops, seg_count);
 	free_split_result(segments, ops, seg_count);
 }

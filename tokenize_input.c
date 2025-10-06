@@ -6,13 +6,13 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:30:35 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/03 15:38:26 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/06 18:48:56 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
 
-t_token	*create_token_node(t_minishell *minishell, char *value)
+t_token	*create_token_node(t_minishell *mini, char *value)
 {
 	t_token	*new_node;
 
@@ -20,36 +20,36 @@ t_token	*create_token_node(t_minishell *minishell, char *value)
 	if (!new_node)
 		return (NULL);
 	new_node->value = ft_strdup(value);
-	if (minishell && minishell->tokenizer)
-		new_node->type = minishell->tokenizer->prev_type;
+	if (mini && mini->tokenizer)
+		new_node->type = mini->tokenizer->prev_type;
 	else
 		new_node->type = T_WORD;
 	new_node->quote = Q_NONE;
 	new_node->expansion_type = NO_EXPANSION;
 	new_node->next = NULL;
-	if (minishell && minishell->tokenizer)
+	if (mini && mini->tokenizer)
 	{
-		new_node->adjacent = minishell->tokenizer->last_adjacent;
-		minishell->tokenizer->last_adjacent = 0;
+		new_node->adjacent = mini->tokenizer->last_adjacent;
+		mini->tokenizer->last_adjacent = 0;
 	}
 	else
 		new_node->adjacent = 0;
 	return (new_node);
 }
 
-t_token	*add_token(t_minishell *minishell, char *value)
+t_token	*add_token(t_minishell *mini, char *value)
 {
 	t_token	*new_node;
 	t_token	*current;
 
-	new_node = create_token_node(minishell, value);
+	new_node = create_token_node(mini, value);
 	if (!new_node)
 		return (NULL);
-	if (minishell->t_list == NULL)
-		minishell->t_list = new_node;
+	if (mini->t_list == NULL)
+		mini->t_list = new_node;
 	else
 	{
-		current = minishell->t_list;
+		current = mini->t_list;
 		while (current->next)
 			current = current->next;
 		current->next = new_node;
@@ -72,15 +72,15 @@ void	replace_char_inplace(char *s, char find, char replace)
 	}
 }
 
-t_token	*check_expansion(t_minishell *minishell, char *val)
+t_token	*check_expansion(t_minishell *mini, char *val)
 {
 	t_token	*new_token;
 
-	new_token = add_token(minishell, val);
+	new_token = add_token(mini, val);
 	if (!new_token)
 		return (NULL);
-	new_token->type = minishell->tokenizer->prev_type;
-	new_token->quote = minishell->tokenizer->quote;
+	new_token->type = mini->tokenizer->prev_type;
+	new_token->quote = mini->tokenizer->quote;
 	if (ft_strchr(new_token->value, '\x01')
 		&& !ft_strchr(new_token->value, '$'))
 		remove_marker_inplace(new_token->value);
@@ -100,16 +100,16 @@ t_token	*check_expansion(t_minishell *minishell, char *val)
 	return (new_token);
 }
 
-int	tokenize_input(t_minishell *minishell)
+int	tokenize_input(t_minishell *mini)
 {
 	char	*val;
 
-	while (!minishell->tokenizer->err)
+	while (!mini->tokenizer->err)
 	{
-		val = extract_token(minishell);
-		if (minishell->tokenizer->err || !val)
+		val = extract_token(mini);
+		if (mini->tokenizer->err || !val)
 			break ;
-		if (!check_expansion(minishell, val))
+		if (!check_expansion(mini, val))
 		{
 			free(val);
 			return (0);

@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:07:18 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/03 15:29:37 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/06 18:48:56 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ void	execute_pipeline(t_minishell *mini)
 		i++;
 	}
 	if (mini->pipex_data->builtins == 1)
-		(apply_redirections(mini), execute_buitin(mini));
+		(apply_redirections(mini), exec_builtin_parent(mini));
 	else
 		execute_last_command(mini, i);
 	if (mini->pipex_data->prev_fd != -1)

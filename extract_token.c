@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   21.c                                               :+:      :+:    :+:   */
+/*   extract_token.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:27:30 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/02 14:15:25 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/06 19:34:59 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,31 +50,31 @@ char	*join_with_marker(char *s1, char *s2)
 	return (res);
 }
 
-int	process_token_part(t_minishell *shell, char **token,
+int	process_token_part(t_minishell *mini, char **token,
 	t_token_quote *first_quote, int *mixed)
 {
 	char	*part;
 
-	while (shell->tokenizer->input[shell->tokenizer->pos]
-		&& shell->tokenizer->input[shell->tokenizer->pos] != ' '
-		&& shell->tokenizer->input[shell->tokenizer->pos] != '\t'
-		&& !ft_strchr("|<>", shell->tokenizer->input[shell->tokenizer->pos]))
+	while (mini->tokenizer->input[mini->tokenizer->pos]
+		&& mini->tokenizer->input[mini->tokenizer->pos] != ' '
+		&& mini->tokenizer->input[mini->tokenizer->pos] != '\t'
+		&& !ft_strchr("|<>", mini->tokenizer->input[mini->tokenizer->pos]))
 	{
-		part = get_next_token_part(shell);
+		part = get_next_token_part(mini);
 		if (!part)
 			return (0);
 		if (*first_quote == (t_token_quote) - 1)
-			*first_quote = shell->tokenizer->quote;
-		else if (shell->tokenizer->quote != *first_quote)
+			*first_quote = mini->tokenizer->quote;
+		else if (mini->tokenizer->quote != *first_quote)
 			*mixed = 1;
-		if (shell->tokenizer->quote == Q_SINGLE)
+		if (mini->tokenizer->quote == Q_SINGLE)
 			replace_char_inplace(part, '$', '\x07');
 		*token = join_with_marker(*token, part);
 	}
 	return (1);
 }
 
-char	*extract_complex_token(t_minishell *shell)
+char	*extract_complex_token(t_minishell *mini)
 {
 	char			*token;
 	t_token_quote	first_quote;
@@ -85,36 +85,36 @@ char	*extract_complex_token(t_minishell *shell)
 	token = ft_strdup("");
 	if (!token)
 	{
-		shell->tokenizer->err = 1;
+		mini->tokenizer->err = 1;
 		return (NULL);
 	}
-	if (!process_token_part(shell, &token, &first_quote, &mixed))
+	if (!process_token_part(mini, &token, &first_quote, &mixed))
 		return (free(token), NULL);
-	shell->tokenizer->prev_type = T_WORD;
+	mini->tokenizer->prev_type = T_WORD;
 	if (!mixed && first_quote != (t_token_quote)-1)
-		shell->tokenizer->quote = first_quote;
+		mini->tokenizer->quote = first_quote;
 	else
-		shell->tokenizer->quote = Q_NONE;
-	if (shell->tokenizer->pos < (int)ft_strlen(shell->tokenizer->input)
-		&& ft_strchr("<>|", shell->tokenizer->input[shell->tokenizer->pos]))
-		shell->tokenizer->last_adjacent = 1;
+		mini->tokenizer->quote = Q_NONE;
+	if (mini->tokenizer->pos < (int)ft_strlen(mini->tokenizer->input)
+		&& ft_strchr("<>|", mini->tokenizer->input[mini->tokenizer->pos]))
+		mini->tokenizer->last_adjacent = 1;
 	else
-		shell->tokenizer->last_adjacent = 0;
+		mini->tokenizer->last_adjacent = 0;
 	return (token);
 }
 
-char	*extract_token(t_minishell *shell)
+char	*extract_token(t_minishell *mini)
 {
 	char	*val;
 
-	while (shell->tokenizer->input[shell->tokenizer->pos] == ' '
-		|| shell->tokenizer->input[shell->tokenizer->pos] == '\t'
-		|| shell->tokenizer->input[shell->tokenizer->pos] == '\n')
-		shell->tokenizer->pos++;
-	if (shell->tokenizer->input[shell->tokenizer->pos] == '\0')
+	while (mini->tokenizer->input[mini->tokenizer->pos] == ' '
+		|| mini->tokenizer->input[mini->tokenizer->pos] == '\t'
+		|| mini->tokenizer->input[mini->tokenizer->pos] == '\n')
+		mini->tokenizer->pos++;
+	if (mini->tokenizer->input[mini->tokenizer->pos] == '\0')
 		return (NULL);
-	val = extract_metachar(shell);
+	val = extract_metachar(mini);
 	if (val)
 		return (val);
-	return (extract_complex_token(shell));
+	return (extract_complex_token(mini));
 }
