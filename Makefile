@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+         #
+#    By: vdiez-cu <vdiez-cu@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/07 14:20:26 by sofernan          #+#    #+#              #
-#    Updated: 2025/10/06 19:42:23 by sofernan         ###   ########.fr        #
+#    Updated: 2025/10/07 16:40:30 by vdiez-cu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,16 +18,18 @@ LIBFT = libft
 LIBFT_DIR = libft/
 LIBFT_LIB = $(LIBFT_DIR)libft.a
 LDFLAGS = -lreadline
+VALGRIND_VALE	:=	./new_suppression.supp
+VFLAGS			:=	--leak-check=full --show-leak-kinds=all --track-origins=yes --track-fds=yes --suppressions=$(VALGRIND_VALE) --trace-children=yes
 
 OBJ_DIR = obj
-SRCS = process_input.c handle_continuation.c prepare_segments.c exec_builtin_parent.c \
-		handle_word_token.c glob_init.c split_loop_and_append.c execute_subshell.c \
+SRCS = process_input.c handle_continuation.c prepare_segments.c execute_buitin.c \
+		handle_word_token.c glob_init.c split_loop_and_append.c execute_group_in_subshell.c \
 		process_segment.c ft_cd.c execute_command.c ft_cmd.c expand_and_add_glob.c \
 		process_and_exec.c execute_pipeline.c get_next_token_part.c tokenize_input.c \
 		process_command.c extract_token.c main.c parse_commands.c parse_redir1.c parse_redir2.c \
-		parse_heredoc.c utils_execute.c exec_builtin_child.c process_dir.c match_glob.c \
+		parse_heredoc.c utils_execute.c execute_buitin_args.c process_dir.c match_glob.c \
 		env_to_array.c free_and_exit.c extract_quoted_token.c ft_export.c add_env_node.c \
-		append_var.c extract_metachar.c free_minishell.c here_doc.c process_export_arg.c
+		append_var.c extract_metachar.c free_minishell.c here_doc.c process_export_argument.c
 
 OBJS = $(SRCS:.c=.o)
 OBJ_FILES = $(addprefix $(OBJ_DIR)/, $(OBJS))
@@ -63,6 +65,9 @@ clean:
 fclean: clean
 	@rm -rf $(NAME)
 	@$(MAKE) -C $(LIBFT_DIR) fclean
+
+valgrind: re
+	valgrind $(VFLAGS) ./$(NAME)
 
 re: fclean all
 
