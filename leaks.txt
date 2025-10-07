@@ -1,193 +1,1193 @@
-
-
-
-ARREGLAR:
-
-==79829== 48 bytes in 2 blocks are still reachable in loss record 23 of 81
-==79829==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==79829==    by 0x48AA0EC: xmalloc (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.2)
-==79829==    by 0x48A0C7E: alloc_history_entry (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.2)
-==79829==    by 0x48A35AF: add_history (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.2)
-==79829==    by 0x11164F: prepare_segments (todo.c:3237)
-==79829==    by 0x111C57: process_input (todo.c:3406)
-==79829==    by 0x111F74: mini_loop (todo.c:3494)
-==79829==    by 0x112130: main (todo.c:3516)
-==79829== 
-
-==79829== 21 bytes in 2 blocks are still reachable in loss record 16 of 81
-==79829==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==79829==    by 0x48AA0EC: xmalloc (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.2)
-==79829==    by 0x48A0C9A: alloc_history_entry (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.2)
-==79829==    by 0x48A35AF: add_history (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.2)
-==79829==    by 0x11164F: prepare_segments (todo.c:3237)
-==79829==    by 0x111C57: process_input (todo.c:3406)
-==79829==    by 0x111F74: mini_loop (todo.c:3494)
-==79829==    by 0x112130: main (todo.c:3516)
-==79829== 
-
-==79829== 8 bytes in 1 blocks are still reachable in loss record 5 of 81
-==79829==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==79829==    by 0x110E6D: append_ptr (todo.c:3021)
-==79829==    by 0x11126C: split_loop_and_append (todo.c:3098)
-==79829==    by 0x111326: split_ops (todo.c:3123)
-==79829==    by 0x1117CF: prepare_segments (todo.c:3274)
-==79829==    by 0x111C57: process_input (todo.c:3406)
-==79829==    by 0x111F74: mini_loop (todo.c:3494)
-==79829==    by 0x112130: main (todo.c:3516)
-
-==79829== 5 bytes in 1 blocks are still reachable in loss record 3 of 81
-==79829==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==79829==    by 0x112BBF: ft_substr (ft_substr.c:32)
-==79829==    by 0x110CF4: trim_whitespace (todo.c:2986)
-==79829==    by 0x1114BD: strip_outer_parentheses (todo.c:3170)
-==79829==    by 0x111A16: process_segment (todo.c:3323)
-==79829==    by 0x111B4D: handle_segments (todo.c:3362)
-==79829==    by 0x111C80: process_input (todo.c:3411)
-==79829==    by 0x111F74: mini_loop (todo.c:3494)
-==79829==    by 0x112130: main (todo.c:3516)
-
-==79829== 5 bytes in 1 blocks are still reachable in loss record 2 of 81
-==79829==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==79829==    by 0x112BBF: ft_substr (ft_substr.c:32)
-==79829==    by 0x110CF4: trim_whitespace (todo.c:2986)
-==79829==    by 0x11121B: split_loop_and_append (todo.c:3094)
-==79829==    by 0x111326: split_ops (todo.c:3123)
-==79829==    by 0x1117CF: prepare_segments (todo.c:3274)
-==79829==    by 0x111C57: process_input (todo.c:3406)
-==79829==    by 0x111F74: mini_loop (todo.c:3494)
-==79829==    by 0x112130: main (todo.c:3516)
-==79829== 
-
-==79829== 24 bytes in 2 blocks are still reachable in loss record 18 of 81
-==79829==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==79829==    by 0x48AA0EC: xmalloc (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.2)
-==79829==    by 0x48A356B: add_history (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.2)
-==79829==    by 0x11164F: prepare_segments (todo.c:3237)
-==79829==    by 0x111C57: process_input (todo.c:3406)
-==79829==    by 0x111F74: mini_loop (todo.c:3494)
-==79829==    by 0x112130: main (todo.c:3516)
-
-==79829== 4,016 bytes in 1 blocks are still reachable in loss record 53 of 81
-==79829==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==79829==    by 0x48AA0EC: xmalloc (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.2)
-==79829==    by 0x48A361F: add_history (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.2)
-==79829==    by 0x11164F: prepare_segments (todo.c:3237)
-==79829==    by 0x111C57: process_input (todo.c:3406)
-==79829==    by 0x111F74: mini_loop (todo.c:3494)
-==79829==    by 0x112130: main (todo.c:3516)
-
-
-
-
-
-
----------------------------------------------------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------------------------------------------------
-
-
-SOLUCIONADOS:
-
-/home/vdiez-cu/Desktop/42_Madrid/cursus/mini Minishell> echo $PWD
-/home/vdiez-cu/Desktop/42_Madrid/cursus/mini
-==2287638== 
-==2287638== HEAP SUMMARY:
-==2287638==     in use at exit: 208,356 bytes in 230 blocks
-==2287638==   total heap usage: 934 allocs, 704 frees, 246,389 bytes allocated
-==2287638== 
-==2287638== LEAK SUMMARY:
-==2287638==    definitely lost: 1 bytes in 1 blocks
-==2287638==    indirectly lost: 0 bytes in 0 blocks
-==2287638==      possibly lost: 0 bytes in 0 blocks
-==2287638==    still reachable: 208,355 bytes in 229 blocks
-==2287638==         suppressed: 0 bytes in 0 blocks
-==2287638== Rerun with --leak-check=full to see details of leaked memory
-==2287638== 
-==2287638== For lists of detected and suppressed errors, rerun with: -s
-==2287638== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-
-
-
-
-/home/vdiez-cu/Desktop/42_Madrid/cursus/mini Minishell> echo "'
-> '
-> '
-> "
-'
-'
-'
-
-==2288687== 
-==2288687== HEAP SUMMARY:
-==2288687==     in use at exit: 208,417 bytes in 239 blocks
-==2288687==   total heap usage: 957 allocs, 718 frees, 246,586 bytes allocated
-==2288687== 
-==2288687== LEAK SUMMARY:
-==2288687==    definitely lost: 64 bytes in 1 blocks
-==2288687==    indirectly lost: 0 bytes in 0 blocks
-==2288687==      possibly lost: 0 bytes in 0 blocks
-==2288687==    still reachable: 208,353 bytes in 238 blocks
-==2288687==         suppressed: 0 bytes in 0 blocks
-==2288687== Rerun with --leak-check=full to see details of leaked memory
-==2288687== 
-==2288687== For lists of detected and suppressed errors, rerun with: -s
-==2288687== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-
-
-
-/home/vdiez-cu/Desktop/42_Madrid/cursus/mini Minishell> echo "$"HOME
-$HOME
-==2288716== 
-==2288716== HEAP SUMMARY:
-==2288716==     in use at exit: 208,434 bytes in 232 blocks
-==2288716==   total heap usage: 934 allocs, 702 frees, 246,338 bytes allocated
-==2288716== 
-==2288716== LEAK SUMMARY:
-==2288716==    definitely lost: 67 bytes in 3 blocks
-==2288716==    indirectly lost: 0 bytes in 0 blocks
-==2288716==      possibly lost: 0 bytes in 0 blocks
-==2288716==    still reachable: 208,367 bytes in 229 blocks
-==2288716==         suppressed: 0 bytes in 0 blocks
-==2288716== Rerun with --leak-check=full to see details of leaked memory
-==2288716== 
-==2288716== For lists of detected and suppressed errors, rerun with: -s
-==2288716== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-
-
-
-/home/vdiez-cu/Desktop/42_Madrid/cursus/mini Minishell> echo $
-$
-==2288744== 
-==2288744== HEAP SUMMARY:
-==2288744==     in use at exit: 208,404 bytes in 235 blocks
-==2288744==   total heap usage: 974 allocs, 739 frees, 251,007 bytes allocated
-==2288744== 
-==2288744== LEAK SUMMARY:
-==2288744==    definitely lost: 1 bytes in 1 blocks
-==2288744==    indirectly lost: 0 bytes in 0 blocks
-==2288744==      possibly lost: 0 bytes in 0 blocks
-==2288744==    still reachable: 208,403 bytes in 234 blocks
-==2288744==         suppressed: 0 bytes in 0 blocks
-==2288744== Rerun with --leak-check=full to see details of leaked memory
-==2288744== 
-==2288744== For lists of detected and suppressed errors, rerun with: -s
-==2288744== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --track-fds=yes --suppressions=./new_suppression.supp --trace-children=yes ./minishell
+==387750== Memcheck, a memory error detector
+==387750== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==387750== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==387750== Command: ./minishell
+==387750== 
+/home/vdiez-cu/Desktop/42_Madrid/cursus/mini Minishell> echo hola <<EOF | <<EOF
+> ^C
+/home/vdiez-cu/Desktop/42_Madrid/cursus/mini Minishell> echo hola <<EOF | <<EOF
+> heredoc delimited by EOF
+> heredoc delimited by EOF
+==387761== 
+==387761== FILE DESCRIPTORS: 5 open (3 std) at exit.
+==387761== Open file descriptor 4:
+==387761==    at 0x49DB0ED: pipe (pipe.c:29)
+==387761==    by 0x404EB7: process_and_exec (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x40556B: execute_pipeline (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x40808D: ft_execute_helper (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406267: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761== 
+==387761== Open file descriptor 3: /dev/pts/0
+==387761==    at 0x49DB05B: dup (syscall-template.S:120)
+==387761==    by 0x406B82: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761== 
+==387761== 
+==387761== HEAP SUMMARY:
+==387761==     in use at exit: 213,953 bytes in 449 blocks
+==387761==   total heap usage: 922 allocs, 473 frees, 251,745 bytes allocated
+==387761== 
+==387761== 2 bytes in 1 blocks are still reachable in loss record 2 of 92
+==387761==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387761==    by 0x40B81B: ft_strdup (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x409C91: create_new_node (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x409E23: add_env_node (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406CD6: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761== 
+==387761== 4 bytes in 1 blocks are still reachable in loss record 3 of 92
+==387761==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387761==    by 0x40B81B: ft_strdup (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x409BA2: update_node_value (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x409C1B: update_node (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x409E05: add_env_node (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x401393: update_env_status (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4013EE: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761== 
+==387761== 8 bytes in 1 blocks are still reachable in loss record 5 of 92
+==387761==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387761==    by 0x402D02: append_ptr (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x403123: split_loop_and_append (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x401BF7: split_ops (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x401E99: prepare_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4015DB: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761== 
+==387761== 8 bytes in 1 blocks are still reachable in loss record 7 of 92
+==387761==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387761==    by 0x40800A: ft_execute_helper (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406267: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761== 
+==387761== 10 bytes in 2 blocks are still reachable in loss record 8 of 92
+==387761==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387761==    by 0x40B81B: ft_strdup (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4049C2: add_arg_to_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4027ED: handle_word_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406E76: process_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x407043: parse_commands (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x40618E: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761== 
+==387761== 18 bytes in 4 blocks are indirectly lost in loss record 14 of 92
+==387761==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387761==    by 0x40B81B: ft_strdup (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4049C2: add_arg_to_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4027ED: handle_word_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406E76: process_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x407043: parse_commands (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x40618E: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761== 
+==387761== 24 bytes in 1 blocks are still reachable in loss record 18 of 92
+==387761==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387761==    by 0x40BC97: ft_substr (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4037C2: trim_whitespace (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4030D6: split_loop_and_append (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x401BF7: split_ops (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x401E99: prepare_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4015DB: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761== 
+==387761== 24 bytes in 1 blocks are still reachable in loss record 19 of 92
+==387761==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387761==    by 0x40BC97: ft_substr (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4037C2: trim_whitespace (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x403825: strip_outer_parentheses (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x403953: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761== 
+==387761== 24 bytes in 1 blocks are still reachable in loss record 20 of 92
+==387761==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387761==    by 0x404953: add_arg_to_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4027ED: handle_word_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406E76: process_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x407043: parse_commands (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x40618E: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761== 
+==387761== 26 bytes in 7 blocks are still reachable in loss record 23 of 92
+==387761==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387761==    by 0x40B81B: ft_strdup (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x40599E: create_token_node (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x405A8C: add_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x405BBC: check_expansion (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x405D95: tokenize_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x405F61: fill_tokens (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406290: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761== 
+==387761== 32 bytes in 1 blocks are still reachable in loss record 25 of 92
+==387761==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387761==    by 0x407D31: init_pipex (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x40613C: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761== 
+==387761== 34 bytes in 2 blocks are still reachable in loss record 26 of 92
+==387761==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387761==    by 0x40B957: ft_strjoin (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x407A29: get_filename (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x407A6E: handle_heredoc (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x407B75: process_heredoc_2 (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x407D11: parse_heredoc (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406F79: process_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x407043: parse_commands (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x40618E: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761== 
+==387761== 34 bytes in 2 blocks are still reachable in loss record 27 of 92
+==387761==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387761==    by 0x40B81B: ft_strdup (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4071A6: init_redir (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x407251: add_redir_to_cmd (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x407BB5: process_heredoc_2 (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x407D11: parse_heredoc (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406F79: process_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x407043: parse_commands (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x40618E: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761== 
+==387761== 40 bytes in 1 blocks are still reachable in loss record 28 of 92
+==387761==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387761==    by 0x409C6C: create_new_node (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x409E23: add_env_node (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406CD6: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761== 
+==387761== 48 bytes in 2 blocks are still reachable in loss record 34 of 92
+==387761==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387761==    by 0x407178: init_redir (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x407251: add_redir_to_cmd (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x407BB5: process_heredoc_2 (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x407D11: parse_heredoc (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406F79: process_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x407043: parse_commands (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x40618E: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761== 
+==387761== 48 bytes in 2 blocks are indirectly lost in loss record 35 of 92
+==387761==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387761==    by 0x404953: add_arg_to_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4027ED: handle_word_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406E76: process_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x407043: parse_commands (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x40618E: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761== 
+==387761== 64 bytes in 1 blocks are indirectly lost in loss record 38 of 92
+==387761==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387761==    by 0x40B01D: ft_calloc (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406D26: init_new_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x407022: parse_commands (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x40618E: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761== 
+==387761== 128 bytes in 2 blocks are still reachable in loss record 43 of 92
+==387761==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387761==    by 0x40B01D: ft_calloc (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406D26: init_new_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x407022: parse_commands (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x40618E: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761== 
+==387761== 194 (64 direct, 130 indirect) bytes in 1 blocks are definitely lost in loss record 46 of 92
+==387761==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387761==    by 0x40B01D: ft_calloc (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406D26: init_new_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x407022: parse_commands (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x40618E: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761== 
+==387761== 224 bytes in 7 blocks are still reachable in loss record 47 of 92
+==387761==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387761==    by 0x405979: create_token_node (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x405A8C: add_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x405BBC: check_expansion (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x405D95: tokenize_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x405F61: fill_tokens (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406290: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761== 
+==387761== 801 bytes in 59 blocks are still reachable in loss record 52 of 92
+==387761==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387761==    by 0x40B81B: ft_strdup (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x409C91: create_new_node (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x409E23: add_env_node (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x40329A: create_env_list (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406C9D: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761== 
+==387761== 1,488 bytes in 59 blocks are still reachable in loss record 62 of 92
+==387761==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387761==    by 0x40B81B: ft_strdup (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x409CD5: create_new_node (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x409E23: add_env_node (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x40329A: create_env_list (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406C9D: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761== 
+==387761== 2,360 bytes in 59 blocks are still reachable in loss record 67 of 92
+==387761==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387761==    by 0x409C6C: create_new_node (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x409E23: add_env_node (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x40329A: create_env_list (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761==    by 0x406C9D: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387761== 
+==387761== LEAK SUMMARY:
+==387761==    definitely lost: 64 bytes in 1 blocks
+==387761==    indirectly lost: 130 bytes in 7 blocks
+==387761==      possibly lost: 0 bytes in 0 blocks
+==387761==    still reachable: 5,319 bytes in 210 blocks
+==387761==         suppressed: 208,440 bytes in 231 blocks
+==387761== 
+==387761== For lists of detected and suppressed errors, rerun with: -s
+==387761== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+==387760== 
+==387760== FILE DESCRIPTORS: 4 open (3 std) at exit.
+==387760== Open file descriptor 3: /dev/pts/0
+==387760==    at 0x49DB05B: dup (syscall-template.S:120)
+==387760==    by 0x406B82: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760== 
+==387760== 
+==387760== HEAP SUMMARY:
+==387760==     in use at exit: 208,690 bytes in 242 blocks
+==387760==   total heap usage: 1,041 allocs, 799 frees, 255,374 bytes allocated
+==387760== 
+==387760== 8 bytes in 1 blocks are still reachable in loss record 3 of 76
+==387760==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387760==    by 0x402D02: append_ptr (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x403123: split_loop_and_append (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x401BF7: split_ops (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x401E99: prepare_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x4015DB: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760== 
+==387760== 18 bytes in 4 blocks are indirectly lost in loss record 10 of 76
+==387760==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387760==    by 0x40B81B: ft_strdup (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x4049C2: add_arg_to_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x4027ED: handle_word_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x406E76: process_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x407043: parse_commands (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x40618E: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760== 
+==387760== 24 bytes in 1 blocks are still reachable in loss record 14 of 76
+==387760==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387760==    by 0x40BC97: ft_substr (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x4037C2: trim_whitespace (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x4030D6: split_loop_and_append (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x401BF7: split_ops (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x401E99: prepare_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x4015DB: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760== 
+==387760== 24 bytes in 1 blocks are still reachable in loss record 15 of 76
+==387760==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387760==    by 0x40BC97: ft_substr (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x4037C2: trim_whitespace (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x403825: strip_outer_parentheses (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x403953: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760== 
+==387760== 48 bytes in 2 blocks are indirectly lost in loss record 24 of 76
+==387760==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387760==    by 0x404953: add_arg_to_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x4027ED: handle_word_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x406E76: process_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x407043: parse_commands (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x40618E: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760== 
+==387760== 64 bytes in 1 blocks are indirectly lost in loss record 27 of 76
+==387760==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387760==    by 0x40B01D: ft_calloc (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x406D26: init_new_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x407022: parse_commands (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x40618E: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760== 
+==387760== 194 (64 direct, 130 indirect) bytes in 1 blocks are definitely lost in loss record 34 of 76
+==387760==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387760==    by 0x40B01D: ft_calloc (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x406D26: init_new_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x407022: parse_commands (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x40618E: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387760== 
+==387760== LEAK SUMMARY:
+==387760==    definitely lost: 64 bytes in 1 blocks
+==387760==    indirectly lost: 130 bytes in 7 blocks
+==387760==      possibly lost: 0 bytes in 0 blocks
+==387760==    still reachable: 56 bytes in 3 blocks
+==387760==         suppressed: 208,440 bytes in 231 blocks
+==387760== 
+==387760== For lists of detected and suppressed errors, rerun with: -s
+==387760== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+/home/vdiez-cu/Desktop/42_Madrid/cursus/mini Minishell> cat  <<EOF | <<EOF
+> heredoc delimited by EOF
+> heredoc delimited by EOF
+==387778== Memcheck, a memory error detector
+==387778== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==387778== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==387778== Command: /usr/bin/cat
+==387778== 
+==387779== 
+==387779== FILE DESCRIPTORS: 5 open (3 std) at exit.
+==387779== Open file descriptor 4:
+==387779==    at 0x49DB0ED: pipe (pipe.c:29)
+==387779==    by 0x404EB7: process_and_exec (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x40556B: execute_pipeline (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x40808D: ft_execute_helper (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406267: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779== 
+==387779== Open file descriptor 3: /dev/pts/0
+==387779==    at 0x49DB05B: dup (syscall-template.S:120)
+==387779==    by 0x406B82: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779== 
+==387779== 
+==387779== HEAP SUMMARY:
+==387779==     in use at exit: 214,386 bytes in 455 blocks
+==387779==   total heap usage: 1,026 allocs, 571 frees, 259,897 bytes allocated
+==387779== 
+==387779== 2 bytes in 1 blocks are still reachable in loss record 3 of 101
+==387779==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387779==    by 0x40B81B: ft_strdup (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x409C91: create_new_node (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x409E23: add_env_node (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406CD6: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779== 
+==387779== 2 bytes in 1 blocks are still reachable in loss record 4 of 101
+==387779==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387779==    by 0x40B81B: ft_strdup (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x409BA2: update_node_value (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x409C1B: update_node (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x409E05: add_env_node (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x401393: update_env_status (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4013EE: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779== 
+==387779== 4 bytes in 1 blocks are still reachable in loss record 5 of 101
+==387779==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387779==    by 0x40B81B: ft_strdup (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4049C2: add_arg_to_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4027ED: handle_word_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406E76: process_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x407043: parse_commands (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x40618E: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779== 
+==387779== 8 bytes in 1 blocks are still reachable in loss record 7 of 101
+==387779==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387779==    by 0x402D02: append_ptr (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x403123: split_loop_and_append (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x401BF7: split_ops (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x401E99: prepare_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4015DB: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779== 
+==387779== 8 bytes in 1 blocks are still reachable in loss record 9 of 101
+==387779==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387779==    by 0x40800A: ft_execute_helper (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406267: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779== 
+==387779== 16 bytes in 1 blocks are still reachable in loss record 16 of 101
+==387779==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387779==    by 0x404953: add_arg_to_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4027ED: handle_word_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406E76: process_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x407043: parse_commands (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x40618E: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779== 
+==387779== 18 bytes in 4 blocks are indirectly lost in loss record 17 of 101
+==387779==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387779==    by 0x40B81B: ft_strdup (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4049C2: add_arg_to_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4027ED: handle_word_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406E76: process_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x407043: parse_commands (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x40618E: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779== 
+==387779== 19 bytes in 1 blocks are still reachable in loss record 19 of 101
+==387779==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387779==    by 0x40BC97: ft_substr (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4037C2: trim_whitespace (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4030D6: split_loop_and_append (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x401BF7: split_ops (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x401E99: prepare_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4015DB: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779== 
+==387779== 19 bytes in 1 blocks are still reachable in loss record 20 of 101
+==387779==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387779==    by 0x40BC97: ft_substr (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4037C2: trim_whitespace (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x403825: strip_outer_parentheses (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x403953: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779== 
+==387779== 20 bytes in 6 blocks are still reachable in loss record 22 of 101
+==387779==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387779==    by 0x40B81B: ft_strdup (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x40599E: create_token_node (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x405A8C: add_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x405BBC: check_expansion (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x405D95: tokenize_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x405F61: fill_tokens (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406290: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779== 
+==387779== 32 bytes in 1 blocks are still reachable in loss record 31 of 101
+==387779==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387779==    by 0x407D31: init_pipex (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x40613C: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779== 
+==387779== 34 bytes in 2 blocks are still reachable in loss record 32 of 101
+==387779==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387779==    by 0x40B957: ft_strjoin (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x407A29: get_filename (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x407A6E: handle_heredoc (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x407B75: process_heredoc_2 (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x407D11: parse_heredoc (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406F79: process_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x407043: parse_commands (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x40618E: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779== 
+==387779== 34 bytes in 2 blocks are still reachable in loss record 33 of 101
+==387779==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387779==    by 0x40B81B: ft_strdup (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4071A6: init_redir (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x407251: add_redir_to_cmd (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x407BB5: process_heredoc_2 (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x407D11: parse_heredoc (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406F79: process_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x407043: parse_commands (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x40618E: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779== 
+==387779== 40 bytes in 1 blocks are still reachable in loss record 34 of 101
+==387779==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387779==    by 0x409C6C: create_new_node (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x409E23: add_env_node (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406CD6: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779== 
+==387779== 48 bytes in 2 blocks are still reachable in loss record 40 of 101
+==387779==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387779==    by 0x407178: init_redir (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x407251: add_redir_to_cmd (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x407BB5: process_heredoc_2 (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x407D11: parse_heredoc (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406F79: process_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x407043: parse_commands (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x40618E: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779== 
+==387779== 48 bytes in 2 blocks are indirectly lost in loss record 41 of 101
+==387779==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387779==    by 0x404953: add_arg_to_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4027ED: handle_word_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406E76: process_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x407043: parse_commands (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x40618E: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779== 
+==387779== 64 bytes in 1 blocks are indirectly lost in loss record 44 of 101
+==387779==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387779==    by 0x40B01D: ft_calloc (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406D26: init_new_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x407022: parse_commands (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x40618E: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779== 
+==387779== 128 bytes in 2 blocks are still reachable in loss record 50 of 101
+==387779==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387779==    by 0x40B01D: ft_calloc (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406D26: init_new_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x407022: parse_commands (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x40618E: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779== 
+==387779== 192 bytes in 6 blocks are still reachable in loss record 55 of 101
+==387779==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387779==    by 0x405979: create_token_node (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x405A8C: add_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x405BBC: check_expansion (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x405D95: tokenize_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x405F61: fill_tokens (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406290: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779== 
+==387779== 194 (64 direct, 130 indirect) bytes in 1 blocks are definitely lost in loss record 56 of 101
+==387779==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387779==    by 0x40B01D: ft_calloc (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406D26: init_new_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x407022: parse_commands (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x40618E: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779== 
+==387779== 801 bytes in 59 blocks are still reachable in loss record 61 of 101
+==387779==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387779==    by 0x40B81B: ft_strdup (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x409C91: create_new_node (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x409E23: add_env_node (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x40329A: create_env_list (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406C9D: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779== 
+==387779== 1,488 bytes in 59 blocks are still reachable in loss record 71 of 101
+==387779==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387779==    by 0x40B81B: ft_strdup (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x409CD5: create_new_node (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x409E23: add_env_node (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x40329A: create_env_list (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406C9D: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779== 
+==387779== 2,360 bytes in 59 blocks are still reachable in loss record 76 of 101
+==387779==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387779==    by 0x409C6C: create_new_node (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x409E23: add_env_node (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x40329A: create_env_list (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779==    by 0x406C9D: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387779== 
+==387779== LEAK SUMMARY:
+==387779==    definitely lost: 64 bytes in 1 blocks
+==387779==    indirectly lost: 130 bytes in 7 blocks
+==387779==      possibly lost: 0 bytes in 0 blocks
+==387779==    still reachable: 5,255 bytes in 207 blocks
+==387779==         suppressed: 208,937 bytes in 240 blocks
+==387779== 
+==387779== For lists of detected and suppressed errors, rerun with: -s
+==387779== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+==387778== 
+==387778== FILE DESCRIPTORS: 1 open (0 std) at exit.
+==387778== Open file descriptor 3: /dev/pts/0
+==387778==    <inherited from parent>
+==387778== 
+==387778== 
+==387778== HEAP SUMMARY:
+==387778==     in use at exit: 0 bytes in 0 blocks
+==387778==   total heap usage: 31 allocs, 31 frees, 139,232 bytes allocated
+==387778== 
+==387778== All heap blocks were freed -- no leaks are possible
+==387778== 
+==387778== For lists of detected and suppressed errors, rerun with: -s
+==387778== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+/home/vdiez-cu/Desktop/42_Madrid/cursus/mini Minishell> echo hola | exit | echo hola
+hola
+==387784== 
+==387783== 
+==387784== FILE DESCRIPTORS: 4 open (3 std) at exit.
+==387783== FILE DESCRIPTORS: 4 open (3 std) at exit.
+==387784== Open file descriptor 3: /dev/pts/0
+==387783== Open file descriptor 3: /dev/pts/0
+==387783==    at 0x49DB05B: dup (syscall-template.S:120)
+==387784==    at 0x49DB05B: dup (syscall-template.S:120)
+==387784==    by 0x406B82: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x406B82: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784== 
+==387783== 
+==387784== 
+==387783== 
+==387784== HEAP SUMMARY:
+==387784==     in use at exit: 209,247 bytes in 252 blocks
+==387784==   total heap usage: 1,230 allocs, 978 frees, 269,149 bytes allocated
+==387784== 
+==387783== HEAP SUMMARY:
+==387783==     in use at exit: 209,247 bytes in 252 blocks
+==387783==   total heap usage: 1,230 allocs, 978 frees, 269,149 bytes allocated
+==387783== 
+==387785== 
+==387785== FILE DESCRIPTORS: 5 open (3 std) at exit.
+==387783== 8 bytes in 1 blocks are still reachable in loss record 3 of 83
+==387784== 8 bytes in 1 blocks are still reachable in loss record 3 of 83
+==387785== Open file descriptor 5:
+==387783==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387784==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387783==    by 0x402D02: append_ptr (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x402D02: append_ptr (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x403123: split_loop_and_append (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x403123: split_loop_and_append (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x401BF7: split_ops (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x401BF7: split_ops (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x401E99: prepare_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x401E99: prepare_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x4015DB: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x4015DB: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    at 0x49DB0ED: pipe (pipe.c:29)
+==387783==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783== 
+==387785==    by 0x404EB7: process_and_exec (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784== 
+==387785==    by 0x40556B: execute_pipeline (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x40808D: ft_execute_helper (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x406267: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783== 18 bytes in 4 blocks are indirectly lost in loss record 11 of 83
+==387784== 18 bytes in 4 blocks are indirectly lost in loss record 11 of 83
+==387785==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387785==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387783==    by 0x40B81B: ft_strdup (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785== 
+==387784==    by 0x40B81B: ft_strdup (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x4049C2: add_arg_to_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785== Open file descriptor 3: /dev/pts/0
+==387784==    by 0x4049C2: add_arg_to_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x4027ED: handle_word_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x4027ED: handle_word_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x406E76: process_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x406E76: process_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    at 0x49DB05B: dup (syscall-template.S:120)
+==387783==    by 0x407043: parse_commands (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x407043: parse_commands (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x406B82: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x40618E: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x40618E: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785== 
+==387783==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785== 
+==387784==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785== HEAP SUMMARY:
+==387785==     in use at exit: 209,247 bytes in 252 blocks
+==387785==   total heap usage: 1,230 allocs, 978 frees, 269,149 bytes allocated
+==387785== 
+==387784==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783== 
+==387784== 
+==387784== 29 bytes in 1 blocks are still reachable in loss record 20 of 83
+==387783== 29 bytes in 1 blocks are still reachable in loss record 20 of 83
+==387784==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387784==    by 0x40BC97: ft_substr (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387784==    by 0x4037C2: trim_whitespace (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x40BC97: ft_substr (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x4030D6: split_loop_and_append (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x4037C2: trim_whitespace (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x401BF7: split_ops (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x4030D6: split_loop_and_append (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x401E99: prepare_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x401BF7: split_ops (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x4015DB: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x401E99: prepare_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x4015DB: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784== 
+==387783==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783== 
+==387784== 29 bytes in 1 blocks are still reachable in loss record 21 of 83
+==387784==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387783== 29 bytes in 1 blocks are still reachable in loss record 21 of 83
+==387784==    by 0x40BC97: ft_substr (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387784==    by 0x4037C2: trim_whitespace (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x40BC97: ft_substr (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x403825: strip_outer_parentheses (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x4037C2: trim_whitespace (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x403953: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x403825: strip_outer_parentheses (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x403953: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784== 
+==387783==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783== 
+==387784== 48 bytes in 2 blocks are indirectly lost in loss record 26 of 83
+==387784==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387783== 48 bytes in 2 blocks are indirectly lost in loss record 26 of 83
+==387784==    by 0x404953: add_arg_to_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387784==    by 0x4027ED: handle_word_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x404953: add_arg_to_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x406E76: process_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x4027ED: handle_word_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x407043: parse_commands (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x406E76: process_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x40618E: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x407043: parse_commands (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x40618E: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784== 
+==387783==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783== 
+==387784== 64 bytes in 1 blocks are indirectly lost in loss record 29 of 83
+==387784==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387783== 64 bytes in 1 blocks are indirectly lost in loss record 29 of 83
+==387784==    by 0x40B01D: ft_calloc (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387784==    by 0x406D26: init_new_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x40B01D: ft_calloc (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x407022: parse_commands (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x406D26: init_new_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x40618E: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x407022: parse_commands (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x40618E: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784== 
+==387783==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783== 
+==387784== 194 (64 direct, 130 indirect) bytes in 1 blocks are definitely lost in loss record 41 of 83
+==387784==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387784==    by 0x40B01D: ft_calloc (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783== 194 (64 direct, 130 indirect) bytes in 1 blocks are definitely lost in loss record 41 of 83
+==387784==    by 0x406D26: init_new_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387784==    by 0x407022: parse_commands (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x40B01D: ft_calloc (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x40618E: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x406D26: init_new_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x407022: parse_commands (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x40618E: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387784== 
+==387783==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387783== 
+==387784== LEAK SUMMARY:
+==387784==    definitely lost: 64 bytes in 1 blocks
+==387784==    indirectly lost: 130 bytes in 7 blocks
+==387784==      possibly lost: 0 bytes in 0 blocks
+==387784==    still reachable: 66 bytes in 3 blocks
+==387784==         suppressed: 208,987 bytes in 241 blocks
+==387784== 
+==387783== LEAK SUMMARY:
+==387784== For lists of detected and suppressed errors, rerun with: -s
+==387783==    definitely lost: 64 bytes in 1 blocks
+==387784== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+==387783==    indirectly lost: 130 bytes in 7 blocks
+==387783==      possibly lost: 0 bytes in 0 blocks
+==387783==    still reachable: 66 bytes in 3 blocks
+==387783==         suppressed: 208,987 bytes in 241 blocks
+==387783== 
+==387783== For lists of detected and suppressed errors, rerun with: -s
+==387783== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+==387785== 8 bytes in 1 blocks are still reachable in loss record 3 of 83
+==387785==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387785==    by 0x402D02: append_ptr (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x403123: split_loop_and_append (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x401BF7: split_ops (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x401E99: prepare_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x4015DB: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785== 
+==387785== 18 bytes in 4 blocks are indirectly lost in loss record 11 of 83
+==387785==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387785==    by 0x40B81B: ft_strdup (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x4049C2: add_arg_to_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x4027ED: handle_word_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x406E76: process_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x407043: parse_commands (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x40618E: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785== 
+==387785== 29 bytes in 1 blocks are still reachable in loss record 20 of 83
+==387785==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387785==    by 0x40BC97: ft_substr (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x4037C2: trim_whitespace (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x4030D6: split_loop_and_append (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x401BF7: split_ops (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x401E99: prepare_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x4015DB: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785== 
+==387785== 29 bytes in 1 blocks are still reachable in loss record 21 of 83
+==387785==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387785==    by 0x40BC97: ft_substr (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x4037C2: trim_whitespace (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x403825: strip_outer_parentheses (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x403953: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785== 
+==387785== 48 bytes in 2 blocks are indirectly lost in loss record 26 of 83
+==387785==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387785==    by 0x404953: add_arg_to_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x4027ED: handle_word_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x406E76: process_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x407043: parse_commands (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x40618E: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785== 
+==387785== 64 bytes in 1 blocks are indirectly lost in loss record 29 of 83
+==387785==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387785==    by 0x40B01D: ft_calloc (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x406D26: init_new_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x407022: parse_commands (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x40618E: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785== 
+==387785== 194 (64 direct, 130 indirect) bytes in 1 blocks are definitely lost in loss record 41 of 83
+==387785==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387785==    by 0x40B01D: ft_calloc (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x406D26: init_new_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x407022: parse_commands (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x40618E: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387785== 
+==387785== LEAK SUMMARY:
+==387785==    definitely lost: 64 bytes in 1 blocks
+==387785==    indirectly lost: 130 bytes in 7 blocks
+==387785==      possibly lost: 0 bytes in 0 blocks
+==387785==    still reachable: 66 bytes in 3 blocks
+==387785==         suppressed: 208,987 bytes in 241 blocks
+==387785== 
+==387785== For lists of detected and suppressed errors, rerun with: -s
+==387785== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+/home/vdiez-cu/Desktop/42_Madrid/cursus/mini Minishell> 
+/home/vdiez-cu/Desktop/42_Madrid/cursus/mini Minishell> 
+==387750== 
+==387750== FILE DESCRIPTORS: 3 open (3 std) at exit.
+==387750== 
+==387750== HEAP SUMMARY:
+==387750==     in use at exit: 209,152 bytes in 248 blocks
+==387750==   total heap usage: 1,126 allocs, 878 frees, 274,165 bytes allocated
+==387750== 
+==387750== 18 bytes in 4 blocks are indirectly lost in loss record 10 of 79
+==387750==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387750==    by 0x40B81B: ft_strdup (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750==    by 0x4049C2: add_arg_to_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750==    by 0x4027ED: handle_word_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750==    by 0x406E76: process_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750==    by 0x407043: parse_commands (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750==    by 0x40618E: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750== 
+==387750== 48 bytes in 2 blocks are indirectly lost in loss record 22 of 79
+==387750==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387750==    by 0x404953: add_arg_to_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750==    by 0x4027ED: handle_word_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750==    by 0x406E76: process_token (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750==    by 0x407043: parse_commands (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750==    by 0x40618E: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750== 
+==387750== 64 bytes in 1 blocks are indirectly lost in loss record 25 of 79
+==387750==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387750==    by 0x40B01D: ft_calloc (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750==    by 0x406D26: init_new_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750==    by 0x407022: parse_commands (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750==    by 0x40618E: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750== 
+==387750== 194 (64 direct, 130 indirect) bytes in 1 blocks are definitely lost in loss record 37 of 79
+==387750==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==387750==    by 0x40B01D: ft_calloc (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750==    by 0x406D26: init_new_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750==    by 0x407022: parse_commands (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750==    by 0x40618E: ft_execute (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750==    by 0x40632E: process_command (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750==    by 0x4039BB: process_segment (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750==    by 0x4013E5: handle_segments (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750==    by 0x401606: process_input (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750==    by 0x406B44: handle_input_cycle (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750==    by 0x406BFE: mini_loop (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750==    by 0x406CFC: main (in /home/vdiez-cu/Desktop/42_Madrid/cursus/mini/minishell)
+==387750== 
+==387750== LEAK SUMMARY:
+==387750==    definitely lost: 64 bytes in 1 blocks
+==387750==    indirectly lost: 130 bytes in 7 blocks
+==387750==      possibly lost: 0 bytes in 0 blocks
+==387750==    still reachable: 0 bytes in 0 blocks
+==387750==         suppressed: 208,958 bytes in 240 blocks
+==387750== 
+==387750== For lists of detected and suppressed errors, rerun with: -s
+==387750== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
