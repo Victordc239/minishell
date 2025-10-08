@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_minishell.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vdiez-cu <vdiez-cu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 14:41:20 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/08 14:31:19 by vdiez-cu         ###   ########.fr       */
+/*   Updated: 2025/10/08 15:21:04 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,29 +66,6 @@ void	ft_freedoom(char **str)
 	}
 	free(str);
 }
-
-/*void	free_minishell(t_minishell *mini)
-{
-	if (!mini)
-		return ;
-	if (mini->env_list)
-		(free_env_list(mini->env_list), mini->env_list = NULL);
-	if (mini->t_list)
-		(free_t_list(mini->t_list), mini->t_list = NULL);
-	if (mini->pipex_data)
-		(free_pipex_data(mini->pipex_data), mini->pipex_data = NULL);
-	if (mini->tokenizer)
-		(free_tokenizer(mini->tokenizer), mini->tokenizer = NULL);
-	ft_freedoom(mini->envir_execve);
-	ft_freedoom(mini->paths_execve);
-	mini->curr_token = NULL;
-	mini->new_token = NULL;
-	mini->new_node = NULL;
-	mini->current = NULL;
-	mini->head = NULL;
-	mini->tmp = NULL;
-	mini->curr = NULL;
-}*/
 
 void	free_minishell(t_minishell *mini)
 {

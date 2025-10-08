@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 14:41:57 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/06 18:48:56 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/07 14:19:27 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ char	*expand_env_in_str(char *src, t_minishell *mini)
 	while (src[i])
 	{
 		if (src[i] == '$')
-			append_var(&res, src, &i, mini);
+			expand_dollar(&res, src, &i, mini);
 		else
 		{
 			start = i;
@@ -80,7 +80,7 @@ void	expand_token(t_token *token, t_minishell *mini)
 	if (token->quote == Q_NONE && token->value && token->value[0] == '~'
 		&& (token->value[1] == '/' || token->value[1] == '\0'))
 	{
-		home = get_env_value("HOME", mini->env_list);
+		home = copy_env_value("HOME", mini->env_list);
 		if (home)
 		{
 			tmp = ft_strjoin(home, token->value + 1);

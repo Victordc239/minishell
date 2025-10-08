@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 17:14:17 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/06 19:05:04 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/07 14:41:35 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,17 @@ char	*get_filename(int index)
 {
 	char	*number;
 	char	*filename;
-	char	*temp;
+	char	*tmp;
 
 	number = ft_itoa(index);
 	if (!number)
 		return (NULL);
-	temp = ft_strjoin("minishell_", number);
+	tmp = ft_strjoin("minishell_", number);
 	free(number);
-	if (!temp)
+	if (!tmp)
 		return (NULL);
-	filename = ft_strjoin(temp, ".temp");
-	free(temp);
+	filename = ft_strjoin(tmp, ".tmp");
+	free(tmp);
 	return (filename);
 }
 

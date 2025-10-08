@@ -59,7 +59,7 @@ void	add_or_update_env(char *arg, t_minishell *mini)
 	}
 	else
 	{
-		add_env_node(mini, name, value, 1);
+		set_env_var(mini, name, value, 1);
 		free(value);
 	}
 	free(name);
@@ -73,7 +73,7 @@ void	mark_as_exported(char *name, t_minishell *mini)
 	if (var)
 		var->exported = 1;
 	else
-		add_env_node(mini, name, NULL, 1);
+		set_env_var(mini, name, NULL, 1);
 }
 
 int	process_export_arg(char *arg, t_minishell *mini)

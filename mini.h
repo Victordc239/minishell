@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vdiez-cu <vdiez-cu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 14:02:20 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/08 13:59:19 by vdiez-cu         ###   ########.fr       */
+/*   Updated: 2025/10/08 15:20:21 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,7 @@ typedef struct s_fd_pipex
 
 typedef struct s_minishell
 {
+	int					saved_stdin;
 	char				**paths_execve;
 	char				**envir_execve;
 	t_env				*env_list;
@@ -129,7 +130,6 @@ typedef struct s_minishell
 	t_command			*tmp;
 	t_command			*curr;
 	t_tokenizer			*tokenizer;
-	int saved_stdin;
 }						t_minishell;
 
 typedef struct s_split_state
@@ -186,9 +186,8 @@ void		ft_unset(t_minishell *mini);
 void		add_or_update_env(char *arg, t_minishell *mini);
 void		remove_env_var(char const *name, t_minishell *mini);
 void		mark_as_exported(char *name, t_minishell *mini);
-void		add_node_to_list(t_minishell *mini, t_env *new);
-void		update_node_value(t_env *tmp, char *value, int exported);
-void		add_env_node(t_minishell *mini, char *name,
+void		add_node_env_list(t_minishell *mini, t_env *new);
+void		set_env_var(t_minishell *mini, char *name,
 				char *value, int exported);
 void		exec_builtin_child(char **argv, char ***env, t_minishell *mini);
 void		add_command_to_list(t_minishell *mini);
@@ -224,17 +223,17 @@ void		free_minishell(t_minishell *mini);
 void		free_tokenizer(t_tokenizer *tokenizer);
 void		sighandler(int signal);
 void		do_signal(void);
-void		append_var(char **res, char *src, int *i, t_minishell *mini);
+void		expand_dollar(char **res, char *src, int *i, t_minishell *mini);
 void		append_literal(char **res, char *src, int len);
 void		expand_token(t_token *token, t_minishell *mini);
 void		mini_loop(t_minishell *mini);
-void		append_exit_code(char **res, int *i, t_minishell *mini);
-void		append_variable(char **res, char *src, int *i, t_minishell *mini);
+void		expand_exit_code(char **res, int *i, t_minishell *mini);
+void		expand_env_var(char **res, char *src, int *i, t_minishell *mini);
 void		process_input(char *input, t_minishell *mini);
 void		replace_char_inplace(char *s, char find, char replace);
 void		free_split_result(char **segments, char **ops, int count);
 void		exec_paths(char **paths, char *cmd, t_minishell *mini, char **env);
-void		run_group_child(t_minishell *parent, char *inner);
+void		exec_subshell_child(t_minishell *parent, char *inner);
 void		process_segment(t_minishell *mini, char *segment);
 void		update_env_status(t_minishell *mini);
 void		exec_segments(t_minishell *mini, char **segments,
@@ -262,7 +261,7 @@ int			ft_exit(t_minishell *mini);
 int			count_exported(t_minishell *mini);
 int			is_valid_identifier(char const *str);
 int			process_export_arg(char *arg, t_minishell *mini);
-int			update_node(t_env *tmp, char *name, char *value, int exported);
+int			update_env_var(t_env *tmp, char *name, char *value, int exported);
 int			count_commands_list(t_minishell *mini);
 int			here_doc(const char *limiter, const char *filename,
 				t_minishell *mini, t_token_quote quote);
@@ -311,7 +310,7 @@ int			ensure_capacity(char ***arr, size_t *count, size_t *cap);
 int			parse_exit_code(const char *s, unsigned char *out_code,
 				int i, int neg);
 int			is_all_digits(const char *s);
-char		*get_env_value(char *name, t_env *env);
+char		*copy_env_value(char *name, t_env *env);
 char		*get_filename(int index);
 char		*handle_heredoc(t_minishell *mini, t_command *cmd,
 				t_token *tok, int index);
@@ -325,7 +324,7 @@ char		*extract_quoted_token(t_minishell *mini);
 char		*extract_complex_token(t_minishell *mini);
 char		*extract_word(t_minishell *mini);
 char		*extract_token(t_minishell *mini);
-char		*env_value(char const *name, t_env *env);
+char		*get_env_value(char const *name, t_env *env);
 char		*get_prompt(void);
 char		**copy_env(char **env);
 char		**env_to_array(t_env *env_list);
@@ -335,7 +334,7 @@ char		*strip_outer_parentheses(char *s, int *removed);
 char		*join_with_marker(char *s1, char *s2);
 const char	*init_class(const char *p, char c, int *negate, int *matched);
 const char	*process_class_content(const char *p, char c, int *matched);
-t_env		*create_new_node(char *name, char *value, int exported);
+t_env		*create_env_var(char *name, char *value, int exported);
 t_env		*find_env(t_env *env_list, char const *name);
 t_env		*create_env_list(char **envp, t_minishell *mini);
 t_token		*check_expansion(t_minishell *mini, char *val);
