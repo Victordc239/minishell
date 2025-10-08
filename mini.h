@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
+/*   By: vdiez-cu <vdiez-cu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 14:02:20 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/06 19:55:43 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:59:19 by vdiez-cu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,7 @@ typedef struct s_minishell
 	t_command			*tmp;
 	t_command			*curr;
 	t_tokenizer			*tokenizer;
+	int saved_stdin;
 }						t_minishell;
 
 typedef struct s_split_state
@@ -296,7 +297,7 @@ int			handle_quote_paren(char *input, t_split_state *st);
 int			try_process_operator(char *input, t_split_state *st);
 int			ends_with_unquoted_redir(const char *s, int in_sq, int in_dq);
 int			ends_with_unquoted_continuation_op(const char *s);
-int			handle_input_cycle(char *input, t_minishell *mini, int saved_stdin);
+int			handle_input_cycle(char *input, t_minishell *mini);
 int			split_ops(char *input, char ***segments_out,
 				char ***ops_out, int *count_out);
 int			append_ptr(char ***arr, int new_size, int copy_count, char *value);

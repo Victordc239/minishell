@@ -12,7 +12,7 @@
 
 #include "mini.h"
 
-t_minishell	init_minishell(void)
+/*t_minishell	init_minishell(void)
 {
 	t_minishell	mini;
 
@@ -29,7 +29,28 @@ t_minishell	init_minishell(void)
 	mini.new_node = NULL;
 	mini.current = NULL;
 	return (mini);
+}*/
+
+t_minishell init_minishell(void)
+{
+    t_minishell mini;
+
+    ft_bzero(&mini, sizeof(t_minishell));
+    mini.env_list = NULL;
+    mini.t_list = NULL;
+    mini.cmd_list = NULL;
+    mini.pipex_data = NULL;
+    mini.head = NULL;
+    mini.tmp = NULL;
+    mini.tokenizer = NULL;
+    mini.curr_token = NULL;
+    mini.new_token = NULL;
+    mini.new_node = NULL;
+    mini.current = NULL;
+    mini.saved_stdin = -1;
+    return (mini);
 }
+
 
 t_env	*create_env_list(char **envp, t_minishell *mini)
 {

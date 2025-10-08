@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
+/*   By: vdiez-cu <vdiez-cu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 14:40:52 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/06 19:13:59 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/08 14:11:45 by vdiez-cu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,12 @@ int	here_doc(const char *limiter, const char *filename,
 	int	result;
 
 	save_in = dup(STDIN_FILENO);
+	if (save_in != -1)
+	{
+		int flags = fcntl(save_in, F_GETFD);
+		if (flags != -1)
+			fcntl(save_in, F_SETFD, flags | FD_CLOEXEC);
+	}
 	signal(SIGINT, heredoc_signal);
 	fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (fd == -1)
