@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 14:36:45 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/06 18:48:56 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/13 14:46:10 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	ft_exit(t_minishell *mini)
 	exit((int)code);
 }
 
-void	remove_env_var(char const *name, t_minishell *mini)
+void	delete_env_var(char const *name, t_minishell *mini)
 {
 	t_env	*curr;
 	t_env	*prev;
@@ -100,7 +100,7 @@ void	ft_unset(t_minishell *mini)
 	i = 1;
 	while (mini->cmd_list->argv[i])
 	{
-		remove_env_var(mini->cmd_list->argv[i], mini);
+		delete_env_var(mini->cmd_list->argv[i], mini);
 		i++;
 	}
 }

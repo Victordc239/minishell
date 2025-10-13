@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_minishell.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
+/*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 14:41:20 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/08 15:21:04 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/08 18:03:35 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,4 +94,3 @@ void	free_minishell(t_minishell *mini)
 	mini->tmp = NULL;
 	mini->curr = NULL;
 }
-

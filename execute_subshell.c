@@ -12,26 +12,25 @@
 
 #include "mini.h"
 
-t_minishell init_minishell(void)
+t_minishell	init_minishell(void)
 {
-    t_minishell mini;
+	t_minishell	mini;
 
-    ft_bzero(&mini, sizeof(t_minishell));
-    mini.env_list = NULL;
-    mini.t_list = NULL;
-    mini.cmd_list = NULL;
-    mini.pipex_data = NULL;
-    mini.head = NULL;
-    mini.tmp = NULL;
-    mini.tokenizer = NULL;
-    mini.curr_token = NULL;
-    mini.new_token = NULL;
-    mini.new_node = NULL;
-    mini.current = NULL;
-    mini.saved_stdin = -1;
-    return (mini);
+	ft_bzero(&mini, sizeof(t_minishell));
+	mini.env_list = NULL;
+	mini.t_list = NULL;
+	mini.cmd_list = NULL;
+	mini.pipex_data = NULL;
+	mini.head = NULL;
+	mini.tmp = NULL;
+	mini.tokenizer = NULL;
+	mini.curr_token = NULL;
+	mini.new_token = NULL;
+	mini.new_node = NULL;
+	mini.current = NULL;
+	mini.saved_stdin = -1;
+	return (mini);
 }
-
 
 t_env	*create_env_list(char **envp, t_minishell *mini)
 {
@@ -64,18 +63,16 @@ void	exec_subshell_child(t_minishell *parent, char *inner)
 	char		**env_arr;
 	char		*status_str;
 
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
+	(signal(SIGINT, SIG_DFL), signal(SIGQUIT, SIG_DFL));
+	if (parent->saved_stdin != -1)
+		(close(parent->saved_stdin), parent->saved_stdin = -1);
 	child = init_minishell();
-	env_arr = env_to_array(parent->env_list);
+	env_arr = make_env_array(parent->env_list);
 	if (env_arr)
 		child.env_list = create_env_list(env_arr, &child);
 	status_str = ft_itoa(g_status);
 	if (status_str)
-	{
-		set_env_var(&child, "?", status_str, 0);
-		free(status_str);
-	}
+		(set_env_var(&child, "?", status_str, 0), free(status_str));
 	if (inner)
 		process_input(inner, &child);
 	else

@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:35:56 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/06 18:48:56 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/13 13:30:50 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ void	ft_execute(t_minishell *mini)
 		exit_with_error("Error init_pipex\n", 1, 2);
 	mini->pipex_data->builtins = is_builtin(mini);
 	mini->cmd_list = parse_commands(mini);
+	mini->pipex_data->commands = mini->cmd_list;
 	if (g_status == 2 || g_status == 130)
 	{
 		if (g_status == 130)
@@ -115,7 +116,6 @@ void	ft_execute(t_minishell *mini)
 		return ;
 	}
 	mini->t_list = tokken;
-	mini->pipex_data->commands = mini->cmd_list;
 	mini->pipex_data->n_cmds = count_commands_list(mini);
 	ft_execute_helper(mini);
 }

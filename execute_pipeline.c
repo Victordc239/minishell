@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:07:18 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/08 14:10:00 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/13 13:58:44 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,16 +68,23 @@ void	execute_last_command(t_minishell *mini, int i)
 	if (mini->pipex_data->pid[i] == 0)
 	{
 		(signal(SIGINT, SIG_DFL), signal(SIGQUIT, SIG_DFL));
+		if (mini->saved_stdin != -1)
+			(close(mini->saved_stdin), mini->saved_stdin = -1);
 		if (mini->pipex_data->prev_fd != -1)
 		{
 			if (dup2(mini->pipex_data->prev_fd, STDIN_FILENO) == -1)
 				exit_with_error("dup2 final prev_fd failed\n", 1, 2);
+			close(mini->pipex_data->prev_fd);
+			mini->pipex_data->prev_fd = -1;
 		}
 		apply_redirections(mini);
 		if (!mini->cmd_list->argv || !mini->cmd_list->argv[0])
 			exit(0);
 		ft_cmd(mini);
 	}
+	else
+		if (mini->pipex_data->prev_fd != -1)
+			(close(mini->pipex_data->prev_fd), mini->pipex_data->prev_fd = -1);
 }
 
 void	wait_status(t_pipex *data)
@@ -121,11 +128,17 @@ void	execute_pipeline(t_minishell *mini)
 		i++;
 	}
 	if (mini->pipex_data->builtins == 1)
-		(apply_redirections(mini), exec_builtin_parent(mini));
+	{
+		apply_redirections(mini);
+		exec_builtin_parent(mini);
+	}
 	else
 		execute_last_command(mini, i);
-	if (mini->pipex_data->prev_fd != -1)
-		close(mini->pipex_data->prev_fd);
 	wait_status(mini->pipex_data);
+	if (mini->pipex_data->prev_fd != -1)
+	{
+		close(mini->pipex_data->prev_fd);
+		mini->pipex_data->prev_fd = -1;
+	}
 	signal(SIGINT, sighandler);
 }

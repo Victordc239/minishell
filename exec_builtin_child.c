@@ -12,7 +12,7 @@
 
 #include "mini.h"
 
-void	ft_echo_arg(char **argv)
+void	ft_echo(char **argv)
 {
 	int	new_line;
 	int	i;
@@ -75,7 +75,7 @@ void	ft_env(char **argv, char **env)
 void	exec_builtin_child(char **argv, char ***env, t_minishell *mini)
 {
 	if (!ft_strcmp(argv[0], "echo"))
-		ft_echo_arg(argv);
+		ft_echo(argv);
 	else if (!ft_strcmp(argv[0], "pwd"))
 		ft_pwd(argv, *env);
 	else if (!ft_strcmp(argv[0], "export"))

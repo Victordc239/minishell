@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/08 15:21:51 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/13 13:37:31 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,99 +34,76 @@ char	**copy_env(char **env)
 	return (copy);
 }
 
-void	do_signal(void)
+void	update_status_env_on_sigint(t_minishell *mini)
 {
-	signal(SIGINT, sighandler);
-	signal(SIGQUIT, SIG_IGN);
-}
+	char	*status_str;
 
-int handle_input_cycle(char *input, t_minishell *mini)
-{
-    char *status_str;
-
-    if (!input)
-    {
-        free_env_list(mini->env_list);
-        free_tokenizer(mini->tokenizer);
-        free_t_list(mini->t_list);
-        if (mini->saved_stdin != -1)
-        {
-            close(mini->saved_stdin);
-            mini->saved_stdin = -1;
-        }
-        return (0);
-    }
-    if (g_status == 128 + SIGINT)
-    {
-        status_str = ft_itoa(g_status);
-        if (status_str)
-        {
-            if (!update_env_var(mini->env_list, "?", status_str, 0))
-                set_env_var(mini, "?", status_str, 0);
-            free(status_str);
-        }
-    }
-    if (*input == '\0')
-    {
-        free(input);
-        if (dup2(mini->saved_stdin, STDIN_FILENO) == -1)
-            ft_putstr("dup2 failed\n", 2);
-        if (mini->saved_stdin != -1)
-        {
-            close(mini->saved_stdin);
-            mini->saved_stdin = -1;
-        }
-        return (1);
-    }
-    process_input(input, mini);
-    free(input);
-    if (dup2(mini->saved_stdin, STDIN_FILENO) == -1)
-        ft_putstr("dup2 failed\n", 2);
-    if (mini->saved_stdin != -1)
-    {
-        close(mini->saved_stdin);
-        mini->saved_stdin = -1;
-    }
-    return (1);
-}
-
-void mini_loop(t_minishell *mini)
-{
-    char *prompt;
-    char *input;
-    char *cwd;
-
-    while (1)
-    {
-        mini->saved_stdin = dup(STDIN_FILENO);
-	  if (mini->saved_stdin != -1)
+	if (g_status == 128 + SIGINT)
+	{
+		status_str = ft_itoa(g_status);
+		if (status_str)
 		{
-		int flags;
-
-		flags = fcntl(mini->saved_stdin, F_GETFD);
-		if (flags != -1)
-			fcntl(mini->saved_stdin, F_SETFD, flags | FD_CLOEXEC);
+			if (!update_env_var(mini->env_list, "?", status_str, 0))
+				set_env_var(mini, "?", status_str, 0);
+			free(status_str);
 		}
-        if (mini->saved_stdin == -1)
-            exit_with_error("dup failed\n", 1, 2);
-        cwd = getcwd(NULL, 0);
-        if (!cwd)
-            prompt = ft_strdup("Minishell> ");
-        else
-        {
-            prompt = ft_strjoin(cwd, " Minishell> ");
-            free(cwd);
-        }
-        input = readline(prompt);
-        free(prompt);
-        if (!handle_input_cycle(input, mini))
-            break ;
-    }
-    if (mini->saved_stdin != -1)
-    {
-        close(mini->saved_stdin);
-        mini->saved_stdin = -1;
-    }
+	}
+}
+
+int	handle_input_cycle(char *input, t_minishell *mini)
+{
+	if (!input)
+	{
+		(free_env_list(mini->env_list), free_tokenizer(mini->tokenizer));
+		free_t_list(mini->t_list);
+		if (mini->saved_stdin != -1)
+			(close(mini->saved_stdin), mini->saved_stdin = -1);
+		return (0);
+	}
+	update_status_env_on_sigint(mini);
+	if (*input == '\0')
+	{
+		free(input);
+		if (dup2(mini->saved_stdin, STDIN_FILENO) == -1)
+			ft_putstr("dup2 failed\n", 2);
+		if (mini->saved_stdin != -1)
+			(close(mini->saved_stdin), mini->saved_stdin = -1);
+		return (1);
+	}
+	(process_input(input, mini), free(input));
+	if (dup2(mini->saved_stdin, STDIN_FILENO) == -1)
+		ft_putstr("dup2 failed\n", 2);
+	if (mini->saved_stdin != -1)
+		(close(mini->saved_stdin), mini->saved_stdin = -1);
+	return (1);
+}
+
+void	mini_loop(t_minishell *mini)
+{
+	char	*prompt;
+	char	*input;
+	char	*cwd;
+
+	while (1)
+	{
+		if (mini->saved_stdin != -1)
+			(close(mini->saved_stdin), mini->saved_stdin = -1);
+		mini->saved_stdin = dup(STDIN_FILENO);
+		if (mini->saved_stdin == -1)
+			exit_with_error("dup failed\n", 1, 2);
+		cwd = getcwd(NULL, 0);
+		if (!cwd)
+			prompt = ft_strdup("Minishell> ");
+		else
+		{
+			prompt = ft_strjoin(cwd, " Minishell> ");
+			free(cwd);
+		}
+		input = readline(prompt);
+		free(prompt);
+		if (!handle_input_cycle(input, mini))
+			break ;
+	}
 }
 
 volatile sig_atomic_t	g_status = 0;
@@ -147,7 +124,10 @@ int	main(int argc, char **argv, char **env)
 	set_env_var(&mini, "?", status_str, 0);
 	ft_freedoom(my_env);
 	free(status_str);
-	do_signal();
+	signal(SIGINT, sighandler);
+	signal(SIGQUIT, SIG_IGN);
 	mini_loop(&mini);
+	if (mini.saved_stdin != -1)
+		(close(mini.saved_stdin), mini.saved_stdin = -1);
 	return (0);
 }

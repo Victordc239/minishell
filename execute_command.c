@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 14:41:03 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/06 19:51:32 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/13 15:08:01 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int	try_exec_path(char *dir, char *cmd, t_minishell *mini, char **env)
 	return (free(path), 0);
 }
 
-void	exec_paths(char **paths, char *cmd, t_minishell *mini, char **env)
+void	search_exec_cmds(char **paths, char *cmd, t_minishell *mini, char **env)
 {
 	int	i;
 	int	ret;
@@ -124,7 +124,7 @@ void	execute_command(t_minishell *mini, char **paths, char **env)
 		execve(cmd, mini->cmd_list->argv, env);
 		check_errno(errno, mini);
 	}
-	exec_paths(paths, cmd, mini, env);
+	search_exec_cmds(paths, cmd, mini, env);
 	mini->paths_execve = paths;
 	mini->envir_execve = env;
 	(check_errno(ENOENT, mini), exit(127));

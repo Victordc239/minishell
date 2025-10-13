@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 14:41:57 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/07 14:19:27 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/13 14:46:10 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ char	*expand_env_in_str(char *src, t_minishell *mini)
 	return (res);
 }
 
-void	remove_marker_inplace(char *s)
+void	delete_marker_inplace(char *s)
 {
 	size_t	i;
 	size_t	j;
@@ -76,7 +76,7 @@ void	expand_token(t_token *token, t_minishell *mini)
 	expanded = expand_env_in_str(token->value, mini);
 	free(token->value);
 	token->value = expanded;
-	remove_marker_inplace(token->value);
+	delete_marker_inplace(token->value);
 	if (token->quote == Q_NONE && token->value && token->value[0] == '~'
 		&& (token->value[1] == '/' || token->value[1] == '\0'))
 	{

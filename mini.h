@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 14:02:20 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/08 15:20:21 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/13 15:08:01 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,7 +175,7 @@ typedef struct s_extract
 void		exec_builtin_parent(t_minishell *mini);
 void		ft_cd(t_minishell *mini, int free_path, int print_new);
 void		ft_cmd(t_minishell *mini);
-void		ft_echo_arg(char **argv);
+void		ft_echo(char **argv);
 void		ft_env(char **argv, char **env);
 void		print_env_array(t_env **arr, int count);
 void		print_sorted_env(t_minishell *mini);
@@ -184,7 +184,7 @@ void		sort_env_array(t_env **arr, int count);
 void		ft_pwd(char **argv, char **env);
 void		ft_unset(t_minishell *mini);
 void		add_or_update_env(char *arg, t_minishell *mini);
-void		remove_env_var(char const *name, t_minishell *mini);
+void		delete_env_var(char const *name, t_minishell *mini);
 void		mark_as_exported(char *name, t_minishell *mini);
 void		add_node_env_list(t_minishell *mini, t_env *new);
 void		set_env_var(t_minishell *mini, char *name,
@@ -232,7 +232,7 @@ void		expand_env_var(char **res, char *src, int *i, t_minishell *mini);
 void		process_input(char *input, t_minishell *mini);
 void		replace_char_inplace(char *s, char find, char replace);
 void		free_split_result(char **segments, char **ops, int count);
-void		exec_paths(char **paths, char *cmd, t_minishell *mini, char **env);
+void		search_exec_cmds(char **paths, char *cmd, t_minishell *mini, char **env);
 void		exec_subshell_child(t_minishell *parent, char *inner);
 void		process_segment(t_minishell *mini, char *segment);
 void		update_env_status(t_minishell *mini);
@@ -241,7 +241,7 @@ void		exec_segments(t_minishell *mini, char **segments,
 void		process_command(t_minishell *mini, char *segment, char *inner);
 void		process_heredoc_2(t_minishell *mini, t_token **token, int *index);
 void		handle_word_token(t_minishell *mini, t_token *token);
-void		remove_marker_inplace(char *s);
+void		delete_marker_inplace(char *s);
 void		syntax_error_unexpected(t_minishell *mini, const char *tok);
 void		parse_red_inout(t_minishell *mini, t_token **token);
 void		ft_execute_helper(t_minishell *mini);
@@ -249,6 +249,7 @@ void		split_loop_and_append(char *input, t_split_state *st);
 void		add_results(t_minishell *mini, t_glob_ctx *ctx, size_t idx);
 void		free_matches_recursive(t_glob_ctx *ctx, size_t idx);
 void		split_path(const char *pattern, char **dir_out, char **base_out);
+void		update_status_env_on_sigint(t_minishell *mini);
 int			complete_last_seg(char **cur_input, char ***segments,
 				char ***ops, int *seg_count);
 int			ft_isspace(int c);
@@ -267,7 +268,7 @@ int			here_doc(const char *limiter, const char *filename,
 				t_minishell *mini, t_token_quote quote);
 int			process_heredoc(int fd, const char *limiter,
 				t_minishell *mini, t_token_quote quote);
-int			env_list_size(t_env *env);
+int			count_env_var(t_env *env);
 int			has_redir_type(t_command *cmd, int type);
 int			check_syntax_pipes(t_token *tokenizer);
 int			fill_tokens(t_minishell *mini, char *input);
@@ -306,15 +307,18 @@ int			glob_init(const char *pattern, t_minishell *mini, t_glob_ctx *ctx);
 int			match_glob_star(const char *p, const char *str);
 int			process_dir(t_glob_ctx *ctx, char *pattern, t_minishell *mini);
 int			process_and_insert(t_glob_ctx *ctx, const char *name);
+int			write_heredoc_line(int fd, char *line, t_minishell *mini,
+				t_token_quote quote);
 int			ensure_capacity(char ***arr, size_t *count, size_t *cap);
 int			parse_exit_code(const char *s, unsigned char *out_code,
 				int i, int neg);
 int			is_all_digits(const char *s);
+int			here_doc_finish(int fd, int save_in, int result);
 char		*copy_env_value(char *name, t_env *env);
 char		*get_filename(int index);
 char		*handle_heredoc(t_minishell *mini, t_command *cmd,
 				t_token *tok, int index);
-char		*env_entry(t_env *node);
+char		*make_env_entry(t_env *node);
 char		*find_execpath(char **env);
 char		*create_path(char *possible_path, char *command);
 char		*expand_env_in_str(char *src, t_minishell *mini);
@@ -327,10 +331,10 @@ char		*extract_token(t_minishell *mini);
 char		*get_env_value(char const *name, t_env *env);
 char		*get_prompt(void);
 char		**copy_env(char **env);
-char		**env_to_array(t_env *env_list);
+char		**make_env_array(t_env *env_list);
 char		*join_free(char *s1, char *s2);
 char		*trim_whitespace(char *s);
-char		*strip_outer_parentheses(char *s, int *removed);
+char		*strip_outer_parentheses(char *s, int *deleted);
 char		*join_with_marker(char *s1, char *s2);
 const char	*init_class(const char *p, char c, int *negate, int *matched);
 const char	*process_class_content(const char *p, char c, int *matched);

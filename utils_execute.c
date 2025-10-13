@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 13:58:50 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/06 18:48:56 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/13 13:29:15 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,11 @@ void	ft_execute_helper(t_minishell *mini)
 	while (i < mini->pipex_data->n_cmds)
 		mini->pipex_data->pid[i++] = -1;
 	execute_pipeline(mini);
+	if (mini->pipex_data->prev_fd != -1)
+	{
+		close(mini->pipex_data->prev_fd);
+		mini->pipex_data->prev_fd = -1;
+	}
 	delete_heredoc_files(mini->pipex_data->count_heredoc);
 	if (mini->pipex_data)
 		free_pipex_data(mini->pipex_data);

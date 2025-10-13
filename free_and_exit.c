@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 14:35:42 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/06 16:13:37 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/13 13:33:29 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,11 @@ void	free_pipex_data(t_pipex *data)
 {
 	if (!data)
 		return ;
+	if (data->prev_fd != -1)
+	{
+		close(data->prev_fd);
+		data->prev_fd = -1;
+	}
 	if (data->pid)
 		free(data->pid);
 	if (data->commands)

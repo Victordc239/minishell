@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:16:00 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/07 19:40:17 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/13 13:31:06 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ void	child_process(t_minishell *mini, int fd[2])
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
+	if (mini->saved_stdin != -1)
+		(close(mini->saved_stdin), mini->saved_stdin = -1);
 	apply_redirections(mini);
 	if (!has_redir_type(mini->cmd_list, T_RED_IN)
 		&& !has_redir_type(mini->cmd_list, T_HEREDOC)
@@ -52,17 +54,16 @@ void	child_process(t_minishell *mini, int fd[2])
 	{
 		if (dup2(mini->pipex_data->prev_fd, STDIN_FILENO) == -1)
 			exit_with_error("dup2 prev_fd failed\n", 1, 2);
-	}
-	if (mini->pipex_data->prev_fd != -1)
 		close(mini->pipex_data->prev_fd);
+		mini->pipex_data->prev_fd = -1;
+	}
 	if (!has_redir_type(mini->cmd_list, T_RED_OUT)
 		&& !has_redir_type(mini->cmd_list, T_RED_APPEND))
 	{
 		if (dup2(fd[1], STDOUT_FILENO) == -1)
 			exit_with_error("dup2 pipe write failed\n", 1, 2);
 	}
-	close(fd[0]);
-	close(fd[1]);
+	(close(fd[0]), close(fd[1]));
 	if (!mini->cmd_list->argv || !mini->cmd_list->argv[0])
 		exit(0);
 	ft_cmd(mini);

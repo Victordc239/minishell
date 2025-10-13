@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 14:33:09 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/06 19:51:32 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/13 14:22:13 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	ft_cmd(t_minishell *mini)
 	char		*cmd;
 	struct stat	st;
 
-	env = env_to_array(mini->env_list);
+	env = make_env_array(mini->env_list);
 	cmd = mini->cmd_list->argv[0];
 	if (is_builtin_str(cmd))
 	{

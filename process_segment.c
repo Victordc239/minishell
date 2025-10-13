@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:44:09 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/06 18:48:56 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/13 14:46:10 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,21 +57,21 @@ char	*trim_whitespace(char *s)
 	return (ft_substr(start, 0, end - start));
 }
 
-char	*strip_outer_parentheses(char *s, int *removed)
+char	*strip_outer_parentheses(char *s, int *deleted)
 {
 	char	*cur;
 	char	*tmp;
-	int		did_remove;
+	int		did_delete;
 	int		len;
 
-	if (removed)
-		*removed = 0;
+	if (deleted)
+		*deleted = 0;
 	if (!s)
 		return (NULL);
 	cur = trim_whitespace(s);
 	if (!cur)
 		return (ft_strdup(""));
-	did_remove = 0;
+	did_delete = 0;
 	while (is_outer_parenthesized(cur))
 	{
 		len = ft_strlen(cur);
@@ -79,10 +79,10 @@ char	*strip_outer_parentheses(char *s, int *removed)
 		if (!tmp)
 			return (NULL);
 		(free(cur), cur = trim_whitespace(tmp));
-		(free(tmp), did_remove = 1);
+		(free(tmp), did_delete = 1);
 	}
-	if (removed && did_remove)
-		*removed = 1;
+	if (deleted && did_delete)
+		*deleted = 1;
 	return (cur);
 }
 
