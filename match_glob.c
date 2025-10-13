@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   match_glob.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
+/*   By: vdiez-cu <vdiez-cu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 14:41:14 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/06 16:13:37 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/13 17:59:54 by vdiez-cu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,43 @@ int	match_class(const char **pp, char c)
 	return (matched);
 }
 
+int	match_question(const char *p, const char *str)
+{
+	if (*str == '\0')
+		return (0);
+	return (match_glob(p + 1, str + 1));
+}
+
 int	match_glob(const char *p, const char *str)
+{
+	if (*p == '\0')
+		return (*str == '\0');
+	if (*p == '*')
+	{
+		while (*p == '*')
+			p++;
+		if (*p == '\0')
+			return (1);
+		while (*str != '\0' && !match_glob(p, str))
+			str++;
+		return (match_glob(p, str));
+	}
+	if (*p == '?')
+		return (match_question(p, str));
+	if (*p == '[')
+	{
+		if (*str == '\0')
+			return (0);
+		if (match_class(&p, *str) <= 0)
+			return (0);
+		return (match_glob(p, str + 1));
+	}
+	if (*str == '\0' || *p != *str)
+		return (0);
+	return (match_glob(p + 1, str + 1));
+}
+
+/*int	match_glob(const char *p, const char *str)
 {
 	if (*p == '\0')
 		return (*str == '\0');
@@ -105,4 +141,4 @@ int	match_glob(const char *p, const char *str)
 	if (*str == '\0' || *p != *str)
 		return (0);
 	return (match_glob(p + 1, str + 1));
-}
+}*/
