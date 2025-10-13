@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 14:41:03 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/13 15:08:01 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/13 19:16:08 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,17 @@
 char	*create_path(char *possible_path, char *command)
 {
 	char	*path;
-	char	*temp;
+	char	*tmp;
 
 	if (ft_strchr(command, '/'))
 		return (ft_strdup(command));
 	if (possible_path && possible_path[0] == '\0')
 		return (ft_strdup(command));
-	temp = ft_strjoin(possible_path, "/");
-	if (!temp)
+	tmp = ft_strjoin(possible_path, "/");
+	if (!tmp)
 		return (NULL);
-	path = ft_strjoin(temp, command);
-	free(temp);
+	path = ft_strjoin(tmp, command);
+	free(tmp);
 	return (path);
 }
 

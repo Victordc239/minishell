@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 14:41:57 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/13 14:46:10 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/13 17:31:04 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ void	handle_word_token(t_minishell *mini, t_token *token)
 		return ;
 	if (token->quote == Q_NONE && (ft_strchr(token->value, '*')
 			|| ft_strchr(token->value, '?') || ft_strchr(token->value, '[')))
-		expand_and_add_glob(token->value, mini);
+		expand_matches(token->value, mini);
 	else
-		add_arg_to_command(mini, token->value);
+		add_arg_to_cmd(mini, token->value);
 }

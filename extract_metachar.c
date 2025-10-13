@@ -6,13 +6,13 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:16:43 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/06 19:34:59 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/13 20:01:42 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
 
-int	handle_heredoc_and_error(char *input, t_minishell *mini)
+int	process_heredoc_token(char *input, t_minishell *mini)
 {
 	int	count;
 
@@ -35,7 +35,7 @@ int	handle_heredoc_and_error(char *input, t_minishell *mini)
 	return (0);
 }
 
-int	handle_redirection_append(char *input, t_minishell *mini)
+int	process_redir_append(char *input, t_minishell *mini)
 {
 	if (input[0] == '>' && input[1] == '>')
 	{
@@ -58,9 +58,9 @@ int	extract_double_metachar(t_minishell *mini)
 		return (1);
 	}
 	if (input[0] == '<')
-		return (handle_heredoc_and_error(input, mini));
+		return (process_heredoc_token(input, mini));
 	if (input[0] == '>' && input[1] == '>')
-		return (handle_redirection_append(input, mini));
+		return (process_redir_append(input, mini));
 	return (0);
 }
 

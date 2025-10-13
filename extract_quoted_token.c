@@ -6,13 +6,13 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 19:17:34 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/06 19:50:36 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/13 19:46:24 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
 
-int	init_extract(t_minishell *mini, t_extract *extr)
+int	init_quoted_token(t_minishell *mini, t_extract *extr)
 {
 	extr->quote_char = mini->tokenizer->input[mini->tokenizer->pos];
 	extr->j = mini->tokenizer->pos + 1;
@@ -32,7 +32,7 @@ int	init_extract(t_minishell *mini, t_extract *extr)
 	return (1);
 }
 
-int	ensure_capacity_2(t_extract *extr, t_minishell *mini)
+int	reserve_buffer_capacity(t_extract *extr, t_minishell *mini)
 {
 	size_t		newcap;
 	char		*newbuf;
@@ -53,26 +53,26 @@ int	ensure_capacity_2(t_extract *extr, t_minishell *mini)
 	return (1);
 }
 
-int	handle_escape_double(t_extract *extr, t_minishell *mini)
+int	handle_double_quote_escape(t_extract *extr, t_minishell *mini)
 {
 	extr->next = mini->tokenizer->input[extr->pos + 1];
 	if (extr->next == '"' || extr->next == '\\'
 		|| extr->next == '$' || extr->next == '`')
 	{
-		if (!ensure_capacity_2(extr, mini))
+		if (!reserve_buffer_capacity(extr, mini))
 			return (0);
 		extr->buf[extr->bi++] = extr->next;
 		extr->pos += 2;
 		return (1);
 	}
-	if (!ensure_capacity_2(extr, mini))
+	if (!reserve_buffer_capacity(extr, mini))
 		return (0);
 	extr->buf[extr->bi++] = '\\';
 	extr->pos++;
 	return (1);
 }
 
-char	*finish_and_return(t_extract *extr, t_minishell *mini)
+char	*finalize_quoted_token(t_extract *extr, t_minishell *mini)
 {
 	extr->buf[extr->bi] = '\0';
 	mini->tokenizer->prev_type = T_WORD;
@@ -91,7 +91,7 @@ char	*extract_quoted_token(t_minishell *mini)
 {
 	t_extract	extr;
 
-	if (!init_extract(mini, &extr))
+	if (!init_quoted_token(mini, &extr))
 		return (NULL);
 	while (1)
 	{
@@ -100,14 +100,14 @@ char	*extract_quoted_token(t_minishell *mini)
 				g_status = 2, mini->tokenizer->err = 1, NULL);
 		extr.c = mini->tokenizer->input[extr.pos];
 		if (extr.c == extr.quote_char)
-			return (finish_and_return(&extr, mini));
+			return (finalize_quoted_token(&extr, mini));
 		if (extr.quote_char == '"' && extr.c == '\\' && extr.pos + 1 < extr.len)
 		{
-			if (!handle_escape_double(&extr, mini))
+			if (!handle_double_quote_escape(&extr, mini))
 				return (NULL);
 			continue ;
 		}
-		if (!ensure_capacity_2(&extr, mini))
+		if (!reserve_buffer_capacity(&extr, mini))
 			return (NULL);
 		extr.buf[extr.bi++] = extr.c;
 		extr.pos++;

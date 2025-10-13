@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 14:02:20 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/13 15:08:01 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/13 20:01:36 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,7 +191,7 @@ void		set_env_var(t_minishell *mini, char *name,
 				char *value, int exported);
 void		exec_builtin_child(char **argv, char ***env, t_minishell *mini);
 void		add_command_to_list(t_minishell *mini);
-void		add_arg_to_command(t_minishell *mini, char *arg);
+void		add_arg_to_cmd(t_minishell *mini, char *arg);
 void		free_struct(t_pipex *data, char *message, int exit_code, int std);
 void		exit_with_error(char *message, int exit_code, int std);
 void		ft_freedoom(char **str);
@@ -232,7 +232,8 @@ void		expand_env_var(char **res, char *src, int *i, t_minishell *mini);
 void		process_input(char *input, t_minishell *mini);
 void		replace_char_inplace(char *s, char find, char replace);
 void		free_split_result(char **segments, char **ops, int count);
-void		search_exec_cmds(char **paths, char *cmd, t_minishell *mini, char **env);
+void		search_exec_cmds(char **paths, char *cmd,
+				t_minishell *mini, char **env);
 void		exec_subshell_child(t_minishell *parent, char *inner);
 void		process_segment(t_minishell *mini, char *segment);
 void		update_env_status(t_minishell *mini);
@@ -246,10 +247,11 @@ void		syntax_error_unexpected(t_minishell *mini, const char *tok);
 void		parse_red_inout(t_minishell *mini, t_token **token);
 void		ft_execute_helper(t_minishell *mini);
 void		split_loop_and_append(char *input, t_split_state *st);
-void		add_results(t_minishell *mini, t_glob_ctx *ctx, size_t idx);
+void		add_matches(t_minishell *mini, t_glob_ctx *ctx, size_t idx);
 void		free_matches_recursive(t_glob_ctx *ctx, size_t idx);
 void		split_path(const char *pattern, char **dir_out, char **base_out);
 void		update_status_env_on_sigint(t_minishell *mini);
+int			match_question(const char *p, const char *str);
 int			complete_last_seg(char **cur_input, char ***segments,
 				char ***ops, int *seg_count);
 int			ft_isspace(int c);
@@ -275,8 +277,8 @@ int			fill_tokens(t_minishell *mini, char *input);
 int			init_tokenizer(t_minishell *mini, char *input);
 int			tokenize_input(t_minishell *mini);
 int			env_len(char **env);
-int			handle_heredoc_and_error(char *input, t_minishell *mini);
-int			handle_redirection_append(char *input, t_minishell *mini);
+int			process_heredoc_token(char *input, t_minishell *mini);
+int			process_redir_append(char *input, t_minishell *mini);
 int			extract_double_metachar(t_minishell *mini);
 int			extract_single_metachar(t_minishell *mini);
 int			is_word_char(char c);
@@ -301,8 +303,8 @@ int			handle_input_cycle(char *input, t_minishell *mini);
 int			split_ops(char *input, char ***segments_out,
 				char ***ops_out, int *count_out);
 int			append_ptr(char ***arr, int new_size, int copy_count, char *value);
-int			expand_and_add_glob(char *pattern, t_minishell *mini);
-int			open_dir(t_glob_ctx *ctx, char *pattern, t_minishell *mini);
+int			expand_matches(char *pattern, t_minishell *mini);
+int			try_open_dir(t_glob_ctx *ctx, char *pattern, t_minishell *mini);
 int			glob_init(const char *pattern, t_minishell *mini, t_glob_ctx *ctx);
 int			match_glob_star(const char *p, const char *str);
 int			process_dir(t_glob_ctx *ctx, char *pattern, t_minishell *mini);

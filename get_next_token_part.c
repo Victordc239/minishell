@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:24:25 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/06 19:34:59 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/13 19:16:08 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ char	*extract_word(t_minishell *mini)
 
 char	*get_next_token_part(t_minishell *mini)
 {
-	char	*temp;
+	char	*tmp;
 
 	if (mini->tokenizer->input[mini->tokenizer->pos] == '$'
 		&& mini->tokenizer->input[mini->tokenizer->pos + 1] == '"')
@@ -60,17 +60,17 @@ char	*get_next_token_part(t_minishell *mini)
 	if (mini->tokenizer->input[mini->tokenizer->pos] == '\'')
 	{
 		mini->tokenizer->quote = Q_SINGLE;
-		temp = extract_quoted_token(mini);
+		tmp = extract_quoted_token(mini);
 	}
 	else if (mini->tokenizer->input[mini->tokenizer->pos] == '"')
 	{
 		mini->tokenizer->quote = Q_DOUBLE;
-		temp = extract_quoted_token(mini);
+		tmp = extract_quoted_token(mini);
 	}
 	else
 	{
-		temp = extract_word(mini);
+		tmp = extract_word(mini);
 		mini->tokenizer->quote = Q_NONE;
 	}
-	return (temp);
+	return (tmp);
 }

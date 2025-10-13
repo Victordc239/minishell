@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 14:41:47 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/06 18:48:56 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/13 15:24:19 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int	glob_init(const char *pattern, t_minishell *mini, t_glob_ctx *ctx)
 		return (0);
 	if (!ft_strchr(pattern, '*') && !ft_strchr(pattern, '?')
 		&& !ft_strchr(pattern, '['))
-		return (add_arg_to_command(mini, (char *)pattern), 0);
+		return (add_arg_to_cmd(mini, (char *)pattern), 0);
 	if (pattern_has_slash(pattern))
 		split_path(pattern, &ctx->dir, &ctx->pat);
 	else
@@ -71,7 +71,7 @@ int	glob_init(const char *pattern, t_minishell *mini, t_glob_ctx *ctx)
 	}
 	if (!ctx->dir || !ctx->pat)
 		return (free(ctx->dir), free(ctx->pat),
-			add_arg_to_command(mini, (char *)pattern), 0);
+			add_arg_to_cmd(mini, (char *)pattern), 0);
 	ctx->allow_dot = (ctx->pat[0] == '.');
 	return (1);
 }
