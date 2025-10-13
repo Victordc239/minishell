@@ -1,8 +1,45 @@
 
 
 
+				env_to_array.c (3)
 
-		QUITAR LA FUNCION PROHIBIDA fcntl
+				exec_builtin_child.c (4)
+
+				execute_subshell.c (4)
+
+				expand_and_add_glob.c (4)
+
+				free_and_exit.c (4)
+
+				ft_cd.c (3)
+
+				ft_cmd.c (4)
+
+				get_next_token_part.c (3)
+
+				glob_init.c (3) 
+				
+				handle_continuation.c (4)
+
+				make_env_array.c (3)
+
+				match_glob.c (4)
+
+				parse_commands.c (4)
+
+				parse_heredoc.c (4)
+
+				prepare_segments.c (4)
+
+				process_and_exec.c (4)
+
+				process_input.c (4)
+
+				process_segment.c (4)
+
+				set_env_var.c (4)
+
+				
 
 
 
