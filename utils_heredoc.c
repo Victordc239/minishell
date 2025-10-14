@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_herdoc.c                                     :+:      :+:    :+:   */
+/*   utils_heredoc.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 14:40:52 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/13 13:37:43 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/14 18:06:44 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	process_heredoc(int fd, const char *limiter, t_minishell *mini,
 	return (0);
 }
 
-void	sighandler(int signal)
+void	handle_signal(int signal)
 {
 	if (signal == SIGINT)
 	{
@@ -80,7 +80,7 @@ void	sighandler(int signal)
 	}
 }
 
-int	here_doc_finish(int fd, int save_in, int result)
+int	heredoc_finish(int fd, int save_in, int result)
 {
 	if (result == 130)
 	{
@@ -96,5 +96,5 @@ int	here_doc_finish(int fd, int save_in, int result)
 			ft_putstr("error stdin heredoc\n", 2);
 		close(save_in);
 	}
-	return (signal(SIGINT, sighandler), result);
+	return (signal(SIGINT, handle_signal), result);
 }

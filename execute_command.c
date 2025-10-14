@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 14:41:03 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/13 19:16:08 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/14 19:27:37 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int	try_exec_path(char *dir, char *cmd, t_minishell *mini, char **env)
 	return (free(path), 0);
 }
 
-void	search_exec_cmds(char **paths, char *cmd, t_minishell *mini, char **env)
+void	search_in_path(char **paths, char *cmd, t_minishell *mini, char **env)
 {
 	int	i;
 	int	ret;
@@ -95,8 +95,8 @@ void	search_exec_cmds(char **paths, char *cmd, t_minishell *mini, char **env)
 		ret = try_exec_path(paths[i], cmd, mini, env);
 		if (ret == -1)
 		{
-			ft_freedoom(mini->cmd_list->argv);
-			ft_freedoom(paths);
+			free_str_array(mini->cmd_list->argv);
+			free_str_array(paths);
 			exit(0);
 		}
 		i++;
@@ -124,7 +124,7 @@ void	execute_command(t_minishell *mini, char **paths, char **env)
 		execve(cmd, mini->cmd_list->argv, env);
 		check_errno(errno, mini);
 	}
-	search_exec_cmds(paths, cmd, mini, env);
+	search_in_path(paths, cmd, mini, env);
 	mini->paths_execve = paths;
 	mini->envir_execve = env;
 	(check_errno(ENOENT, mini), exit(127));

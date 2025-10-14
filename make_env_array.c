@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 14:40:58 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/13 19:59:42 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/14 15:09:20 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ char	**make_env_array(t_env *env_list)
 			if (!env_array[i])
 			{
 				env_array[i] = NULL;
-				return (ft_freedoom(env_array), NULL);
+				return (free_str_array(env_array), NULL);
 			}
 			i++;
 		}

@@ -6,13 +6,13 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 14:41:08 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/06 18:48:56 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/14 19:30:22 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
 
-int	count_exported(t_minishell *mini)
+int	count_exported_var(t_minishell *mini)
 {
 	int		count;
 	t_env	*tmp;
@@ -76,7 +76,7 @@ void	print_sorted_env(t_minishell *mini)
 	t_env	**arr;
 	t_env	*tmp;
 
-	count = count_exported(mini);
+	count = count_exported_var(mini);
 	arr = malloc(sizeof(t_env *) * count);
 	if (!arr)
 		return ;

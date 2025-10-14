@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:30:35 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/13 18:43:39 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/14 15:29:19 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ int	tokenize_input(t_minishell *mini)
 
 	while (!mini->tokenizer->err)
 	{
-		val = extract_token(mini);
+		val = extract_next_token(mini);
 		if (mini->tokenizer->err || !val)
 			break ;
 		if (!check_expansion(mini, val))

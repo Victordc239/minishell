@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 17:23:37 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/07 15:02:36 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/14 15:10:15 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ char	*get_cd_path(t_minishell *mini, int *free_path, int *print_new)
 	return (mini->cmd_list->argv[1]);
 }
 
-char	*builtin_cd(t_minishell *mini, char *path,
+char	*execute_cd(t_minishell *mini, char *path,
 						int free_path, char **prev_cwd)
 {
 	char	*new_cwd;
@@ -74,7 +74,7 @@ void	ft_cd(t_minishell *mini, int free_path, int print_new)
 	path = get_cd_path(mini, &free_path, &print_new);
 	if (!path)
 		return ;
-	new_cwd = builtin_cd(mini, path, free_path, &prev_cwd);
+	new_cwd = execute_cd(mini, path, free_path, &prev_cwd);
 	if (!new_cwd)
 		return ;
 	if (prev_cwd)

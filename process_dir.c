@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 14:32:13 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/13 15:24:19 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/14 16:36:51 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ void	free_matches_recursive(t_glob_ctx *ctx, size_t idx)
 	free_matches_recursive(ctx, idx + 1);
 }
 
-int	process_dir(t_glob_ctx *ctx, char *pattern, t_minishell *mini)
+int	process_dir(t_glob_ctx *ctx, char *str, t_minishell *mini)
 {
 	struct dirent	*entry;
 	const char		*name;
@@ -113,9 +113,9 @@ int	process_dir(t_glob_ctx *ctx, char *pattern, t_minishell *mini)
 		return (1);
 	name = entry->d_name;
 	if (!name || name[0] == '\0')
-		return (process_dir(ctx, pattern, mini));
+		return (process_dir(ctx, str, mini));
 	if (!ctx->allow_dot && name[0] == '.')
-		return (process_dir(ctx, pattern, mini));
+		return (process_dir(ctx, str, mini));
 	if (match_glob(ctx->pat, name))
 	{
 		if (!process_and_insert(ctx, name))
@@ -124,9 +124,9 @@ int	process_dir(t_glob_ctx *ctx, char *pattern, t_minishell *mini)
 			closedir(ctx->d);
 			free(ctx->dir);
 			free(ctx->pat);
-			add_arg_to_cmd(mini, pattern);
+			add_arg_to_cmd(mini, str);
 			return (0);
 		}
 	}
-	return (process_dir(ctx, pattern, mini));
+	return (process_dir(ctx, str, mini));
 }

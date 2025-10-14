@@ -39,14 +39,14 @@ void	add_arg_to_cmd(t_minishell *mini, char *arg)
 	mini->curr->argv = new_argv;
 }
 
-int	try_open_dir(t_glob_ctx *ctx, char *pattern, t_minishell *mini)
+int	try_open_dir(t_glob_ctx *ctx, char *str, t_minishell *mini)
 {
 	ctx->d = opendir(ctx->dir);
 	if (!ctx->d)
 	{
 		free(ctx->dir);
 		free(ctx->pat);
-		add_arg_to_cmd(mini, pattern);
+		add_arg_to_cmd(mini, str);
 		return (0);
 	}
 	return (1);
@@ -61,16 +61,16 @@ void	add_matches(t_minishell *mini, t_glob_ctx *ctx, size_t idx)
 	add_matches(mini, ctx, idx + 1);
 }
 
-int	expand_matches(char *pattern, t_minishell *mini)
+int	expand_matches(char *str, t_minishell *mini)
 {
 	t_glob_ctx	ctx;
 	int			ok;
 
-	if (!glob_init(pattern, mini, &ctx))
+	if (!init_glob(str, mini, &ctx))
 		return (1);
-	if (!try_open_dir(&ctx, pattern, mini))
+	if (!try_open_dir(&ctx, str, mini))
 		return (1);
-	ok = process_dir(&ctx, pattern, mini);
+	ok = process_dir(&ctx, str, mini);
 	if (!ok)
 		return (1);
 	closedir(ctx.d);
@@ -80,7 +80,7 @@ int	expand_matches(char *pattern, t_minishell *mini)
 		free(ctx.pat);
 		if (ctx.matches)
 			free_matches_recursive(&ctx, 0);
-		add_arg_to_cmd(mini, pattern);
+		add_arg_to_cmd(mini, str);
 		return (1);
 	}
 	add_matches(mini, &ctx, 0);

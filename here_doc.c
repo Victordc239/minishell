@@ -6,13 +6,13 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 17:14:17 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/13 14:42:18 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/14 20:21:12 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
 
-char	*get_filename(int index)
+char	*create_heredoc_filename(int index)
 {
 	char	*number;
 	char	*filename;
@@ -30,7 +30,7 @@ char	*get_filename(int index)
 	return (filename);
 }
 
-int	here_doc(const char *limiter, const char *filename,
+int	create_heredoc_file(const char *limiter, const char *filename,
 		t_minishell *mini, t_token_quote quote)
 {
 	int	fd;
@@ -49,19 +49,19 @@ int	here_doc(const char *limiter, const char *filename,
 	if (!limiter || !*limiter)
 		exit_with_error(SYNTAX_ERROR, 1, 2);
 	result = process_heredoc(fd, limiter, mini, quote);
-	return (here_doc_finish(fd, save_in, result));
+	return (heredoc_finish(fd, save_in, result));
 }
 
-char	*handle_heredoc(t_minishell *mini, t_command *cmd,
+char	*create_heredoc(t_minishell *mini, t_command *cmd,
 						t_token *tok, int index)
 {
 	char	*filename;
 	int		ret;
 
-	filename = get_filename(index);
+	filename = create_heredoc_filename(index);
 	if (!filename)
 		exit_with_error("malloc filename failed\n", 1, 2);
-	ret = here_doc(tok->value, filename, mini, tok->quote);
+	ret = create_heredoc_file(tok->value, filename, mini, tok->quote);
 	if (ret == -1)
 	{
 		free(filename);
@@ -81,11 +81,11 @@ char	*handle_heredoc(t_minishell *mini, t_command *cmd,
 	return (filename);
 }
 
-void	process_heredoc_2(t_minishell *mini, t_token **token, int *index)
+void	process_add_heredoc(t_minishell *mini, t_token **token, int *index)
 {
 	char	*filename;
 
-	filename = handle_heredoc(mini, mini->curr,
+	filename = create_heredoc(mini, mini->curr,
 			(*token)->next, *index);
 	if (!filename)
 	{
@@ -119,5 +119,5 @@ void	parse_heredoc(t_minishell *mini, t_token **token, int *index)
 		syntax_error_unexpected(mini, (*token)->next->value);
 		return ;
 	}
-	process_heredoc_2(mini, token, index);
+	process_add_heredoc(mini, token, index);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_minishell.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: victor <victor@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 14:41:20 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/08 18:03:35 by victor           ###   ########.fr       */
+/*   Updated: 2025/10/14 15:09:20 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	free_env_list(t_env *env)
 	}
 }
 
-void	free_t_list(t_token *list)
+void	free_token_list(t_token *list)
 {
 	t_token	*tmp;
 
@@ -51,7 +51,7 @@ void	free_tokenizer(t_tokenizer *tokenizer)
 	free(tokenizer);
 }
 
-void	ft_freedoom(char **str)
+void	free_str_array(char **str)
 {
 	int	i;
 
@@ -79,13 +79,13 @@ void	free_minishell(t_minishell *mini)
 	if (mini->env_list)
 		(free_env_list(mini->env_list), mini->env_list = NULL);
 	if (mini->t_list)
-		(free_t_list(mini->t_list), mini->t_list = NULL);
+		(free_token_list(mini->t_list), mini->t_list = NULL);
 	if (mini->pipex_data)
 		(free_pipex_data(mini->pipex_data), mini->pipex_data = NULL);
 	if (mini->tokenizer)
 		(free_tokenizer(mini->tokenizer), mini->tokenizer = NULL);
-	ft_freedoom(mini->envir_execve);
-	ft_freedoom(mini->paths_execve);
+	free_str_array(mini->envir_execve);
+	free_str_array(mini->paths_execve);
 	mini->curr_token = NULL;
 	mini->new_token = NULL;
 	mini->new_node = NULL;

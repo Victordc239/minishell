@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 15:25:53 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/13 13:37:31 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/14 19:36:36 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ char	**copy_env(char **env)
 	return (copy);
 }
 
-void	update_status_env_on_sigint(t_minishell *mini)
+void	update_status_sigint(t_minishell *mini)
 {
 	char	*status_str;
 
@@ -50,17 +50,17 @@ void	update_status_env_on_sigint(t_minishell *mini)
 	}
 }
 
-int	handle_input_cycle(char *input, t_minishell *mini)
+int	process_input_line(char *input, t_minishell *mini)
 {
 	if (!input)
 	{
 		(free_env_list(mini->env_list), free_tokenizer(mini->tokenizer));
-		free_t_list(mini->t_list);
+		free_token_list(mini->t_list);
 		if (mini->saved_stdin != -1)
 			(close(mini->saved_stdin), mini->saved_stdin = -1);
 		return (0);
 	}
-	update_status_env_on_sigint(mini);
+	update_status_sigint(mini);
 	if (*input == '\0')
 	{
 		free(input);
@@ -78,7 +78,7 @@ int	handle_input_cycle(char *input, t_minishell *mini)
 	return (1);
 }
 
-void	mini_loop(t_minishell *mini)
+void	minishell_loop(t_minishell *mini)
 {
 	char	*prompt;
 	char	*input;
@@ -101,7 +101,7 @@ void	mini_loop(t_minishell *mini)
 		}
 		input = readline(prompt);
 		free(prompt);
-		if (!handle_input_cycle(input, mini))
+		if (!process_input_line(input, mini))
 			break ;
 	}
 }
@@ -122,11 +122,11 @@ int	main(int argc, char **argv, char **env)
 	mini.env_list = create_env_list(my_env, &mini);
 	status_str = ft_itoa(g_status);
 	set_env_var(&mini, "?", status_str, 0);
-	ft_freedoom(my_env);
+	free_str_array(my_env);
 	free(status_str);
-	signal(SIGINT, sighandler);
+	signal(SIGINT, handle_signal);
 	signal(SIGQUIT, SIG_IGN);
-	mini_loop(&mini);
+	minishell_loop(&mini);
 	if (mini.saved_stdin != -1)
 		(close(mini.saved_stdin), mini.saved_stdin = -1);
 	return (0);

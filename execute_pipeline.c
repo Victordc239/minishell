@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:07:18 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/13 13:58:44 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/14 18:06:44 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,5 +140,5 @@ void	execute_pipeline(t_minishell *mini)
 		close(mini->pipex_data->prev_fd);
 		mini->pipex_data->prev_fd = -1;
 	}
-	signal(SIGINT, sighandler);
+	signal(SIGINT, handle_signal);
 }

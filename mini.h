@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 14:02:20 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/13 20:01:36 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/14 20:52:38 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,7 +194,7 @@ void		add_command_to_list(t_minishell *mini);
 void		add_arg_to_cmd(t_minishell *mini, char *arg);
 void		free_struct(t_pipex *data, char *message, int exit_code, int std);
 void		exit_with_error(char *message, int exit_code, int std);
-void		ft_freedoom(char **str);
+void		free_str_array(char **str);
 void		free_and_exit(char **args, char **paths, int exit_code);
 void		delete_heredoc_files(int n);
 void		heredoc_signal(int sing);
@@ -215,24 +215,24 @@ void		execute_pipeline(t_minishell *mini);
 void		execute_last_command(t_minishell *mini, int i);
 void		ft_execute(t_minishell *mini);
 void		free_env_list(t_env *env);
-void		free_t_list(t_token *list);
+void		free_token_list(t_token *list);
 void		free_redir_list(t_redir *redir);
 void		free_command_list(t_command *cmd);
 void		free_pipex_data(t_pipex *data);
 void		free_minishell(t_minishell *mini);
 void		free_tokenizer(t_tokenizer *tokenizer);
-void		sighandler(int signal);
+void		handle_signal(int signal);
 void		do_signal(void);
 void		expand_dollar(char **res, char *src, int *i, t_minishell *mini);
 void		append_literal(char **res, char *src, int len);
 void		expand_token(t_token *token, t_minishell *mini);
-void		mini_loop(t_minishell *mini);
+void		minishell_loop(t_minishell *mini);
 void		expand_exit_code(char **res, int *i, t_minishell *mini);
 void		expand_env_var(char **res, char *src, int *i, t_minishell *mini);
 void		process_input(char *input, t_minishell *mini);
 void		replace_char_inplace(char *s, char find, char replace);
 void		free_split_result(char **segments, char **ops, int count);
-void		search_exec_cmds(char **paths, char *cmd,
+void		search_in_path(char **paths, char *cmd,
 				t_minishell *mini, char **env);
 void		exec_subshell_child(t_minishell *parent, char *inner);
 void		process_segment(t_minishell *mini, char *segment);
@@ -240,33 +240,35 @@ void		update_env_status(t_minishell *mini);
 void		exec_segments(t_minishell *mini, char **segments,
 				char **ops, int seg_count);
 void		process_command(t_minishell *mini, char *segment, char *inner);
-void		process_heredoc_2(t_minishell *mini, t_token **token, int *index);
+void		process_add_heredoc(t_minishell *mini, t_token **token, int *index);
 void		handle_word_token(t_minishell *mini, t_token *token);
 void		delete_marker_inplace(char *s);
 void		syntax_error_unexpected(t_minishell *mini, const char *tok);
 void		parse_red_inout(t_minishell *mini, t_token **token);
-void		ft_execute_helper(t_minishell *mini);
+void		run_pipeline(t_minishell *mini);
 void		split_loop_and_append(char *input, t_split_state *st);
 void		add_matches(t_minishell *mini, t_glob_ctx *ctx, size_t idx);
 void		free_matches_recursive(t_glob_ctx *ctx, size_t idx);
-void		split_path(const char *pattern, char **dir_out, char **base_out);
-void		update_status_env_on_sigint(t_minishell *mini);
+void		split_path(const char *str, char **dir_out, char **base_out);
+void		update_status_sigint(t_minishell *mini);
+void		update_shlvl(t_minishell *mini);
+void		try_exec_in_path(t_minishell *mini, char **env, char *cmd);
 int			match_question(const char *p, const char *str);
-int			complete_last_seg(char **cur_input, char ***segments,
+int			complete_last_seg(char **command_line, char ***segments,
 				char ***ops, int *seg_count);
 int			ft_isspace(int c);
-int			append_more_line(char **cur_input);
-int			handle_continuation(char **cur_input);
+int			add_next_line(char **command_line);
+int			continue_incomplete_cmd(char **command_line);
 int			is_builtin(t_minishell *mini);
-int			is_builtin_str(char *str);
+int			is_builtin_cmd(char *str);
 int			is_numeric(char const *str);
 int			ft_exit(t_minishell *mini);
-int			count_exported(t_minishell *mini);
+int			count_exported_var(t_minishell *mini);
 int			is_valid_identifier(char const *str);
 int			process_export_arg(char *arg, t_minishell *mini);
 int			update_env_var(t_env *tmp, char *name, char *value, int exported);
 int			count_commands_list(t_minishell *mini);
-int			here_doc(const char *limiter, const char *filename,
+int			create_heredoc_file(const char *limiter, const char *filename,
 				t_minishell *mini, t_token_quote quote);
 int			process_heredoc(int fd, const char *limiter,
 				t_minishell *mini, t_token_quote quote);
@@ -281,14 +283,14 @@ int			process_heredoc_token(char *input, t_minishell *mini);
 int			process_redir_append(char *input, t_minishell *mini);
 int			extract_double_metachar(t_minishell *mini);
 int			extract_single_metachar(t_minishell *mini);
-int			is_word_char(char c);
+int			is_token_char(char c);
 int			split_ops(char *input, char ***segments_out,
 				char ***ops_out, int *count_out);
 int			execute_subshell(t_minishell *parent, char *inner);
 int			is_outer_parenthesized(const char *s);
 int			process_token_part(t_minishell *mini, char **token,
 				t_token_quote *first_quote, int *mixed);
-int			pattern_has_slash(const char *s);
+int			str_has_slash(const char *s);
 int			match_class(const char **pp, char c);
 int			match_glob(const char *pat, const char *s);
 int			insert_sorted(char ***arr, size_t *count, size_t *cap, char *s);
@@ -298,16 +300,16 @@ int			prepare_segments(char *input, char ***segments,
 int			handle_quote_paren(char *input, t_split_state *st);
 int			try_process_operator(char *input, t_split_state *st);
 int			ends_with_unquoted_redir(const char *s, int in_sq, int in_dq);
-int			ends_with_unquoted_continuation_op(const char *s);
-int			handle_input_cycle(char *input, t_minishell *mini);
+int			ends_with_operator(const char *s);
+int			process_input_line(char *input, t_minishell *mini);
 int			split_ops(char *input, char ***segments_out,
 				char ***ops_out, int *count_out);
 int			append_ptr(char ***arr, int new_size, int copy_count, char *value);
-int			expand_matches(char *pattern, t_minishell *mini);
-int			try_open_dir(t_glob_ctx *ctx, char *pattern, t_minishell *mini);
-int			glob_init(const char *pattern, t_minishell *mini, t_glob_ctx *ctx);
+int			expand_matches(char *str, t_minishell *mini);
+int			try_open_dir(t_glob_ctx *ctx, char *str, t_minishell *mini);
+int			init_glob(const char *str, t_minishell *mini, t_glob_ctx *ctx);
 int			match_glob_star(const char *p, const char *str);
-int			process_dir(t_glob_ctx *ctx, char *pattern, t_minishell *mini);
+int			process_dir(t_glob_ctx *ctx, char *str, t_minishell *mini);
 int			process_and_insert(t_glob_ctx *ctx, const char *name);
 int			write_heredoc_line(int fd, char *line, t_minishell *mini,
 				t_token_quote quote);
@@ -315,21 +317,21 @@ int			ensure_capacity(char ***arr, size_t *count, size_t *cap);
 int			parse_exit_code(const char *s, unsigned char *out_code,
 				int i, int neg);
 int			is_all_digits(const char *s);
-int			here_doc_finish(int fd, int save_in, int result);
+int			heredoc_finish(int fd, int save_in, int result);
 char		*copy_env_value(char *name, t_env *env);
-char		*get_filename(int index);
-char		*handle_heredoc(t_minishell *mini, t_command *cmd,
+char		*create_heredoc_filename(int index);
+char		*create_heredoc(t_minishell *mini, t_command *cmd,
 				t_token *tok, int index);
 char		*make_env_entry(t_env *node);
-char		*find_execpath(char **env);
+char		*get_path_env(char **env);
 char		*create_path(char *possible_path, char *command);
 char		*expand_env_in_str(char *src, t_minishell *mini);
 char		*extract_metachar(t_minishell *mini);
 char		*get_next_token_part(t_minishell *mini);
 char		*extract_quoted_token(t_minishell *mini);
 char		*extract_complex_token(t_minishell *mini);
-char		*extract_word(t_minishell *mini);
-char		*extract_token(t_minishell *mini);
+char		*extract_word_token(t_minishell *mini);
+char		*extract_next_token(t_minishell *mini);
 char		*get_env_value(char const *name, t_env *env);
 char		*get_prompt(void);
 char		**copy_env(char **env);

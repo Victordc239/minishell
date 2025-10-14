@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 13:58:50 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/13 13:29:15 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/14 20:52:38 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void	delete_heredoc_files(int n)
 	i = 0;
 	while (i < n)
 	{
-		filename = get_filename(i);
+		filename = create_heredoc_filename(i);
 		if (filename)
 		{
 			unlink(filename);
@@ -78,7 +78,7 @@ void	delete_heredoc_files(int n)
 	}
 }
 
-void	ft_execute_helper(t_minishell *mini)
+void	run_pipeline(t_minishell *mini)
 {
 	int	i;
 

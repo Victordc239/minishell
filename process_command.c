@@ -6,7 +6,7 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:35:56 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/13 13:30:50 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/14 20:52:38 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	init_tokenizer(t_minishell *mini, char *input)
 {
 	if (mini->t_list)
 	{
-		free_t_list(mini->t_list);
+		free_token_list(mini->t_list);
 		mini->t_list = NULL;
 	}
 	if (mini->tokenizer)
@@ -58,7 +58,7 @@ int	fill_tokens(t_minishell *mini, char *input)
 	}
 	if (!success)
 	{
-		free_t_list(mini->t_list);
+		free_token_list(mini->t_list);
 		mini->t_list = NULL;
 	}
 	return (success);
@@ -117,7 +117,7 @@ void	ft_execute(t_minishell *mini)
 	}
 	mini->t_list = tokken;
 	mini->pipex_data->n_cmds = count_commands_list(mini);
-	ft_execute_helper(mini);
+	run_pipeline(mini);
 }
 
 void	process_command(t_minishell *mini, char *segment, char *inner)
@@ -125,7 +125,7 @@ void	process_command(t_minishell *mini, char *segment, char *inner)
 	if (!fill_tokens(mini, segment))
 	{
 		update_env_status(mini);
-		free_t_list(mini->t_list);
+		free_token_list(mini->t_list);
 		mini->t_list = NULL;
 		if (inner)
 			free(inner);
@@ -134,14 +134,14 @@ void	process_command(t_minishell *mini, char *segment, char *inner)
 	if (!check_syntax_pipes(mini->t_list))
 	{
 		update_env_status(mini);
-		free_t_list(mini->t_list);
+		free_token_list(mini->t_list);
 		mini->t_list = NULL;
 		if (inner)
 			free(inner);
 		return ;
 	}
 	ft_execute(mini);
-	free_t_list(mini->t_list);
+	free_token_list(mini->t_list);
 	mini->t_list = NULL;
 	if (inner)
 		free(inner);

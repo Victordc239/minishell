@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   extract_token.c                                    :+:      :+:    :+:   */
+/*   extract_metachar.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:27:30 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/06 19:34:59 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/13 18:44:00 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ char	*extract_complex_token(t_minishell *mini)
 	return (token);
 }
 
-char	*extract_token(t_minishell *mini)
+char	*extract_next_token(t_minishell *mini)
 {
 	char	*val;
 
@@ -113,7 +113,7 @@ char	*extract_token(t_minishell *mini)
 		mini->tokenizer->pos++;
 	if (mini->tokenizer->input[mini->tokenizer->pos] == '\0')
 		return (NULL);
-	val = extract_metachar(mini);
+	val = extract_metachar (mini);
 	if (val)
 		return (val);
 	return (extract_complex_token(mini));

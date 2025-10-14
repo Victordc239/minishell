@@ -61,31 +61,6 @@ void	update_shlvl(t_minishell *mini)
 	shlvl->exported = 1;
 }
 
-/*t_env	*create_env_list(char **envp, t_minishell *mini)
-{
-	int		i;
-	char	*equal;
-	char	*name;
-	char	*value;
-
-	mini->env_list = NULL;
-	i = 0;
-	while (envp[i])
-	{
-		equal = ft_strchr(envp[i], '=');
-		if (equal)
-		{
-			name = ft_substr(envp[i], 0, equal - envp[i]);
-			value = ft_strdup(equal + 1);
-			set_env_var(mini, name, value, 1);
-			free(name);
-			free(value);
-		}
-		i++;
-	}
-	return (mini->env_list);
-}*/
-
 t_env	*create_env_list(char **envp, t_minishell *mini)
 {
 	int		i;
@@ -135,7 +110,7 @@ void	exec_subshell_child(t_minishell *parent, char *inner)
 	if (child.env_list)
 		free_env_list(child.env_list);
 	if (env_arr)
-		ft_freedoom(env_arr);
+		free_str_array(env_arr);
 	exit(g_status);
 }
 

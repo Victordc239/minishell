@@ -6,13 +6,13 @@
 /*   By: sofernan <sofernan@student.42madrid.es>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 14:24:25 by sofernan          #+#    #+#             */
-/*   Updated: 2025/10/13 19:16:08 by sofernan         ###   ########.fr       */
+/*   Updated: 2025/10/14 16:20:44 by sofernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
 
-int	is_word_char(char c)
+int	is_token_char(char c)
 {
 	if (c == '\0')
 		return (0);
@@ -25,13 +25,13 @@ int	is_word_char(char c)
 	return (1);
 }
 
-char	*extract_word(t_minishell *mini)
+char	*extract_word_token(t_minishell *mini)
 {
 	int		start;
 	char	*word;
 
 	start = mini->tokenizer->pos;
-	while (is_word_char(mini->tokenizer->input[mini->tokenizer->pos]))
+	while (is_token_char(mini->tokenizer->input[mini->tokenizer->pos]))
 		mini->tokenizer->pos++;
 	if (mini->tokenizer->pos == start)
 		return (NULL);
@@ -69,7 +69,7 @@ char	*get_next_token_part(t_minishell *mini)
 	}
 	else
 	{
-		tmp = extract_word(mini);
+		tmp = extract_word_token(mini);
 		mini->tokenizer->quote = Q_NONE;
 	}
 	return (tmp);
