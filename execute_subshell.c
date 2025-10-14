@@ -32,6 +32,60 @@ t_minishell	init_minishell(void)
 	return (mini);
 }
 
+void	update_shlvl(t_minishell *mini)
+{
+	t_env	*shlvl;
+	int		level;
+	char	*new_value;
+
+	if (!mini)
+		return ;
+	shlvl = find_env(mini->env_list, "SHLVL");
+	if (!shlvl)
+	{
+		set_env_var(mini, "SHLVL", "1", 1);
+		return ;
+	}
+	if (!shlvl->value || !is_all_digits(shlvl->value))
+		level = 1;
+	else
+		level = ft_atoi(shlvl->value) + 1;
+	if (level > 999)
+		level = 1;
+	new_value = ft_itoa(level);
+	if (!new_value)
+		return ;
+	if (shlvl->value)
+		free(shlvl->value);
+	shlvl->value = new_value;
+	shlvl->exported = 1;
+}
+
+/*t_env	*create_env_list(char **envp, t_minishell *mini)
+{
+	int		i;
+	char	*equal;
+	char	*name;
+	char	*value;
+
+	mini->env_list = NULL;
+	i = 0;
+	while (envp[i])
+	{
+		equal = ft_strchr(envp[i], '=');
+		if (equal)
+		{
+			name = ft_substr(envp[i], 0, equal - envp[i]);
+			value = ft_strdup(equal + 1);
+			set_env_var(mini, name, value, 1);
+			free(name);
+			free(value);
+		}
+		i++;
+	}
+	return (mini->env_list);
+}*/
+
 t_env	*create_env_list(char **envp, t_minishell *mini)
 {
 	int		i;
@@ -54,6 +108,7 @@ t_env	*create_env_list(char **envp, t_minishell *mini)
 		}
 		i++;
 	}
+	update_shlvl(mini);
 	return (mini->env_list);
 }
 
